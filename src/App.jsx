@@ -50,6 +50,11 @@ import Settings from './pages/Settings.jsx'
 import LogOut from './pages/LogOut.jsx'
 import Profile from './pages/Profile.jsx'
 import Layout from './Layout.jsx'
+import ComputerVision from './pages/courses/ComputerVision.jsx'
+import Programming from './pages/courses/Programming.jsx'
+import AI from './pages/courses/AI.jsx'
+import Network from './pages/courses/Network.jsx'
+import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
 
 const App = () => {
   return (
@@ -67,6 +72,11 @@ const ProtectedRoutes = () => {
         <Route exact path="/" element={<HomePage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/computer-vision" element={<ComputerVision />} />
+        <Route path="/courses/programming" element={<Programming />} />
+        <Route path="/courses/artificial-intelligence" element={<AI />} />
+        <Route path="/courses/network" element={<Network />} />
+        <Route path="/courses/software-engineering" element={<SoftwareEngineering />} />
         <Route path="/assignments" element={<Assignments />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/reminder" element={<Reminder />} />
