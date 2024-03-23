@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
+import NetworkAnnouncements from '../../components/courses/network/NetworkAnnouncements';
 
 const Network = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -10,8 +11,8 @@ const Network = () => {
 
   return (
     <>
+      <h1 className='course-header'>Network</h1>
       <Container fluid className='course-container' style={{margin: "0", padding: "0"}}>
-        <h1 className='course-header'>Network</h1>
         <Row style={{margin: "0", padding: "0"}} className='courseRow1'>
           <Col className='navtabs-container' style={{padding: "0"}} >
             <Navbar className='course-navbar'>
@@ -31,9 +32,11 @@ const Network = () => {
             </Navbar>
           </Col>
         </Row>
+      </Container>
+      <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
-          <Col style={{padding: "0"}}>
-            {activeTab === 'Tab 1' && <div>Content for Tab 1</div>}
+          <Col style={{padding: "0"}} className='tab-content'>
+            {activeTab === 'Tab 1' && <div><NetworkAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div>Content for Tab 3</div>}
             {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}

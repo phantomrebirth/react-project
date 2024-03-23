@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
+import SWAnnouncements from '../../components/courses/software-engineering/SWAnnouncements';
 
 const SoftwareEngineering = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -10,8 +11,8 @@ const SoftwareEngineering = () => {
 
   return (
     <>
+      <h1 className='course-header'>Software Engineering</h1>
       <Container fluid className='course-container' style={{margin: "0", padding: "0"}}>
-        <h1 className='course-header'>Software Engineering</h1>
         <Row style={{margin: "0", padding: "0"}} className='courseRow1'>
           <Col className='navtabs-container' style={{padding: "0"}} >
             <Navbar className='course-navbar'>
@@ -31,9 +32,11 @@ const SoftwareEngineering = () => {
             </Navbar>
           </Col>
         </Row>
+      </Container>
+      <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
-          <Col style={{padding: "0"}}>
-            {activeTab === 'Tab 1' && <div>Content for Tab 1</div>}
+          <Col style={{padding: "0"}} className='tab-content'>
+            {activeTab === 'Tab 1' && <div><SWAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div>Content for Tab 3</div>}
             {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
