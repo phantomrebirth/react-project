@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import SWAnnouncements from '../../components/courses/software-engineering/SWAnnouncements';
+import SWFiles from '../../components/courses/software-engineering/SWFiles';
 
 const SoftwareEngineering = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -38,7 +39,7 @@ const SoftwareEngineering = () => {
           <Col style={{padding: "0"}} className='tab-content'>
             {activeTab === 'Tab 1' && <div><SWAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
-            {activeTab === 'Tab 3' && <div>Content for Tab 3</div>}
+            {activeTab === 'Tab 3' && <div><SWFiles/></div>}
             {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
             {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}

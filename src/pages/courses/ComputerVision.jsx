@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import CVAnnouncements from '../../components/courses/computer-vision/CVAnnouncements';
+import CVFiles from '../../components/courses/computer-vision/CVFiles';
+import CVAssignments from '../../components/courses/computer-vision/CVAssignments';
 
 const ComputerVision = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -39,8 +41,8 @@ const ComputerVision = () => {
           <Col style={{padding: "0"}} className='tab-content'>
             {activeTab === 'Tab 1' && <div><CVAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
-            {activeTab === 'Tab 3' && <div>Content for Tab 3</div>}
-            {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
+            {activeTab === 'Tab 3' && <div><CVFiles/></div>}
+            {activeTab === 'Tab 4' && <div><CVAssignments/></div>}
             {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
             {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
