@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import SWAnnouncements from '../../components/courses/software-engineering/SWAnnouncements';
 import SWFiles from '../../components/courses/software-engineering/SWFiles';
+import SWAssignments from '../../components/courses/software-engineering/SWAssignments';
+import SWProjects from '../../components/courses/software-engineering/SWProjects';
 
 const SoftwareEngineering = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -40,8 +42,8 @@ const SoftwareEngineering = () => {
             {activeTab === 'Tab 1' && <div><SWAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div><SWFiles/></div>}
-            {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
-            {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
+            {activeTab === 'Tab 4' && <div><SWAssignments/></div>}
+            {activeTab === 'Tab 5' && <div><SWProjects/></div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
             {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
             {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}

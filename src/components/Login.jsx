@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap'
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import { Link, } from 'react-router-dom';
 
 const Login = () => {
@@ -18,59 +18,53 @@ const Login = () => {
     const closedEye = "/src/assets/images/eye-closed.png";
     const [isEyeClosed, setIsEyeClosed] = useState(true);
 
-    const validated = useCallback( () => {
-        if (email && email.length < 8 && email.length !== 0) {
-            emailInput.style.border = "1px solid #f00";
-            email_error.style.display = "block";
-            return false;
-        } else {
-            emailInput.style.border = "1px solid silver";
-            email_error.style.display = "none";
-        }
+    // const validated = useCallback( () => {
+    //     if (email && email.length < 8 && email.length !== 0) {
+    //         emailInput.style.border = "1px solid #f00";
+    //         email_error.style.display = "block";
+    //         return false;
+    //     } else {
+    //         emailInput.style.border = "1px solid silver";
+    //         email_error.style.display = "none";
+    //     }
 
-        if (password && password.length < 8) {
-            passwordInput.style.border = "1px solid #f00";
-            password_error.style.display = "block";
-            return false;
-        } else {
-            passwordInput.style.border = "1px solid silver";
-            password_error.style.display = "none";
-        }
-        return email && email.length >= 8 && password && password.length >= 8;
-    }, [email, password]);
+    //     if (password && password.length < 8) {
+    //         passwordInput.style.border = "1px solid #f00";
+    //         password_error.style.display = "block";
+    //         return false;
+    //     } else {
+    //         passwordInput.style.border = "1px solid silver";
+    //         password_error.style.display = "none";
+    //     }
+    //     return email && email.length >= 8 && password && password.length >= 8;
+    // }, [email, password]);
         
-    useEffect(() => {
-        // const identifier =
-        setTimeout(() => {
-            validated(
-                // email.includes('@') && password.trim().length > 6
-            );
-        }, 500);
-        // return () => {
-        //     clearTimeout(identifier);
-        // }; // clean up
-    }, [validated]);
+    // useEffect(() => {
+    //     // const identifier =
+    //     setTimeout(() => {
+    //         validated(
+    //             // email.includes('@') && password.trim().length > 6
+    //         );
+    //     }, 500);
+    //     // return () => {
+    //     //     clearTimeout(identifier);
+    //     // }; // clean up
+    // }, [validated]);
 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (validated()) {
-            const publicKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3emFxZ2poZ3ZpeW9nanlnemt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk3MjQxNTQsImV4cCI6MjAyNTMwMDE1NH0.0q_Unrnm92K1J27tIOgdCPjCOUl4DCfR_3BnaBmcRIQ";
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${publicKey}`
-            };
-    
+        // if (validated()) 
+        {
             axios
-                .post('https://swzaqgjhgviyogjygzkz.supabase.co/', { email, password }, { headers })
+                .post('https://ezlearn.onrender.com/admins/login', { email, password })
                 .then((res) => {
-                    // handle successful login
-                    Navigate('/');
+                    navigate('/');
                 })
                 .catch((err) => {
                     console.error(err);
-                    // handle login error
+                    console.log('Error during login:', err.response.data.error);
                 });
         }
     };
@@ -86,7 +80,7 @@ const Login = () => {
   
     return (
         <>
-            <p>S<span style={{ color: "#7939ff" }}>H</span>A</p>
+            <p className='SHAlogo'>S<span style={{ color: "#7939ff" }}>H</span>A</p>
             <Row>
                 <Col sm={12} md={12} lg={6} xl={6} xxl={6}>
                     <div className="contForm" style={{ minHeight: "100vh" }}>

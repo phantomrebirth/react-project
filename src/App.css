@@ -70,7 +70,7 @@ body{
   font-family: 'Rubik', sans-serif;
   overflow: hidden;
 }
-p {
+.SHAlogo {
   position: absolute;
   /* top: -252px;
   left: -606px; */
@@ -1066,6 +1066,89 @@ input[type="file"]::placeholder {
     height: 100% !important;
     margin-right: 2%;
   }
+  .inProgress-ass {
+    display: inline !important;
+  }
+  .upAss-container {
+    margin-top: 5%;
+    justify-content: center !important;
+  }
+  .headUp-ass {
+    font-size: 111% !important;
+  }
+  .upAss-icon {
+    font-size: 300% !important;
+  }
+  .description-container {
+    width: 96% !important;
+    margin-top: 5% !important;
+  }
+  .project {
+    width: 96% !important;
+    height: 100% !important;
+  }
+  .projects-container {
+    display: inline !important;
+  }
+  .project-container {
+    width: 100% !important;
+    height: 100% !important;
+    margin-right: 2%;
+  }
+  .project-name {
+    font-size: 100% !important;
+  }
+  .projectName-container {
+    margin: 0.5rem 0px 0.5rem 7%!important;
+  }
+  .project-btn {
+    margin: 0px 3% 0px 0% !important;
+    font-size: 75% !important;
+  }
+  .project-inProgress {
+    display: inline !important;
+    max-width: 100% !important;
+  }
+  .projectUp-container {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content:center !important;
+    margin: 5% 0px 2% 0px !important;
+  }
+  .projectUp-icon-container {
+    margin: 0% !important;
+  }
+  .projectUp-btn {
+    width: 100% !important;
+    height: 111% !important;
+    border-radius: 0.5rem !important;
+    background-color: #d6d6d6;
+    color: #999999;
+    font-weight: normal !important;
+    font-size: 90% !important;
+  }
+  .projectUp-icon {
+    color: #999999;
+    font-size: 222% !important;
+  }
+  .project-submit {
+    margin: 0% 4% 0px 13% !important;
+  }
+  .project-submitBtn {
+    border-radius: 0.5rem !important;
+    font-size: 77% !important;
+    width: 100% !important;
+    height: 20% !important;
+  }
+  .headUp-project {
+    width: fit-content !important;
+    height: 100%;
+  }
+  .projectDescription-container {
+    width: 96% !important;
+    margin-top: 5% !important;
+  }
 }
 
 /* .announcements-hr {
@@ -1233,4 +1316,203 @@ input[type="file"]::placeholder {
 
 .marginLeftZero {
   margin-left: 0% !important;
+}
+
+.inProgress-ass {
+  max-width: 69%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upAss-container {
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 5%;
+  /* width: 16rem; */
+  border-radius: 2rem;
+}
+
+.headUp-ass {
+  cursor: pointer;
+  font-size: 121%;
+  font-weight: bold;
+  color: #7939ff;
+  margin: 0% !important;
+  padding: 0% !important;
+}
+
+.upAss-icon {
+  font-size: 396%;
+  font-weight: lighter;
+  color: #7939FF;
+  border-radius: 20%;
+}
+
+.description-container {
+  margin-top: 1.5%;
+  width: 44%;
+}
+
+.ass-submit {
+  background-color: #7939ff;
+  margin-top: 0.7rem;
+}
+
+.ass-submit:hover {
+  background-color: #6d40ce;
+}
+
+/* .projects-container {
+  display: flex;
+} */
+
+.project-inProgress {
+  display: flex;
+  max-width: 96%;
+  /* align-items: center; */
+  justify-content: space-between;
+}
+
+.project-container {
+  height: max-content;
+  width: max-content;
+}
+
+.projectH-container {
+  position: relative;
+  width: max-content;
+  height: max-content;
+  display: block;
+  color: #646464;
+  margin-bottom: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+.project-header {
+  list-style-type: disc;
+  padding: 0px 0px 0px 1rem !important;
+  margin: 0% !important;
+  text-align: center;
+}
+
+.project-header li {
+  padding-bottom: 0px !important;
+}
+
+.projectH-container::after {
+  display: inline-block;
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #646464;
+  z-index: -1;
+}
+
+.project {
+  display: flex;
+  justify-content: space-between;
+  width: 22.2rem;
+  height: 4.4rem;
+  background-color: rgb(136, 255, 152);
+  border: none;
+  border-radius: 0.85rem;
+  align-items: center;
+  box-shadow: 
+  0 4px 2px rgba(0, 0, 0, .1),
+  0 8px 16px rgba(0, 0, 0, .2);
+}
+
+.projectName-container {
+  margin-left: 5%;
+}
+
+.project-name {
+  margin: 0px 0px 0px 0% !important;
+}
+
+.project-btn {
+  color: #fff;
+  background-color: #808080;
+  border: none;
+  border-radius: 2rem;
+  width: 6rem;
+  height: 1.6rem;
+  margin-right: 1rem;
+  font-size: 83%;
+}
+
+.project-zeros {
+  color: #808080;
+  font-size: 69%;
+  margin: 1% 0px 0px 0px !important;
+}
+
+.projectUp-container {
+  text-align: center;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  margin-right: 2%;
+  /* width: 16rem; */
+  /* border-radius: 2rem; */
+}
+
+.headUp-project {
+  margin: 0% !important;
+  padding: 0% !important;
+  width: 100%;
+  height: 100%;
+}
+
+.projectUp-btn {
+  width: 21.5rem;
+  height: 14rem;
+  border-radius: 1.5rem;
+  background-color: #d6d6d6;
+  color: #999999;
+  font-weight: bold;
+  font-size: 123%;
+}
+
+.projectUp-icon-container {
+  margin: 0% 0px 1rem 0px;
+  padding: 0% !important;
+}
+
+.projectUp-icon {
+  color: #999999;
+  font-size: 500%;
+}
+
+.project-submit {
+  margin-left: 7%;
+}
+
+.project-submitBtn {
+  background-color: #7939ff;
+  border-radius: 1.4rem;
+  /* font-weight: bold; */
+  font-size: 113%;
+  width: 10.6rem;
+  height: 10.6rem;
+}
+
+.project-submitBtn:hover {
+  background-color: #5f35b9;
+}
+
+.projectDescription-container {
+  margin-top: 0%;
+  width: 50%;
+}
+
+.description-area {
+  border: 1px solid #8b8b8b;
+  margin-top: 0.6%;
 }

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import NetworkAnnouncements from '../../components/courses/network/NetworkAnnouncements';
 import NetworkFiles from '../../components/courses/network/NetworkFiles';
+import NetworkAssignments from '../../components/courses/network/NetworkAssignments';
+import NetworkProjects from '../../components/courses/network/NetworkProjects';
 
 const Network = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -40,8 +42,8 @@ const Network = () => {
             {activeTab === 'Tab 1' && <div><NetworkAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div><NetworkFiles/></div>}
-            {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
-            {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
+            {activeTab === 'Tab 4' && <div><NetworkAssignments/></div>}
+            {activeTab === 'Tab 5' && <div><NetworkProjects/></div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
             {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
             {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}

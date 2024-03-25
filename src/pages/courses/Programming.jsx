@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import ProgrammingAnnouncements from '../../components/courses/programming/ProgrammingAnnouncements';
 import ProgrammingFiles from '../../components/courses/programming/ProgrammingFiles';
+import ProgrammingAssignments from '../../components/courses/programming/ProgrammingAssignments';
+import ProgrammingProjects from '../../components/courses/programming/ProgrammingProjects';
 
 const Programming = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -40,8 +42,8 @@ const Programming = () => {
             {activeTab === 'Tab 1' && <div><ProgrammingAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div><ProgrammingFiles/></div>}
-            {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
-            {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
+            {activeTab === 'Tab 4' && <div><ProgrammingAssignments/></div>}
+            {activeTab === 'Tab 5' && <div><ProgrammingProjects/></div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
             {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
             {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}

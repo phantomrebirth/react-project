@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import AIAnnouncements from '../../components/courses/artificial-intelligence/AIAnnouncements';
 import AIFiles from '../../components/courses/artificial-intelligence/AIFiles';
+import AIAssignments from '../../components/courses/artificial-intelligence/AIAssignments';
+import AIProjects from '../../components/courses/artificial-intelligence/AIProjects';
 
 const AI = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -40,8 +42,8 @@ const AI = () => {
             {activeTab === 'Tab 1' && <div><AIAnnouncements/></div>}
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div><AIFiles/></div>}
-            {activeTab === 'Tab 4' && <div>Content for Tab 4</div>}
-            {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
+            {activeTab === 'Tab 4' && <div><AIAssignments/></div>}
+            {activeTab === 'Tab 5' && <div><AIProjects/></div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
             {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
             {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}

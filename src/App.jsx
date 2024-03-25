@@ -55,8 +55,10 @@ import Programming from './pages/courses/Programming.jsx'
 import AI from './pages/courses/AI.jsx'
 import Network from './pages/courses/Network.jsx'
 import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
+// import { useSelector } from 'react-redux'
 
 const App = () => {
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -66,13 +68,16 @@ const App = () => {
 };
 
 const ProtectedRoutes = () => {
+
+  // const currentRoute = useSelector(state => state.assignment.currentRoute);
+
   return (
     <Layout>
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/courses" element={<Courses />} />
-        <Route path="/courses/computer-vision" element={<ComputerVision />} />
+        <Route path="/courses/computer-vision/*" element={<ComputerVision />} />
         <Route path="/courses/programming" element={<Programming />} />
         <Route path="/courses/artificial-intelligence" element={<AI />} />
         <Route path="/courses/network" element={<Network />} />

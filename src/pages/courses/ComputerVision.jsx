@@ -3,6 +3,7 @@ import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import CVAnnouncements from '../../components/courses/computer-vision/CVAnnouncements';
 import CVFiles from '../../components/courses/computer-vision/CVFiles';
 import CVAssignments from '../../components/courses/computer-vision/CVAssignments';
+import CVProjects from '../../components/courses/computer-vision/CVProjects';
 
 const ComputerVision = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -43,7 +44,7 @@ const ComputerVision = () => {
             {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
             {activeTab === 'Tab 3' && <div><CVFiles/></div>}
             {activeTab === 'Tab 4' && <div><CVAssignments/></div>}
-            {activeTab === 'Tab 5' && <div>Content for Tab 5</div>}
+            {activeTab === 'Tab 5' && <div><CVProjects/></div>}
             {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
             {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
             {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}
