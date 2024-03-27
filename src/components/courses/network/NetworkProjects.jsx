@@ -44,7 +44,9 @@ const NetworkProjects = () => {
               <h5 className='project-name'>Network Project</h5>
               <h6 className='project-zeros'>00.00.0000</h6>
             </div>
-            <button className='project-btn'>In progress</button>
+            <button className='project-btn' style={{cursor: "unset"}}>
+              In progress
+            </button>
           </div>
         </div>
         <div className='projectUp-container'>

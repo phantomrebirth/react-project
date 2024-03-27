@@ -4,6 +4,7 @@ import ProgrammingAnnouncements from '../../components/courses/programming/Progr
 import ProgrammingFiles from '../../components/courses/programming/ProgrammingFiles';
 import ProgrammingAssignments from '../../components/courses/programming/ProgrammingAssignments';
 import ProgrammingProjects from '../../components/courses/programming/ProgrammingProjects';
+import ProgrammingVideos from '../../components/courses/programming/ProgrammingVideos';
 
 const Programming = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -40,7 +41,7 @@ const Programming = () => {
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
             {activeTab === 'Tab 1' && <div><ProgrammingAnnouncements/></div>}
-            {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
+            {activeTab === 'Tab 2' && <div><ProgrammingVideos/></div>}
             {activeTab === 'Tab 3' && <div><ProgrammingFiles/></div>}
             {activeTab === 'Tab 4' && <div><ProgrammingAssignments/></div>}
             {activeTab === 'Tab 5' && <div><ProgrammingProjects/></div>}

@@ -4,6 +4,7 @@ import NetworkAnnouncements from '../../components/courses/network/NetworkAnnoun
 import NetworkFiles from '../../components/courses/network/NetworkFiles';
 import NetworkAssignments from '../../components/courses/network/NetworkAssignments';
 import NetworkProjects from '../../components/courses/network/NetworkProjects';
+import NetworkVideos from '../../components/courses/network/NetworkVideos';
 
 const Network = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -40,7 +41,7 @@ const Network = () => {
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
             {activeTab === 'Tab 1' && <div><NetworkAnnouncements/></div>}
-            {activeTab === 'Tab 2' && <div>Content for Tab 2</div>}
+            {activeTab === 'Tab 2' && <div><NetworkVideos/></div>}
             {activeTab === 'Tab 3' && <div><NetworkFiles/></div>}
             {activeTab === 'Tab 4' && <div><NetworkAssignments/></div>}
             {activeTab === 'Tab 5' && <div><NetworkProjects/></div>}

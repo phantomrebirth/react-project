@@ -50,7 +50,9 @@ const CVAssignments = () => {
               <h5 className='ass-name'>CV Assignment</h5>
               <h6 className='ass-zeros'>00.00.0000</h6>
             </div>
-            <button className='ass-btn'>Done</button>
+            <button className='ass-btn' style={{cursor: "unset"}}>
+              Done
+            </button>
           </div>
         </div>
         <div className="assignment-container2">
@@ -86,7 +88,7 @@ const CVAssignments = () => {
                 <h5 className='ass-name'>Assignment 2</h5>
                 <h6 className='ass-zeros'>00.00.0000</h6>
             </div>
-            <button className='ass-btn2'>
+            <button className='ass-btn2' style={{cursor: "unset"}}>
                 In progress
             </button>
             </div>

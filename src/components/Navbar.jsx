@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaUser, FaBars, FaChevronDown } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { TbLogout2 } from "react-icons/tb";
 
 const Navbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -41,8 +42,8 @@ const Navbar = ({ toggleSidebar }) => {
             Profile
           </NavLink>
           <hr className="hrPfMenu"/>
-          <NavLink to='/logout' className="pfMenu">
-            Log out
+          <NavLink to='/logout' className="pfMenu" id="pf-menu">
+            <TbLogout2 className="logout-dropdown"/> Log out
           </NavLink>
         </div>
       )}

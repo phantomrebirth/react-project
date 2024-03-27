@@ -94,6 +94,13 @@ export default function ProfileHead() {
     }
   }
 
+  const handleChooseImageClick = () => {
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
+
   function handleCropButtonClick() {
     setCrop(undefined);
     setImgSrc('');
@@ -180,7 +187,16 @@ export default function ProfileHead() {
           </div>
           )}
           {!imgSrc && (
-            <input type="file" accept="image/*" onChange={onSelectFile} id="fileInput" style={{ marginLeft: 0 }}/>
+            <>
+              <input
+              type="file"
+              accept="image/*"
+              onChange={onSelectFile}
+              id="fileInput"
+              style={{ display: 'none' }}
+              />
+              <button className='chooseImage' onClick={handleChooseImageClick}>Choose Image</button>
+            </>
           )}
           {/* <div>
             {showCropButton && (

@@ -4,8 +4,8 @@ import 'react-image-crop/dist/ReactCrop.css'
 import ProfileHead from '../components/ProfileHead';
 
 const Profile = () => {
-  const [name, setName] = useState('Johnny Boy');
-  const [email] = useState('john.boy@example.com');
+  const [name, setName] = useState('Johnny Cash');
+  const [email] = useState('johnnycash13@heaven.com');
   const [password, setPassword] = useState('********');
   const [newPassword, setNewPassword] = useState('');
   
