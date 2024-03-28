@@ -207,10 +207,11 @@ const Login = () => {
         setIsEyeClosed(!isEyeClosed);
         setPasswordVisibility(passwordVisibility === "password" ? "text" : "password");
     }
-
+    
     return (
         <>
-            <p className='SHAlogo'>S<span style={{ color: "#7939ff" }}>H</span>A</p>
+            {/* <p className='SHAlogo'>S<span style={{ color: "#7939ff" }}>H</span>A</p> */}
+            <img src='src/assets/images/LOGOIII.png' alt='' className='logo'/>
             <Row>
                 <Col sm={12} md={12} lg={6} xl={6} xxl={6}>
                     <div className="contForm" style={{ minHeight: "100vh" }}>

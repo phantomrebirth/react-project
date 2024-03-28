@@ -1,17 +1,23 @@
 import React, { useState } from 'react'
+import Quiz from '../../Quiz';
 
 const CVQuizzes = () => {
 
     const [showFinishedQuiz, setShowFinishedQuiz] = useState(true);
+    const [showQuiz, setShowQuiz] = useState(false);
 
     const handleAttemptQuizClick = () => {
         setShowFinishedQuiz(false);
-      };
+    };
+
+    const handleStartQuizClick = () => {
+        setShowQuiz(true);  
+    };
 
   return (
     <div>
         <div className='quizzes-container'>
-            {showFinishedQuiz &&
+            {showFinishedQuiz && !showQuiz && (
               <>
                 <div className='fQ-container'>
                     <div className='quiz-header'>
@@ -46,10 +52,10 @@ const CVQuizzes = () => {
                     </div>
                 </div>
               </>
-            }
+            )}
         </div>
         <div>
-            {!showFinishedQuiz &&
+            {!showFinishedQuiz && !showQuiz &&(
                 <>
                     <div className='attempt-container'>
                         <div className='aQ-container' style={{marginLeft: "0px"}}>
@@ -69,7 +75,7 @@ const CVQuizzes = () => {
                             </div>
                         </div>
                         <div className='startQ-container'>
-                            <button className='startQ-btn'>
+                            <button className='startQ-btn' onClick={handleStartQuizClick}>
                                 Start Quiz
                             </button>
                         </div>
@@ -94,7 +100,14 @@ const CVQuizzes = () => {
                         </div>
                     </div>
                 </>
-            }
+            )}
+        </div>
+        <div>
+            {showQuiz &&(
+                <>
+                    <Quiz/>
+                </>
+            )}
         </div>
     </div>
   );
