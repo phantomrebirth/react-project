@@ -16,8 +16,8 @@ const courses = [
 
 function Courses() {
   return (
-    <Container className='cards-container' fluid>
-      <Row xs={1} md={2} className="g-4" style={{padding: "0", margin: "0"}} id='cardsRow'>
+    <Container className='cards-container' style={{padding: "0px"}} fluid>
+      <Row xs={1} md={2} className="g-4" style={{padding: "0"}} id='cardsRow'>
         {courses.map((course, idx) => (
           <Col key={idx} className='cards'>
             <Link to={course.path} className='cards-link'>

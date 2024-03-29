@@ -31,7 +31,8 @@ const Layout = ({ children }) => {
              md={isSidebarOpen ? 9 : 12}
              lg={isSidebarOpen ? 9 : 12}
              xl={isSidebarOpen ? 10 : 12}
-             style={{ padding: "0", overflowY: "auto", height: "100vh" }} >
+             style={{ padding: "0", overflowY: "auto", height: "90vh" }}
+             className="content-container" >
           <div className="content">{children}</div>
         </Col>
       </Row>

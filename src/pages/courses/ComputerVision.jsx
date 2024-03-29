@@ -6,6 +6,8 @@ import CVAssignments from '../../components/courses/computer-vision/CVAssignment
 import CVProjects from '../../components/courses/computer-vision/CVProjects';
 import CVQuizzes from '../../components/courses/computer-vision/CVQuizzes';
 import CVVideos from '../../components/courses/computer-vision/CVVideos';
+import CVGrades from '../../components/courses/computer-vision/CVGrades';
+import CVAttendanceRate from '../../components/courses/computer-vision/CVAttendanceRate';
 
 const ComputerVision = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -48,8 +50,8 @@ const ComputerVision = () => {
             {activeTab === 'Tab 4' && <div><CVAssignments/></div>}
             {activeTab === 'Tab 5' && <div><CVProjects/></div>}
             {activeTab === 'Tab 6' && <div><CVQuizzes/></div>}
-            {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
-            {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}
+            {activeTab === 'Tab 7' && <div><CVGrades/></div>}
+            {activeTab === 'Tab 8' && <div><CVAttendanceRate/></div>}
           </Col>
         </Row>
       </Container>
