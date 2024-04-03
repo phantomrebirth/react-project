@@ -375,7 +375,7 @@ input[type="password"] {
 .sideLinks{
   display: flex;
   color: #fff;
-  padding: 10px 10px 10px 10px;
+  padding: 5% 13%;
   margin-top: 7px;
   gap: 10px;
   transition: all 0.1s;
@@ -400,16 +400,28 @@ color: #7939FF !important;
   padding: 10px 0px 0px 0px;
   margin-top: 7px;
   /* gap: 15px; */
-  font-size: 16px;
+  font-size: 101%;
   text-decoration: none; 
+}
+
+@media screen and (max-width: 768px) {
+  .sideLinks{
+    padding: 4% 0% 4% 11% !important;
+  }
+  .sideLink {
+    font-size: 87% !important;
+  }
+  .sideIcon {
+    font-size: 100% !important;
+  }
 }
 
 .sideIcon {
   display: flex;
-  padding: 10px 0px 0px 2px;
+  padding: 7% 0px 0px 4%;
   margin-top: 9px;
   gap: 15px;
-  font-size: 19px;
+  font-size: 111%;
   text-decoration: none; 
 }
 

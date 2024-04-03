@@ -175,22 +175,42 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (validated()) {
+    //         axios
+    //             .post('https://ezlearn.onrender.com/admins/login', { email, password })
+    //             .then((res) => {
+    //                 navigate('/');
+    //             })
+    //             .catch((err) => {
+    //                 console.error(err);
+    //                 if (err.response && err.response.data && err.response.data.error) {
+    //                     setErrorMessage(err.response.data.error);
+    //                 } else {
+    //                     setErrorMessage("An error occurred during login.");
+    //                 }
+    //             });
+    //     }
+    // };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validated()) {
-            axios
-                .post('https://ezlearn.onrender.com/admins/login', { email, password })
-                .then((res) => {
-                    navigate('/');
-                })
-                .catch((err) => {
-                    console.error(err);
-                    if (err.response && err.response.data && err.response.data.error) {
-                        setErrorMessage(err.response.data.error);
-                    } else {
-                        setErrorMessage("An error occurred during login.");
-                    }
-                });
+            try {
+                const response = await axios.post('https://ezlearn.onrender.com/admins/login', { email, password });
+                const token = response.data.token; // Assuming your server returns a token
+                localStorage.setItem('token', token); // Store the token in localStorage
+                navigate('/');
+                console.log(token);
+            } catch (error) {
+                console.error(error);
+                if (error.response && error.response.data && error.response.data.error) {
+                    setErrorMessage(error.response.data.error);
+                } else {
+                    setErrorMessage("An error occurred during login.");
+                }
+            }
         }
     };
 

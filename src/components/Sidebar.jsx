@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <Row className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-      <Col className='sidebarContainer'>
+      <Col className='sidebarContainer' style={{padding: "0"}}>
           { isOpen && (
             <div className='sidebarContent'>
               {

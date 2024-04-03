@@ -1,46 +1,8 @@
-// import '../bootstrap/css/bootstrap.min.css'
-// import '../bootstrap/css/all.min.css'
-// import './App.css'
-// import Login from './components/Login.jsx'
-// import { Route, Routes } from 'react-router-dom'
-// import HomePage from './components/HomePage.jsx'
-// import Courses from './pages/Courses.jsx'
-// import Assignments from './pages/Assignments.jsx'
-// import Messages from './pages/Messages.jsx'
-// import Reminder from './pages/Reminder.jsx'
-// import Settings from './pages/Settings.jsx'
-// import LogOut from './pages/LogOut.jsx'
-// import Profile from './pages/Profile.jsx'
-// import Layout from './Layout.jsx'
-
-// const App = () => {
-//   return (
-//     <>
-//       <Routes>
-//         <Route path="/login" element={<Login />} />
-//       </Routes>
-//       <Layout>
-//         <Routes>
-//           <Route exact path="/" element={<HomePage />} />
-//           <Route path="/profile" element={<Profile />} />
-//           <Route path="/courses" element={<Courses />} />
-//           <Route path="/assignments" element={<Assignments />} />
-//           <Route path="/messages" element={<Messages />} />
-//           <Route path="/reminder" element={<Reminder />} />
-//           <Route path="/settings" element={<Settings />} />
-//           <Route path="/logout" element={<LogOut />} />
-//           </Routes>
-//       </Layout>
-//     </>
-//   );
-// };
-
-// export default App;
 import '../bootstrap/css/bootstrap.min.css'
 import '../bootstrap/css/all.min.css'
 import './App.css'
 import Login from './components/Login.jsx'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import HomePage from './components/HomePage.jsx'
 import Courses from './pages/Courses.jsx'
 import Assignments from './pages/Assignments.jsx'
@@ -58,23 +20,41 @@ import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
 // import { useSelector } from 'react-redux'
 
 const App = () => {
-
+  
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate()
+  
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="*" element={<ProtectedRoutes />} />
     </Routes>
+      // <Routes>
+      //   <Route path="/login" element={<Login />} />
+      //   {token ? <PrivateRoutes /> : <Navigate to="/login" />}
+      // </Routes>
+    // <Routes>
+    //   <Route path="/login" element={<Login />} />
+    //   <Route
+    //     path="/*"
+    //     element={token ? <PrivateRoutes /> : <Navigate to="/login" replace />}
+    //   />
+    // </Routes>
   );
 };
 
 const ProtectedRoutes = () => {
-
+  
+  // if (!token) {
+  //   return <Navigate to="/login" />;
+  // }
   // const currentRoute = useSelector(state => state.assignment.currentRoute);
-
+  
   return (
     <Layout>
       <Routes>
         <Route exact path="/" element={<HomePage />} />
+        {/* <Route index element={<HomePage />} /> */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/computer-vision/*" element={<ComputerVision />} />

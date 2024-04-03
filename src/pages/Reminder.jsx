@@ -2,8 +2,10 @@ import React from 'react'
 
 const Reminder = () => {
   return (
-    <div>Reminder</div>
-  )
-}
+    <div>
+        
+    </div>
+  );
+};
 
-export default Reminder
+export default Reminder;
