@@ -199,8 +199,13 @@ input[type="password"] {
   border: none;
 }
 
-.loginForm button:hover{
-  background: #845ed6;
+.loginForm button:hover {
+  background-color: #672ee2;
+  /* transform: scale(1.01); */
+}
+
+.loginForm button:active {
+  background-color: #672ee2 !important;
 }
 
 #sub-btn{
@@ -546,6 +551,14 @@ color: #7939FF !important;
   background-color: #845ed6;
 }
 
+.pfBtn:hover {
+  background-color: #672ee2;
+}
+
+.pfBtn:active {
+  background-color: #672ee2 !important;
+}
+
 .pfHeader {
   margin-bottom: 16px;
   text-align: center;
@@ -556,17 +569,27 @@ color: #7939FF !important;
 .pfName {
   margin-top: 0;
   padding-top: 0;
-  margin-bottom: 11px;
+  margin-bottom: 0.9rem;
+  /* border: #666 solid 1% !important; */
 }
-
+.pfName:focus {
+  box-shadow: 0 0 0 0.2rem rgba(145, 84, 255, 0.20);
+  border: 1px solid #7839ff71 !important;
+}
 .pfEmail {
-  margin-bottom: 11px;
+  margin-bottom: 0.9rem;
 }
-
+.pfEmail:focus {
+  box-shadow: 0 0 0 0.2rem rgba(145, 84, 255, 0.20);
+  border: 1px solid #7839ff71 !important;
+}
 .pfPass {
-  margin-bottom: 11px;
+  margin-bottom: 1.2rem;
 }
-
+.pfPass:focus {
+  box-shadow: 0 0 0 0.2rem rgba(145, 84, 255, 0.20);
+  border: 1px solid #7839ff71 !important;
+}
 .pfNewPass {
   margin-bottom: 16px;
 }
@@ -639,7 +662,7 @@ input[type="file"]::placeholder {
   /* display: flex; */
   /* justify-content: center;
   align-items: center; */
-  top: 21%;
+  top: 10%;
   bottom: 0;
   right: 0;
   left: 0;
@@ -1106,6 +1129,16 @@ input[type="file"]::placeholder {
   }
   .content-container::-webkit-scrollbar {
     display: none; /* Hide the scrollbar in WebKit browsers (like Chrome and Safari) */
+  }
+  .modal-content {
+    /* margin-top: 10rem; */
+    /* display: flex; */
+    /* justify-content: center;
+    align-items: center; */
+    top: 16% !important;
+    bottom: 0;
+    right: 0;
+    left: 0;
   }
   .announcement-p {
     font-size: 100%;
@@ -2336,5 +2369,21 @@ iframe {
   font-weight: bold;
   color: #fff;
   font-size: 123%;
+}
+
+.crop-settings {
+  display: flex;
+  justify-content:right;
+  align-items: center;
+}
+
+.deleteBtn {
+  background-color: transparent;
+  text-align: center;
+  color: #7939ff;
+  cursor: pointer;
+  font-size: 148%;
+  /* margin-left: 0.8rem; */
+  width: 21%;
 }
 

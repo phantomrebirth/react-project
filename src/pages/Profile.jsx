@@ -7,6 +7,7 @@ const Profile = () => {
   const [userData, setUserData] = useState({
     name: '',
     email: '',
+    password: ""
   });
   
   useEffect(() => {
@@ -17,14 +18,15 @@ const Profile = () => {
     try {
       const response = await axios.get('https://ezlearn.onrender.com/admins/me', {
         headers: {
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIwODE3NTd9.cKsx5rWFX8VOHFp8VrKCEjyEqE5_u-2PeiTS4Ey3Sbo'
+          Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIwODE3NTd9.cKsx5rWFX8VOHFp8VrKCEjyEqE5_u-2PeiTS4Ey3Sbo'
         }
       });
-      const { name, email } = response.data;
+      const { name, email, password } = response.data;
       setUserData(prevState => ({
         ...prevState,
         name,
         email,
+        password,
       }));
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -36,11 +38,12 @@ const Profile = () => {
       const body = {
         name: userData.name,
         // email: userData,
+        password: userData.password
       };      console.log(body);
       const response = await axios.patch('https://ezlearn.onrender.com/admins/update',
       body, {
         headers: {
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIwODE3NTd9.cKsx5rWFX8VOHFp8VrKCEjyEqE5_u-2PeiTS4Ey3Sbo'
+          Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIwODE3NTd9.cKsx5rWFX8VOHFp8VrKCEjyEqE5_u-2PeiTS4Ey3Sbo'
         }
       });
       fetchProfileData();
@@ -106,21 +109,26 @@ const Profile = () => {
               />
             </Form.Group>
             <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>Change Password</Form.Label>
               <Form.Control className='pfPass' 
                             type="password" 
                             placeholder="Password" 
                             name="password" 
+                            value={userData.password}
+                            onChange={(e) => setUserData(prevState => ({
+                              ...prevState,
+                              password: e.target.value
+                            }))}  
               />
             </Form.Group>
-            <Form.Group controlId="formNewPassword">
+            {/* <Form.Group controlId="formNewPassword">
               <Form.Label>New Password</Form.Label>
               <Form.Control className='pfNewPass' 
                             type="password" 
                             placeholder="New Password" 
                             name="newPassword" 
               />
-            </Form.Group>
+            </Form.Group> */}
             <Button className='pfBtn' 
                     variant="primary" 
                     onClick={handleSaveChanges}
