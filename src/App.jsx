@@ -9,7 +9,6 @@ import Assignments from './pages/Assignments.jsx'
 import Messages from './pages/Messages.jsx'
 import Reminder from './pages/Reminder.jsx'
 import Settings from './pages/Settings.jsx'
-import LogOut from './pages/LogOut.jsx'
 import Profile from './pages/Profile.jsx'
 import Layout from './Layout.jsx'
 import ComputerVision from './pages/courses/ComputerVision.jsx'
@@ -17,6 +16,7 @@ import Programming from './pages/courses/Programming.jsx'
 import AI from './pages/courses/AI.jsx'
 import Network from './pages/courses/Network.jsx'
 import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
+import AttendanceRate from './pages/Attendance Rate.jsx'
 // import { useSelector } from 'react-redux'
 
 const App = () => {
@@ -66,7 +66,7 @@ const ProtectedRoutes = () => {
         <Route path="/messages" element={<Messages />} />
         <Route path="/reminder" element={<Reminder />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/logout" element={<LogOut />} />
+        <Route path="/attendance" element={<AttendanceRate />} />
       </Routes>
     </Layout>
   );

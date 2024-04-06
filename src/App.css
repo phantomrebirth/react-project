@@ -380,7 +380,7 @@ input[type="password"] {
 .sideLinks{
   display: flex;
   color: #fff;
-  padding: 5% 13%;
+  padding: 5% 8%;
   margin-top: 7px;
   gap: 10px;
   transition: all 0.1s;
@@ -456,7 +456,7 @@ color: #7939FF !important;
 
 .userIconContainer {
   position: relative;
-  right: 16px;
+  right: 25px;
   cursor: pointer;
 }
 
@@ -485,7 +485,7 @@ color: #7939FF !important;
   transition:all 0.5s;
   /* width: fit-content; */
   width: auto;
-  padding: 10px 16px;
+  padding: 10px 0.8rem;
 }
 
 .pfMenu {
@@ -504,7 +504,8 @@ color: #7939FF !important;
 }
 
 .logout-dropdown {
-  font-size: 19px;
+  font-size: 20px;
+  margin-right: 6px;
 }
 
 .pfMenu:hover {
@@ -2387,3 +2388,230 @@ iframe {
   width: 21%;
 }
 
+/* .reminder-container {
+  margin-top: 2rem;
+} */
+
+.reminder-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.addR-container {
+  margin-top: 2rem;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 0.6rem;
+  background-image: linear-gradient(to bottom, #7939ff, #382074);
+  box-shadow: 0 4px 1px rgba(0, 0, 0, .1), 
+              0 4px 1px rgba(0, 0, 0, .2);
+  cursor: pointer;
+}
+
+.addR-container:hover {
+  transform: none;
+}
+
+.addReminder-body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.addReminder-icon {
+  text-align: center;
+  font-weight: bold;
+  font-size: 212%;
+}
+
+.addedR-container {
+  margin-top: 2rem;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 1px rgba(0, 0, 0, .1), 
+              0 4px 1px rgba(0, 0, 0, .2);
+  /* cursor: pointer; */
+  border: 0.1rem solid #7939ff;
+  position: relative;
+}
+
+.addedR-container:hover {
+  transform: none;
+}
+
+.addedReminder-body {
+  padding: 0.7rem;
+}
+
+.addedReminder-title {
+  font-size: 131%;
+  font-weight: normal;
+  margin-bottom: 5%;
+}
+
+.addedReminder-text {
+  font-size: 77%;
+  font-weight: normal;
+  white-space: pre-wrap;
+  height: 56%;
+  overflow: hidden;
+}
+
+.dropdown-menu {
+  min-width: 0rem !important;
+}
+
+.dropdown-menu-right {
+  right: 0 !important;
+  left: auto !important;
+}
+
+.dropdown-menu.show {
+  /* width: 100% !important; */
+  position: absolute;
+  transform: none !important;
+  /* inset: 0px auto auto 69px !important; */
+  inset: -6px auto auto 212px !important;
+  background-color: #000;
+  border-radius: 0.7rem;
+}
+
+.dropdown-item {
+  color: #fff !important;
+  font-size: 89% !important;
+}
+
+.dropdown-item:hover {
+  background-color: #3b3b3b;
+}
+
+.addedR-footer {
+  display: flex;
+  width: 85%;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 1%;
+  text-align: center;
+}
+
+#reminder-date {
+  font-size: 75%;
+  text-align: center;
+  color: #aaa;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reminderO-container {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.reminder-options {
+  font-size: 115%;
+  text-align: center;
+}
+
+.reminderO-container:hover {
+  background-color: #3b3b3b;
+  border-radius: 50%;
+}
+
+/* .note-container {
+  width: 69%;
+  display: block;
+} */
+
+.x-container {
+  width: 1.56rem;
+  border-radius: 50%;
+  /* height: 1.6rem; */display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-noteBtn {
+  border-radius: 50%;
+  padding: 0;
+  color: #000000;
+  border:1px solid #000000c0;
+  text-decoration: none;
+  width: 100%;
+  /* height: 100%; */
+  height: 1.6rem;
+  /* font-size: 169%; */
+}
+
+.close-noteBtn:hover {
+  /* background-color: #d6d6d6c7; */
+  border:1px solid rgba(196, 0, 0, 0.89);
+  /* color: #000; */
+  color: rgb(233, 0, 0);
+}
+
+.noteH-input {
+  margin-bottom: 2.2%;
+  background-color: #cacacabb;
+  border-right: 0px !important;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 3px solid #7939FF;
+  border-radius: 0.7rem;
+  height: 3rem;
+  color: #000;
+}
+
+.noteH-input:focus {
+  background-color: #cacacabb;
+  box-shadow: none;
+  color: #000;
+}
+
+.noteB-input {
+  margin-bottom: 5%;
+  background-color: #cacacabb;
+  border-right: 0px !important;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 3px solid #7939FF;
+  border-radius: 0.7rem;
+  color: #000;
+}
+
+.noteB-input:focus {
+  background-color: #cacacabb;
+  box-shadow: none;
+  color: #000;
+  border-right: 0px !important;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 3px solid #7939FF;
+}
+
+.save-noteBtn {
+  color: #fff;
+  background-color: #7939FF;
+}
+
+.save-noteBtn:hover {
+  background-color: #5f35b9;
+}
+
+.save-noteBtn:active {
+  background-color: #6d40ce !important;
+}
+
+.note-label {
+  font-weight: bold;
+  font-size: 200%;
+}

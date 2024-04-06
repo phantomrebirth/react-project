@@ -6,6 +6,7 @@ import { AiOutlineBars } from "react-icons/ai";
 import { BiMessageRounded } from "react-icons/bi";
 import { LuCalendarMinus } from "react-icons/lu";
 import { VscSettingsGear } from "react-icons/vsc";
+import { BiSolidContact } from "react-icons/bi";
 import { TbLogout2 } from "react-icons/tb";
 import { Col, Row } from "react-bootstrap";
 
@@ -37,15 +38,20 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       icon: <LuCalendarMinus />
     },
     {
-      path: "/settings",
-      name: "Settings",
-      icon: <VscSettingsGear />
+      path: "/attendance",
+      name: "Attendance Rate",
+      icon: <BiSolidContact />
     },
     {
-      path: "/logout",
-      name: "Log out",
-      icon: <TbLogout2 />
+      path: "/settings",
+      name: "Account Settings",
+      icon: <VscSettingsGear />
     },
+    // {
+    //   path: "/logout",
+    //   name: "Log out",
+    //   icon: <TbLogout2 />
+    // },
   ];
 
   const handleLinkClick = () => {

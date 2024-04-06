@@ -78,7 +78,7 @@ const Profile = () => {
     <Container fluid className='pfContainer'>
       <Row className="mt-4" id='pfContainer'>
         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-          <h2 className='pfHeader'>Profile Information</h2>
+          <h2 className='pfHeader'>Personal Information</h2>
           <Col xs={12} sm={12} md={12} lg={12} xl={12} className="text-center mb-3">
             <div className='headContainer'>
               <ProfileHead/>

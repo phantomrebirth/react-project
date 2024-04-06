@@ -43,27 +43,6 @@ export default function ProfileHead() {
   const [showCropButton, setShowCropButton] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  // useEffect(() => {
-  //   async function fetchImage() {
-  //     try {
-  //       const response = await axios.get('https://ezlearn.onrender.com/admins/getPP',{
-  //       headers: {
-  //         Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIyNTE4OTN9.F7I-rl7tpxzBahLST7k2ZAwGmwCh0f0bbQnqI06Nqog'
-  //       },
-  //       responseType: 'blob'
-  //     });
-  //       const imageUrl = URL.createObjectURL(response.data);
-  //       console.log(imageUrl)
-  //       // setImgSrc(imageUrl);
-  //       setFetchedImage(imageUrl);
-  //       console.log(fetchImage)
-  //       setShowCropButton(true);
-  //     } catch (error) {
-  //       console.error('Error fetching image:', error);
-  //     }
-  //   }
-  //   fetchImage();
-  // }, []);
   async function fetchImage() {
     try {
       const response = await axios.get('https://ezlearn.onrender.com/admins/getPP',{
@@ -174,52 +153,46 @@ export default function ProfileHead() {
       if (completedCrop && imgRef.current && imgRef.current.complete) {
         // await new Promise((resolve) => imgRef.current.onload = resolve);
       
-
-        
-        // Log the dimensions of the cropped image
-        // console.log("Original image dimensions:", naturalWidth, "x", naturalHeight);
         console.log("Cropped image dimensions:", completedCrop.width, "x", completedCrop.height);
         
-        
-        // Generate a random name for the image
-        const randomName = Math.random().toString(36).substring(7); // Generates a random string
+        const randomName = Math.random().toString(36).substring(7);
         const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0]; // Format the current date
+        const formattedDate = currentDate.toISOString().split('T')[0];
         const croppedImageName = `${randomName}_${formattedDate}.jpg`;
         
-        // Dispatch an action to update the cropped image name state
         dispatch(setCroppedImageName(croppedImageName));
+        
+        
+        // get the original dimensions of the image
+        const { naturalWidth, naturalHeight } = imgRef.current;
+        // console.log("Original image dimensions:", naturalWidth, "x", naturalHeight);
 
-
-      // Get the original dimensions of the image
-      const { naturalWidth, naturalHeight } = imgRef.current;
-
-      // Calculate the scaling factors
+      // calculate the scaling factors
       const scaleX = naturalWidth / imgRef.current.width;
       const scaleY = naturalHeight / imgRef.current.height;
       
-      // Calculate the target width and height based on the desired aspect ratio
+      // calculate the target width and height based on the desired aspect ratio
       const targetWidth = 1080;
       const targetHeight = 1079;
 
-      // Calculate the cropped dimensions to maintain the aspect ratio
+      // calculate the cropped dimensions to maintain the aspect ratio
       let croppedWidth = completedCrop.width * scaleX;
       let croppedHeight = completedCrop.height * scaleY;
 
       if (croppedWidth / croppedHeight > targetWidth / targetHeight) {
-        // If the cropped width/height ratio is greater than the target width/height ratio,
+        // if the cropped width/height ratio is greater than the target width/height ratio,
         // adjust the cropped height to match the target height
         croppedHeight = croppedWidth * (targetHeight / targetWidth);
       } else {
-        // Otherwise, adjust the cropped width to match the target width
+        // otherwise, adjust the cropped width to match the target width
         croppedWidth = croppedHeight * (targetWidth / targetHeight);
       }
 
-      // Calculate the cropped coordinates to center the cropped area
+      // calculate the cropped coordinates to center the cropped area
       const croppedX = (completedCrop.x * scaleX) + ((completedCrop.width * scaleX - croppedWidth) / 2);
       const croppedY = (completedCrop.y * scaleY) + ((completedCrop.height * scaleY - croppedHeight) / 2);
 
-      // Create a canvas element to draw the cropped image
+      // create a canvas element to draw the cropped image
       const canvas = document.createElement('canvas');
       canvas.width = targetWidth;
       canvas.height = targetHeight;
@@ -253,9 +226,7 @@ export default function ProfileHead() {
         // );
         
         // Convert the cropped image data to a Blob
-        console.log("Before calling canvas.toBlob");
         canvas.toBlob(async (blob) => {
-          console.log("Inside canvas.toBlob callback");
           console.log("blob",blob);
 
           const file = new File([blob], croppedImageName, { type: 'image/jpeg' });
@@ -276,7 +247,6 @@ export default function ProfileHead() {
           console.log('Profile picture updated successfully:', response.data);
           fetchImage();
         }, 'image/jpeg');
-        console.log("After calling canvas.toBlob");
       } else {
         console.error('Completed crop or image ref not available');
       }
