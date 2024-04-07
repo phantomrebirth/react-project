@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { navigateToAssignment } from '../../../redux/slices/assignmentSlice';
 import { TbFileUpload } from "react-icons/tb";
 import { Button, Form } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 
 const CVAssignments = () => {
   const dispatch = useDispatch();
@@ -35,101 +36,107 @@ const CVAssignments = () => {
   };
 
   return (
-    <>
-    <div className='assignments-container'>
-      {showFirstAssignment && (
-       <>
-        <div className='assignment-container'>
-          <div className='assignment-header'>
-            <ul className='ass-h'>
-              <li>Assignment 1</li>
-            </ul>
-          </div>
-          <div className='assignment'>
-            <div className='assName-container'>
-              <h5 className='ass-name'>CV Assignment</h5>
-              <h6 className='ass-zeros'>00.00.0000</h6>
+    <Container>
+      <Row>
+        <Col md={5}>
+          <>
+            <div className='assignments-container'>
+              {showFirstAssignment && (
+              <>
+                <div className='assignment-container'>
+                  <div className='assignment-header'>
+                    <ul className='ass-h'>
+                      <li>Assignment 1</li>
+                    </ul>
+                  </div>
+                  <div className='assignment'>
+                    <div className='assName-container'>
+                      <h5 className='ass-name'>CV Assignment</h5>
+                      <h6 className='ass-zeros'>00.00.0000</h6>
+                    </div>
+                    <button className='ass-btn' style={{cursor: "unset"}}>
+                      Done
+                    </button>
+                  </div>
+                </div>
+                <div className="assignment-container2">
+                    <div className='assignment-header'>
+                    <ul className='ass-h'>
+                        <li>Assignment 2</li>
+                    </ul>
+                    </div>
+                    <div className='assignment'>
+                    <div className='assName-container'>
+                        <h5 className='ass-name'>Assignment 2</h5>
+                        <h6 className='ass-zeros'>00.00.0000</h6>
+                    </div>
+                    <button className='ass-btn2' onClick={handleInProgressClick}>
+                        In progress
+                    </button>
+                    </div>
+                </div>
+              </>
+              )}
             </div>
-            <button className='ass-btn' style={{cursor: "unset"}}>
-              Done
-            </button>
-          </div>
-        </div>
-        <div className="assignment-container2">
-            <div className='assignment-header'>
-            <ul className='ass-h'>
-                <li>Assignment 2</li>
-            </ul>
-            </div>
-            <div className='assignment'>
-            <div className='assName-container'>
-                <h5 className='ass-name'>Assignment 2</h5>
-                <h6 className='ass-zeros'>00.00.0000</h6>
-            </div>
-            <button className='ass-btn2' onClick={handleInProgressClick}>
-                In progress
-            </button>
-            </div>
-        </div>
-       </>
-      )}
-    </div>
-      {!showFirstAssignment && (
-       <>
-        <div className='inProgress-ass'>
-          <div className="assignment-container2" style={{marginLeft: "0px"}}>
-            <div className='assignment-header'>
-            <ul className='ass-h'>
-                <li>Assignment 2</li>
-            </ul>
-            </div>
-            <div className='assignment'>
-            <div className='assName-container'>
-                <h5 className='ass-name'>Assignment 2</h5>
-                <h6 className='ass-zeros'>00.00.0000</h6>
-            </div>
-            <button className='ass-btn2' style={{cursor: "unset"}}>
-                In progress
-            </button>
-            </div>
-          </div>
-          <div className='upAss-container'>
-              {/* Use label to trigger file input */}
-              <label htmlFor='assignmentInput' className='headUp-ass'>
-                Upload Assignment
-                <TbFileUpload className='upAss-icon'/>
-              </label>
-              {/* file input, hidden */}
-              <input
-                id='assignmentInput'
-                type='file'
-                multiple
-                onChange={handleFileSelect}
-                style={{ display: 'none' }}
-              />
-          </div>
-        </div>
-        <div className='description-container'>
-          <h4>Assignment Description</h4>
-          <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="assignmentDescription">
-              <Form.Label>Write your assignment description:</Form.Label>
-              <Form.Control
-                  as="textarea"
-                  value={description}
-                  onChange={handleChange}
-                  rows={4}
-                  className='description-area'
-              />
-              </Form.Group>
-              <Button variant="primary" type="submit" className='ass-submit'>
-                  Submit
-              </Button>
-          </Form>
-        </div>
-       </>
-      )}
-    </>
+            {!showFirstAssignment && (
+            <>
+              <div className='inProgress-ass'>
+                <div className="assignment-container2" style={{marginLeft: "0px"}}>
+                  <div className='assignment-header'>
+                  <ul className='ass-h'>
+                      <li>Assignment 2</li>
+                  </ul>
+                  </div>
+                  <div className='assignment'>
+                  <div className='assName-container'>
+                      <h5 className='ass-name'>Assignment 2</h5>
+                      <h6 className='ass-zeros'>00.00.0000</h6>
+                  </div>
+                  <button className='ass-btn2' style={{cursor: "unset"}}>
+                      In progress
+                  </button>
+                  </div>
+                </div>
+                <div className='upAss-container'>
+                    {/* Use label to trigger file input */}
+                    <label htmlFor='assignmentInput' className='headUp-ass'>
+                      Upload Assignment
+                      <TbFileUpload className='upAss-icon'/>
+                    </label>
+                    {/* file input, hidden */}
+                    <input
+                      id='assignmentInput'
+                      type='file'
+                      multiple
+                      onChange={handleFileSelect}
+                      style={{ display: 'none' }}
+                    />
+                </div>
+              </div>
+              <div className='description-container'>
+                <h4>Assignment Description</h4>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group controlId="assignmentDescription">
+                    <Form.Label>Write your assignment description:</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        value={description}
+                        onChange={handleChange}
+                        rows={4}
+                        className='description-area'
+                    />
+                    </Form.Group>
+                    <Button variant="primary" type="submit" className='ass-submit'>
+                        Submit
+                    </Button>
+                </Form>
+              </div>
+            </>
+            )}
+          </>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

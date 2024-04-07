@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import ProfileHead from '../components/ProfileHead';
+import { useSelector } from 'react-redux';
+import { selectToken } from '../redux/slices/authSlice';
 
 const Profile = () => {
+  const token = useSelector(selectToken);
   const [userData, setUserData] = useState({
     name: '',
     email: '',
@@ -18,7 +21,7 @@ const Profile = () => {
     try {
       const response = await axios.get('https://ezlearn.onrender.com/admins/me', {
         headers: {
-          Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIwODE3NTd9.cKsx5rWFX8VOHFp8VrKCEjyEqE5_u-2PeiTS4Ey3Sbo'
+          Authorization: `Bearer ${token}`
         }
       });
       const { name, email, password } = response.data;
@@ -43,7 +46,7 @@ const Profile = () => {
       const response = await axios.patch('https://ezlearn.onrender.com/admins/update',
       body, {
         headers: {
-          Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIwODE3NTd9.cKsx5rWFX8VOHFp8VrKCEjyEqE5_u-2PeiTS4Ey3Sbo'
+          Authorization: `Bearer ${token}`
         }
       });
       fetchProfileData();

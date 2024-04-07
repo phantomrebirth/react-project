@@ -41,7 +41,7 @@ const ComputerVision = () => {
           </Col>
         </Row>
       </Container>
-      <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
+      <Container className='tabs-container' style={{margin: "0", padding: "0"}} fluid>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
             {activeTab === 'Tab 1' && <div><CVAnnouncements/></div>}

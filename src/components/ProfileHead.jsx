@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCroppedImageName } from '../redux/slices/croppedImageSlice';
 import ReactCrop, {
   centerCrop,
@@ -12,6 +12,8 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import 'react-image-crop/dist/ReactCrop.css';
 import { Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { selectToken } from '../redux/slices/authSlice';
+import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
 
 function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
   return centerCrop(
@@ -30,9 +32,9 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
 }
 
 export default function ProfileHead() {
+  const token = useSelector(selectToken);
   const [imgSrc, setImgSrc] = useState('');
   const previewCanvasRef = useRef(null);
-  const [fetchedImage, setFetchedImage] = useState();
   const dispatch = useDispatch();
   const imgRef = useRef(null);
   const [crop, setCrop] = useState();
@@ -42,28 +44,38 @@ export default function ProfileHead() {
   const [aspect, setAspect] = useState(1 / 1);
   const [showCropButton, setShowCropButton] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const imageUrl = useSelector(selectImageUrl);
+  const [fetchedImage, setFetchedImage] = useState(imageUrl);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
-  async function fetchImage() {
-    try {
-      const response = await axios.get('https://ezlearn.onrender.com/admins/getPP',{
-        headers: {
-          Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIyNTE4OTN9.F7I-rl7tpxzBahLST7k2ZAwGmwCh0f0bbQnqI06Nqog'
-        },
-        responseType: 'blob'
-      });
-      const imageUrl = URL.createObjectURL(response.data);
-      console.log(imageUrl);
-      console.log(fetchImage);
-      setFetchedImage(imageUrl);
-      setShowCropButton(true);
-    } catch (error) {
-      console.error('Error fetching image:', error);
-    }
-  }
+  // async function fetchImage() {
+  //   try {
+  //     const response = await axios.get('https://ezlearn.onrender.com/admins/getPP',{
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       },
+  //       responseType: 'blob'
+  //     });
+  //     const imageUrl = URL.createObjectURL(response.data);
+  //     dispatch(setImageUrl(imageUrl));
+  //     console.log(setImageUrl(imageUrl))
+  //     console.log(imageUrl);
+  //     console.log(fetchImage);
+  //     setFetchedImage(imageUrl);
+  //     setShowCropButton(true);
+  //   } catch (error) {
+  //     console.error('Error fetching image:', error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchImage();
+  // }, []);
 
   useEffect(() => {
-    fetchImage();
-  }, []);
+    dispatch(fetchProfilePicture(token));
+  }, [dispatch, token]);
 
   useEffect(() => {
     if (fetchedImage && previewCanvasRef.current) {
@@ -75,7 +87,14 @@ export default function ProfileHead() {
         canvas.height = image.height;
         ctx.drawImage(image, 0, 0);
       };
+      // Create object URL with the fetchedImage blob
+      const objectURL = URL.createObjectURL(new Blob([fetchedImage]));
+      image.src = objectURL;
       image.src = fetchedImage;
+      // Clean up by revoking the object URL when component unmounts or fetchedImage changes
+      return () => {
+        URL.revokeObjectURL(objectURL);
+      };
     }
   }, [fetchedImage]);
 
@@ -155,7 +174,8 @@ export default function ProfileHead() {
       
         console.log("Cropped image dimensions:", completedCrop.width, "x", completedCrop.height);
         
-        const randomName = Math.random().toString(36).substring(7);
+        // const randomName = Math.random().toString(36).substring(7);
+        const randomName = Math.floor(Math.random() * 1000000000); // Generates a random number between 0 and 999999999
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split('T')[0];
         const croppedImageName = `${randomName}_${formattedDate}.jpg`;
@@ -173,7 +193,7 @@ export default function ProfileHead() {
       
       // calculate the target width and height based on the desired aspect ratio
       const targetWidth = 1080;
-      const targetHeight = 1079;
+      const targetHeight = 1080;
 
       // calculate the cropped dimensions to maintain the aspect ratio
       let croppedWidth = completedCrop.width * scaleX;
@@ -228,24 +248,24 @@ export default function ProfileHead() {
         // Convert the cropped image data to a Blob
         canvas.toBlob(async (blob) => {
           console.log("blob",blob);
-
           const file = new File([blob], croppedImageName, { type: 'image/jpeg' });
           console.log("file",file);
           const formData = new FormData();
           formData.append('avatar', file);
           
           console.log('Sending request with FormData:', formData);
-          
+
         const response = await axios.post('https://ezlearn.onrender.com/admins/profilePicture',
           formData, {
             headers: {
-              Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIyNTE4OTN9.F7I-rl7tpxzBahLST7k2ZAwGmwCh0f0bbQnqI06Nqog',
+              Authorization: `Bearer ${token}`,
               // 'Content-Type': 'multipart/form-data'
               'Content-Type': 'image/jpeg'
             }
           });
           console.log('Profile picture updated successfully:', response.data);
-          fetchImage();
+          // fetchImage();
+          dispatch(fetchProfilePicture(token));
         }, 'image/jpeg');
       } else {
         console.error('Completed crop or image ref not available');
@@ -308,13 +328,13 @@ export default function ProfileHead() {
       // }
       const avatar = await axios.delete('https://ezlearn.onrender.com/admins/deletePP', {
       headers: {
-        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAwZWYwZTY4ZjczMGMzYmM4OThjNjciLCJpYXQiOjE3MTIyNTE4OTN9.F7I-rl7tpxzBahLST7k2ZAwGmwCh0f0bbQnqI06Nqog'
+        Authorization: `Bearer ${token}`
       },
       // data: {avatar: previewCanvasRef}, // empty object to pass as payload
     });
     console.log('Profile picture deleted successfully', avatar.data);
-    setFetchedImage(null); // Clear the fetchedImage state
-    setShowModal(false); // Close the modal
+    setFetchedImage(null);
+    setShowModal(false);
     setCrop(null);
     setImgSrc(null);
     setCompletedCrop(null);
@@ -322,10 +342,18 @@ export default function ProfileHead() {
       console.error('Error deleting profile picture:', error);
     }
   }
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setFetchedImage(null);
+    setCrop(null);
+    setImgSrc(null);
+    setCompletedCrop(null);
+  };
     
   return (
     <div className="profile-head">
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+      <Modal show={showModal} onHide={handleCloseModal} size="lg">
         <Modal.Body className='pfModalBody'>
           {imgSrc && (
             <div className="Crop-Controls">
@@ -385,7 +413,7 @@ export default function ProfileHead() {
         </Modal.Body>
       </Modal>
       {/* !!completedCrop && */}
-      {(!!fetchedImage || !!completedCrop) &&(
+      {(!!fetchedImage || !!completedCrop) && (
           <div className='profile-picture'>
             <canvas
               ref={previewCanvasRef}

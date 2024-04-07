@@ -15,6 +15,7 @@ const croppedImageSlice = createSlice({
   },
 });
 
+export const selectCroppedImageName = (state) => state.croppedImage.croppedImageName;
 export const { setCroppedImageName } = croppedImageSlice.actions;
 
 export default croppedImageSlice.reducer;

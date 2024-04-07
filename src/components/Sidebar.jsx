@@ -1,13 +1,13 @@
 import React from "react";
 import { NavLink } from 'react-router-dom';
 import { CgNotes } from "react-icons/cg";
-import { CiGrid41 } from "react-icons/ci";
 import { AiOutlineBars } from "react-icons/ai";
 import { BiMessageRounded } from "react-icons/bi";
 import { LuCalendarMinus } from "react-icons/lu";
 import { VscSettingsGear } from "react-icons/vsc";
 import { BiSolidContact } from "react-icons/bi";
 import { TbLogout2 } from "react-icons/tb";
+import { BsGrid } from "react-icons/bs";
 import { Col, Row } from "react-bootstrap";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -15,7 +15,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     {
       path: "/",
       name: "Home",
-      icon: <CiGrid41 />
+      icon: <BsGrid />
     },
     {
       path: "/courses",
@@ -28,11 +28,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       icon: <AiOutlineBars />
     },
     {
-      path: "/messages",
-      name: "Messages",
-      icon: <BiMessageRounded />
-    },
-    {
       path: "/reminder",
       name: "Reminder",
       icon: <LuCalendarMinus />
@@ -41,6 +36,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       path: "/attendance",
       name: "Attendance Rate",
       icon: <BiSolidContact />
+    },
+    {
+      path: "/messages",
+      name: "Messages",
+      icon: <BiMessageRounded />
     },
     {
       path: "/settings",
