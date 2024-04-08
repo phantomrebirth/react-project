@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { ImUpload } from "react-icons/im";
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 
 const CVProjects = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -31,64 +31,70 @@ const CVProjects = () => {
   };
 
   return (
-    <div className='projects-container'>
-      <div className='project-inProgress'>
-        <div className='project-container'>
-          <div className='projectH-container'>
-            <ul className='project-header'>
-              <li>Project 1</li>
-            </ul>
-          </div>
-          <div className='project'>
-            <div className='projectName-container'>
-              <h5 className='project-name'>CV Project</h5>
-              <h6 className='project-zeros'>00.00.0000</h6>
+    <Container className='projects-container' style={{margin: "0", padding: "0"}} fluid>
+      <Row className='project-inProgress' style={{margin: "0", padding: "0"}}>
+        <Col style={{margin: "0", padding: "0"}}>
+          <div className='project-container'>
+            <div className='projectH-container'>
+              <ul className='project-header'>
+                <li>Project 1</li>
+              </ul>
             </div>
-            <button className='project-btn' style={{cursor: "unset"}}>
-              In progress
-            </button>
-          </div>
-        </div>
-        <div className='projectUp-container'>
-        <input
-            ref={fileInputRef}
-            id='projectInput'
-            type='file'
-            multiple
-            onChange={handleFileSelect}
-            style={{ display: 'none' }}
-          />
-          <label htmlFor='projectInput' className='headUp-project'>
-            <button className='projectUp-btn' onClick={handleUpButtonClick}>
-              <div className='projectUp-icon-container'>
-                <ImUpload className='projectUp-icon'/>
+            <div className='project'>
+              <div className='projectName-container'>
+                <h5 className='project-name'>CV Project</h5>
+                <h6 className='project-zeros'>00.00.0000</h6>
               </div>
-              Upload Project
-            </button>
-          </label>
-          <Form onSubmit={handleSubmit} className='project-submit'>
-            <Button variant='primary' type='submit' className='project-submitBtn'>
-              Confirm
-            </Button>
-          </Form>
-        </div>
-      </div>
-      <div className='projectDescription-container'>
-        <h4>Project Description</h4>
-        <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="projectDescription">
-            <Form.Label>Write your project description:</Form.Label>
-            <Form.Control
-                as="textarea"
-                value={description}
-                onChange={handleChange}
-                rows={4}
-                className='description-area'
+              <button className='project-btn' style={{cursor: "unset"}}>
+                In progress
+              </button>
+            </div>
+          </div>
+        </Col>
+        <Col style={{margin: "0", padding: "0"}}>
+          <div className='projectUp-container'>
+            <input
+                ref={fileInputRef}
+                id='projectInput'
+                type='file'
+                multiple
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
             />
-            </Form.Group>
-        </Form>
-      </div>
-    </div>
+            <label htmlFor='projectInput' className='headUp-project'>
+              <button className='projectUp-btn' onClick={handleUpButtonClick}>
+                <div className='projectUp-icon-container'>
+                  <ImUpload className='projectUp-icon'/>
+                </div>
+                Upload Project
+              </button>
+            </label>
+            <Form onSubmit={handleSubmit} className='project-submit'>
+              <Button variant='primary' type='submit' className='project-submitBtn'>
+                Confirm
+              </Button>
+            </Form>
+          </div>
+        </Col>
+      </Row>
+      <Row style={{ padding: "0"}} className='projectDescription-container'>
+        <Col style={{margin: "0", padding: "0"}} className='projectD-col' md={12} lg={12} xl={9}>
+          <h4>Project Description</h4>
+          <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="projectDescription">
+              <Form.Label>Write your project description:</Form.Label>
+              <Form.Control
+                  as="textarea"
+                  value={description}
+                  onChange={handleChange}
+                  rows={4}
+                  className='description-area'
+              />
+              </Form.Group>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

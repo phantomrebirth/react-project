@@ -2,9 +2,9 @@ import React from 'react'
 import { Container, Row, Col } from "react-bootstrap"
 const CVAnnouncements = () => {
   return (
-    <Container>
-        <Row>
-            <Col md={7}>
+    <Container style={{margin: "0", padding: "0"}}>
+        <Row style={{margin: "0", padding: "0"}}>
+            <Col md={12} style={{margin: "0", padding: "0"}}>
                 <div className='announcements-container'>
                     <div className='announcement-container'>
                         <div className='annIcon-container'>

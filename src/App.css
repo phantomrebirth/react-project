@@ -337,6 +337,8 @@ input[type="password"] {
   /* position: fixed; */
   /* bottom: 0; */
   transition:all 0.3s ease !important;
+  height: calc(100vh - 73px);
+  overflow-y: scroll;
 }
 
 .sidebar.open {
@@ -364,8 +366,8 @@ input[type="password"] {
   width: 100%;
   /* min-width: 160px; */
   /* width: fit-content; */
-  height: calc(100vh - 102px);
-  /* overflow-y: auto; */
+  /* height: calc(100vh - 102px); */
+  padding-bottom: 2rem;
   /* min-height: 100vh; */
   /* margin-top: 60px; */
   /* transition: all 0.5s; */
@@ -415,6 +417,9 @@ color: #7939FF !important;
 }
 
 @media screen and (max-width: 768px) {
+  .sidebar{
+    min-height: calc(100vh - 62px) !important;
+  }
   .sideLinks{
     padding: 0% 0% 0% 11% !important;
     margin-top: 1.66rem !important;
@@ -422,10 +427,10 @@ color: #7939FF !important;
     font-size: 100% !important;
   }
   .sideLink {
-    font-size: 88% !important;
+    font-size: 85% !important;
   }
   .sideIcon {
-    font-size: 101% !important;
+    font-size: 92% !important;
     /* padding: 7.3% 0px 0px 4% !important; */
   }
   .bars {
@@ -453,7 +458,8 @@ color: #7939FF !important;
     height: 3.9rem !important;
   }
   .sidebarContent {
-    height: calc(100vh - 89px);
+    /* height: calc(100vh - 62px) !important; */
+    padding-bottom: 1rem;
   }
 }
 
@@ -1102,13 +1108,17 @@ input[type="file"]::placeholder {
   /* position: fixed; */
   /* width: max-content; */
   max-width: 100% !important;
+  overflow-x: clip;
+  /* overflow-y: auto; */
 }
 
 .tab-content {
   /* position: fixed; */
   /* display: flex; */
   width: 100%;
+  /* height: 100vh; */
   margin-left: 0.5%;
+  margin-bottom: 6.66%;
 }
 
 .announcements-container {
@@ -1138,8 +1148,6 @@ input[type="file"]::placeholder {
   align-items: center;
   flex-shrink: 0 !important;
 }
-
-
 
 .announcement-icon {
   font-size: 136%;
@@ -1226,7 +1234,7 @@ input[type="file"]::placeholder {
   .assignment-container {
     width: 100% !important;
     height: 100% !important;
-    margin-right: 2%;
+    /* margin-right: 2% !important; */
   }
   .ass-name {
     font-size: 100% !important;
@@ -1240,11 +1248,12 @@ input[type="file"]::placeholder {
     font-size: 75% !important;
   }
   .assignment-container2 {
-    margin-top: 5.4% !important;
+    /* margin-top: 5.4% !important; */
+    margin-top: 0.4% !important;
     margin-left: 0% !important;
     width: 100% !important;
     height: 100% !important;
-    margin-right: 2%;
+    /* margin-right: 2%; */
   }
   .inProgress-ass {
     display: inline !important;
@@ -1300,20 +1309,20 @@ input[type="file"]::placeholder {
     margin: 0% !important;
   }
   .projectUp-btn {
-    width: 100% !important;
+    width: 111% !important;
     height: 111% !important;
     border-radius: 0.5rem !important;
     background-color: #d6d6d6;
     color: #999999;
     font-weight: normal !important;
-    font-size: 90% !important;
+    font-size: 88% !important;
   }
   .projectUp-icon {
     color: #999999;
     font-size: 222% !important;
   }
   .project-submit {
-    margin: 0% 4% 0px 13% !important;
+    margin: 0% 4% 0px 9% !important;
   }
   .project-submitBtn {
     border-radius: 0.5rem !important;
@@ -1324,6 +1333,9 @@ input[type="file"]::placeholder {
   .headUp-project {
     width: fit-content !important;
     height: 100%;
+  }
+  .projectD-col {
+    flex: 1 0 0% !important;
   }
   .projectDescription-container {
     width: 96% !important;
@@ -1340,6 +1352,7 @@ input[type="file"]::placeholder {
     width: 100% !important;
     height: 100% !important;
     margin-right: 2%;
+    /* margin-bottom: 0% !important; */
   }
   .aQ-name, .fQ-name {
     font-size: 100% !important;
@@ -1353,11 +1366,12 @@ input[type="file"]::placeholder {
     font-size: 72% !important;
   }
   .aQ-container {
-    margin-top: 5.4% !important;
+    /* margin-top: 5.4% !important; */
+    margin-top: 0.4% !important;
     margin-left: 0% !important;
     width: 100% !important;
     height: 100% !important;
-    margin-right: 2%;
+    /* margin-right: 2%; */
   }
   .attempt-container {
     display: inline !important;
@@ -1398,8 +1412,11 @@ input[type="file"]::placeholder {
     height: max-content;
   }
   .question-container {
+    display: flex;
+    justify-content: center;
     width: 100%;
     margin-right: 2%;
+    margin-left: 0% !important;
   }
   .question {
     font-size: 111% !important;
@@ -1423,12 +1440,18 @@ input[type="file"]::placeholder {
   }
   .qPages-container {
     width: 100% !important;
-    margin-right: 0% !important;
-    margin-top: 7.7% !important;
-    margin-bottom: 2%;
+  }
+  .question-pages {
+    width: 100% !important;
+    /* margin-right: 2% !important; */
+    justify-content: center;
+    margin-top: 3% !important;
+    /* margin-bottom: 2%; */
+    position: unset !important;
+    /* flex-wrap: nowrap; */
   }
   .question-page {
-    margin: 1% !important;
+    margin: 0.8% !important;
   }
   .page-num {
     width: 1.5rem !important;
@@ -1439,7 +1462,7 @@ input[type="file"]::placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 4%;
+    margin-top: 3.3% !important;
   }
   .nextBtn {
     border-radius: 2rem;
@@ -1454,7 +1477,7 @@ input[type="file"]::placeholder {
     display: inline !important;
   }
   .players-container {
-    width: 100%;
+    width: 100% !important;
     height: 100%;
     align-items: center;
     display: flex;
@@ -1551,6 +1574,39 @@ input[type="file"]::placeholder {
   }
 }
 
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .projectUp-container {
+    margin-right: 0% !important;
+  }
+  .projectD-col {
+    flex: 0.99 0 0% !important;
+  }
+  .projectDescription-container {
+    margin-top: 2.2% !important;
+  }
+  .projectUp-btn {
+    width: 19rem !important;
+    height: 11rem !important;
+  }
+  .projectUp-icon {
+    font-size: 400% !important;
+  }
+  .project-submitBtn {
+    border-radius: 0.69rem !important;
+    width: 7.7rem !important;
+    height: 7.7rem !important;
+  }
+  /* .question-pages {
+    right: 4% !important;
+  } */
+  .all-answers {
+    width: 100% !important;
+  }
+  .question-container {
+    margin-left: 2% !important;
+  }
+}
+
 /* .announcements-hr {
   border: none;
   border-top: 1.6px solid;
@@ -1611,6 +1667,20 @@ input[type="file"]::placeholder {
   display: flex;
   /* align-items: center; */
   /* justify-content:space-evenly; */
+  flex-wrap: wrap;
+}
+
+.asscol1 {
+  /* width: 42%; */
+  /* flex: none !important; */
+  flex: 0.4 0 0% !important;
+  margin-right: 5% !important;
+}
+
+.asscol2 {
+  flex: 0.4 0 0% !important;
+  display: flex;
+  /* justify-content: center; */
 }
 
 .assignment-container, .assignment-container2 {
@@ -1618,8 +1688,9 @@ input[type="file"]::placeholder {
   width: max-content;
 }
 
-.assignment-container2 {
-  margin-left: 21%;
+.assignment-container {
+  margin-bottom: 2%;
+  /* margin-right: 8%; */
 }
 
 .assignment-header {
@@ -1720,7 +1791,7 @@ input[type="file"]::placeholder {
 }
 
 .inProgress-ass {
-  max-width: 69%;
+  /* max-width: 69%; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1754,7 +1825,7 @@ input[type="file"]::placeholder {
 
 .description-container {
   margin-top: 1.5%;
-  width: 44%;
+  width: 46%;
 }
 
 .ass-submit {
@@ -1776,14 +1847,16 @@ input[type="file"]::placeholder {
 
 .project-inProgress {
   display: flex;
-  max-width: 96%;
+  /* max-width: 96%; */
   /* align-items: center; */
-  justify-content: space-between;
+  flex-wrap: wrap;
+  /* justify-content: space-between; */
 }
 
 .project-container {
   height: max-content;
   width: max-content;
+  margin-bottom: 6%;
 }
 
 .projectH-container {
@@ -1862,9 +1935,11 @@ input[type="file"]::placeholder {
 .projectUp-container {
   text-align: center;
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
-  margin-right: 2%;
+  /* margin-left: 2%; */
+  margin-top: 2%;
+  margin-right: 13.3%;
   /* width: 16rem; */
   /* border-radius: 2rem; */
 }
@@ -1872,7 +1947,7 @@ input[type="file"]::placeholder {
 .headUp-project {
   margin: 0% !important;
   padding: 0% !important;
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
 }
 
@@ -1918,9 +1993,14 @@ input[type="file"]::placeholder {
 }
 
 .projectDescription-container {
-  margin-top: 0%;
-  width: 50%;
+  margin: 2% 0% 0% 0%;
+  /* width: 50%; */
+  /* width: 80%; */
 }
+
+/* .projectD-col {
+  flex: 0.46 0 0%;
+} */
 
 .description-area {
   border: 1px solid #8b8b8b;
@@ -1929,6 +2009,22 @@ input[type="file"]::placeholder {
 
 .quizzes-container {
   display: flex;
+  flex-wrap: wrap;
+}
+
+.quiz-col1 {
+  flex: 0.4 0 0% !important;
+  margin-right: 5% !important;
+}
+
+.quiz-col2 {
+  flex: 0.4 0 0% !important;
+  display: flex;
+  /* justify-content: center; */
+}
+
+.fQ-container {
+  margin-bottom: 2%;
 }
 
 .fQ-container, .aQ-container {
@@ -1936,9 +2032,9 @@ input[type="file"]::placeholder {
   width: max-content;
 }
 
-.aQ-container {
+/* .aQ-container {
   margin-left: 21%;
-}
+} */
 
 .quiz-header {
   position: relative;
@@ -2029,7 +2125,8 @@ input[type="file"]::placeholder {
   /* max-width: 83%; */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  /* justify-content: space-between; */
 }
 
 .startQ-container {
@@ -2037,7 +2134,7 @@ input[type="file"]::placeholder {
   margin-top: 2.5rem;
   width: 100%;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
 }
 
@@ -2109,20 +2206,24 @@ input[type="file"]::placeholder {
 }
 
 .QA-container {
-  width: 47.4rem;
-  height: 40rem;
+  /* width: 47.4rem; */
+  /* height: 40rem; */
+  height: max-content;
 }
 
 .photoOrAudio-container {
   height: 13.6rem;
+  width: 75%;
 }
 
 .page-container {
-  width: 100%;
+  /* width: 100%; */
+  /* width: max-content; */
   height: max-content;
 }
 
 .question-container {
+  margin-left: 1.5%;
   width: 100%;
 }
 
@@ -2134,15 +2235,19 @@ input[type="file"]::placeholder {
 }
 
 .answers-container {
+  align-items: center;
+  /* width: 100%; */
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .all-answers {
   display: flex;
   /* justify-content:space-between; */
   flex-wrap: wrap;
+  /* width: 33%; */
+  width: 24rem;
 }
 
 .answer-container {
@@ -2150,12 +2255,16 @@ input[type="file"]::placeholder {
   /* display: flex; */
   /* align-items: center; */
   margin-top: 1.4rem;
+  width: 100%;
 }
 
 .answer {
   display: flex;
-  width: 22.2rem;
+  /* width: 22.2rem; */
+  /* width: 23.3rem; */
+  width: 100%;
   height: 3rem;
+  /* height: 200%; */
   background-color: rgb(206, 234, 245);
   border: none;
   border-radius: 1rem;
@@ -2171,12 +2280,22 @@ input[type="file"]::placeholder {
 }
 
 .qPages-container {
-  width: 10rem;
+  /* width: 10rem;
+  height: 13rem;
   margin-right: 2%;
   margin-top: 1.6%;
+  display: ruby; */
+  height: max-content;
+  width: max-content;
 }
 
 .question-pages {
+  position: absolute;
+  right: 4%;
+  width: 10rem;
+  /* margin-right: 2%; */
+  margin-top: 1.6%;
+  display: ruby;
   display: flex;
   align-items: center;
   /* justify-content: space-evenly; */
@@ -2212,7 +2331,7 @@ input[type="file"]::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* margin-top: 4%; */
+  margin-top: 6.6%;
 }
 
 .nextBtn {
@@ -2244,7 +2363,7 @@ input[type="file"]::placeholder {
 }
 
 .players-container {
-  width: 100%;
+  width: 50%;
   height: 100%;
   align-items: center;
   display: flex;
@@ -2259,7 +2378,7 @@ input[type="file"]::placeholder {
   /* width: 100% !important; */
   /* height: 100% !important; */
   /* width: 31rem !important; */
-  width: 100%;
+  width: 90%;
   height: 100%;
 }
 
@@ -2273,7 +2392,7 @@ input[type="file"]::placeholder {
 }
 
 .video {
-  height: 18.8rem !important ;
+  height: 16.6rem !important ;
   width: 28rem !important ;
   /* width: 92% !important;
   height: 90% !important; */
@@ -2290,7 +2409,8 @@ input[type="file"]::placeholder {
 
 .video-title {
   padding: 0% !important;
-  margin: 0.5rem 0% !important;
+  /* margin: 0.5rem 0% 6.6% 0% !important; */
+  margin: 0.3rem 0% 0.5rem 0% !important;
   text-align: center;
   font-weight: bold;
   font-size: 123%;
