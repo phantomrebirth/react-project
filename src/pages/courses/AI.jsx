@@ -5,6 +5,9 @@ import AIFiles from '../../components/courses/artificial-intelligence/AIFiles';
 import AIAssignments from '../../components/courses/artificial-intelligence/AIAssignments';
 import AIProjects from '../../components/courses/artificial-intelligence/AIProjects';
 import AIVideos from '../../components/courses/artificial-intelligence/AIVideos';
+import AIQuizzes from '../../components/courses/artificial-intelligence/AIQuizzes';
+import AIGrades from '../../components/courses/artificial-intelligence/AIGrades';
+import AIAttendanceRate from '../../components/courses/artificial-intelligence/AIAttendanceRate';
 
 const AI = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -45,9 +48,9 @@ const AI = () => {
             {activeTab === 'Tab 3' && <div><AIFiles/></div>}
             {activeTab === 'Tab 4' && <div><AIAssignments/></div>}
             {activeTab === 'Tab 5' && <div><AIProjects/></div>}
-            {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
-            {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
-            {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}
+            {activeTab === 'Tab 6' && <div><AIQuizzes/></div>}
+            {activeTab === 'Tab 7' && <div><AIGrades/></div>}
+            {activeTab === 'Tab 8' && <div><AIAttendanceRate/></div>}
           </Col>
         </Row>
       </Container>

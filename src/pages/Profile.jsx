@@ -112,10 +112,10 @@ const Profile = () => {
               />
             </Form.Group>
             <Form.Group controlId="formPassword">
-              <Form.Label>Change Password</Form.Label>
+              <Form.Label>Password</Form.Label>
               <Form.Control className='pfPass' 
                             type="password" 
-                            placeholder="Password" 
+                            placeholder="New Password" 
                             name="password" 
                             value={userData.password}
                             onChange={(e) => setUserData(prevState => ({

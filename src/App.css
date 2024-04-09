@@ -511,7 +511,9 @@ color: #7939FF !important;
 }
 
 .nav-pfPicture {
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius: 9px;
+  border: none;
   width: 2.2rem;
   height: 100%;
 }
@@ -1343,7 +1345,7 @@ input[type="file"]::placeholder {
   }
   .finished-quiz, .attempt-quiz {
     width: 96% !important;
-    height: 100% !important;
+    /* height: 100% !important; */
   }
   .quizzes-container {
     display: inline !important;
@@ -2354,6 +2356,11 @@ input[type="file"]::placeholder {
   background-color: #672ee2 !important;
 }
 
+.grades-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .videos-container {
   margin-top: 1rem;
   width: 100%;
@@ -2786,3 +2793,7 @@ iframe {
   font-size: 200%;
 }
 
+.assignments-hr {
+  /* width: 96%; */
+  margin-top: 1.4%;
+}

@@ -5,6 +5,9 @@ import NetworkFiles from '../../components/courses/network/NetworkFiles';
 import NetworkAssignments from '../../components/courses/network/NetworkAssignments';
 import NetworkProjects from '../../components/courses/network/NetworkProjects';
 import NetworkVideos from '../../components/courses/network/NetworkVideos';
+import NetworkQuizzes from '../../components/courses/network/NetworkQuizzes';
+import NetworkGrades from '../../components/courses/network/NetworkGrades';
+import NetworkAttendanceRate from '../../components/courses/network/NetworkAttendanceRate';
 
 const Network = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -45,9 +48,9 @@ const Network = () => {
             {activeTab === 'Tab 3' && <div><NetworkFiles/></div>}
             {activeTab === 'Tab 4' && <div><NetworkAssignments/></div>}
             {activeTab === 'Tab 5' && <div><NetworkProjects/></div>}
-            {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
-            {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
-            {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}
+            {activeTab === 'Tab 6' && <div><NetworkQuizzes/></div>}
+            {activeTab === 'Tab 7' && <div><NetworkGrades/></div>}
+            {activeTab === 'Tab 8' && <div><NetworkAttendanceRate/></div>}
           </Col>
         </Row>
       </Container>

@@ -5,6 +5,9 @@ import ProgrammingFiles from '../../components/courses/programming/ProgrammingFi
 import ProgrammingAssignments from '../../components/courses/programming/ProgrammingAssignments';
 import ProgrammingProjects from '../../components/courses/programming/ProgrammingProjects';
 import ProgrammingVideos from '../../components/courses/programming/ProgrammingVideos';
+import ProgrammingQuizzes from '../../components/courses/programming/ProgrammingQuizzes';
+import ProgrammingGrades from '../../components/courses/programming/ProgrammingGrades';
+import ProgrammingAttendanceRate from '../../components/courses/programming/ProgrammingAttendanceRate';
 
 const Programming = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -45,9 +48,9 @@ const Programming = () => {
             {activeTab === 'Tab 3' && <div><ProgrammingFiles/></div>}
             {activeTab === 'Tab 4' && <div><ProgrammingAssignments/></div>}
             {activeTab === 'Tab 5' && <div><ProgrammingProjects/></div>}
-            {activeTab === 'Tab 6' && <div>Content for Tab 6</div>}
-            {activeTab === 'Tab 7' && <div>Content for Tab 7</div>}
-            {activeTab === 'Tab 8' && <div>Content for Tab 8</div>}
+            {activeTab === 'Tab 6' && <div><ProgrammingQuizzes/></div>}
+            {activeTab === 'Tab 7' && <div><ProgrammingGrades/></div>}
+            {activeTab === 'Tab 8' && <div><ProgrammingAttendanceRate/></div>}
           </Col>
         </Row>
       </Container>
