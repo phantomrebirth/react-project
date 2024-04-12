@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUser, FaBars, FaChevronDown } from "react-icons/fa";
+import { FaUser, FaChevronDown } from "react-icons/fa";
 import { HiBars3 } from "react-icons/hi2";
 import { NavLink } from "react-router-dom";
 import { TbLogout2 } from "react-icons/tb";
 import { useSelector, useDispatch } from 'react-redux'
 import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
 import { selectToken } from '../redux/slices/authSlice';
+import LogOutModal from "../redux/actions/LogOutModal";
+import { openLogOutModal } from "../redux/slices/logOutModalSlice";
+import { CiSearch } from "react-icons/ci";
+import { HiOutlineMinus } from "react-icons/hi2";
 
 const Navbar = ({ toggleSidebar }) => {
   const imageUrl = useSelector(selectImageUrl);
@@ -16,6 +20,7 @@ const Navbar = ({ toggleSidebar }) => {
   const userIconRef = useRef(null);
   const token = useSelector(selectToken);
   const dispatch = useDispatch();
+  const isOpen = useSelector(state => state.logOutModal.isOpen);
 
   useEffect(() => {
     dispatch(fetchProfilePicture(token));
@@ -40,10 +45,26 @@ const Navbar = ({ toggleSidebar }) => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const handleLogout = () => {
+    dispatch(openLogOutModal());
+  };
+
   return (
     <div className='navbar'>
       <div className='bars' onClick={toggleSidebar}>
         <HiBars3 className="barsIcon"/>
+      </div>
+      <NavLink to='/' className="navLogo-container">
+        <img src="src/assets/images/LOGOII.png" alt="" className="nav-logo"/>
+      </NavLink>
+      <div className="searchBar-container">
+        <div className="searchIcon-container">
+          <CiSearch className="search-icon"/>
+        </div>
+        {/* <div className="searchBar-hr">|</div> */}
+        <div className="search-container">
+          <input className="search"/>
+        </div>
       </div>
       <div className="userIconContainer" ref={userIconRef} onClick={handleClickUserIcon}>
       {isLoading ? (
@@ -51,7 +72,10 @@ const Navbar = ({ toggleSidebar }) => {
           <FaUser className="userIcon"/>
         </div>
       ) : error ? (
-        <div>Error: {error}</div>
+        <div>
+          {/* Error: {error} */}
+          <FaUser className="userIcon"/>
+        </div>
       ) : (
         <img src={imageUrl} alt="" className="nav-pfPicture"/>
       )}
@@ -63,11 +87,12 @@ const Navbar = ({ toggleSidebar }) => {
             Profile
           </NavLink>
           <hr className="hrPfMenu"/>
-          <NavLink to='/logout' className="pfMenu" id="pf-menu">
+          <button onClick={handleLogout} className="pfMenu" id="pfMenu">
             <TbLogout2 className="logout-dropdown"/> Log out
-          </NavLink>
+          </button>
         </div>
       )}
+      {isOpen && <LogOutModal />}
     </div>
   );
 };

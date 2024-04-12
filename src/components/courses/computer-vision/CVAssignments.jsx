@@ -10,6 +10,7 @@ const CVAssignments = () => {
   const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
+  const [submit, setSubmit] = useState(false)
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -23,6 +24,7 @@ const CVAssignments = () => {
     // clear after submission
     setSelectedFiles([]);
     setDescription('');
+    setSubmit(true);
   };
 
   const handleInProgressClick = () => {
@@ -38,18 +40,18 @@ const CVAssignments = () => {
   return (
     <>
       <Row style={{ margin: "0", padding: "0"}} className='assignments-container'>
-        {showFirstAssignment && (
+        {showFirstAssignment && !submit && (
          <>
-          <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
+          {/* <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
             <div className='assignment-container'>
               <div className='assignment-header'>
                 <ul className='ass-h'>
-                  <li>Assignment 1</li>
+                  <li>Computer Vision</li>
                 </ul>
               </div>
               <div className='assignment'>
                 <div className='assName-container'>
-                  <h5 className='ass-name'>CV Assignment</h5>
+                  <h5 className='ass-name'>Assignment 1</h5>
                   <h6 className='ass-zeros'>00.00.0000</h6>
                 </div>
                 <button className='ass-btn' style={{cursor: "unset"}}>
@@ -57,17 +59,17 @@ const CVAssignments = () => {
                 </button>
               </div>
             </div>
-          </Col>
+          </Col> */}
           <Col style={{ margin: "0", padding: "0"}} className='asscol2'>
             <div className="assignment-container2">
               <div className='assignment-header'>
                 <ul className='ass-h'>
-                    <li>Assignment 2</li>
+                    <li>Computer Vision</li>
                 </ul>
               </div>
               <div className='assignment'>
                 <div className='assName-container'>
-                  <h5 className='ass-name'>Assignment 2</h5>
+                  <h5 className='ass-name'>Assignment 1</h5>
                   <h6 className='ass-zeros'>00.00.0000</h6>
                 </div>
                 <button className='ass-btn2' onClick={handleInProgressClick}>
@@ -79,7 +81,7 @@ const CVAssignments = () => {
          </>
         )}
       </Row>
-      {!showFirstAssignment && (
+      {!showFirstAssignment && !submit && (
         <>
           <Row>
             <div className='inProgress-ass'>
@@ -87,12 +89,12 @@ const CVAssignments = () => {
                 <div className="assignment-container2" style={{marginLeft: "0px"}}>
                   <div className='assignment-header'>
                     <ul className='ass-h'>
-                        <li>Assignment 2</li>
+                        <li>Computer Vision</li>
                     </ul>
                   </div>
                   <div className='assignment'>
                     <div className='assName-container'>
-                      <h5 className='ass-name'>Assignment 2</h5>
+                      <h5 className='ass-name'>Assignment 1</h5>
                       <h6 className='ass-zeros'>00.00.0000</h6>
                     </div>
                     <button className='ass-btn2' style={{cursor: "unset"}}>
@@ -140,6 +142,28 @@ const CVAssignments = () => {
                 </Button>
               </Form>
           </div>
+        </>
+      )}
+      {submit && (
+        <>
+          <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
+            <div className='assignment-container'>
+              <div className='assignment-header'>
+                <ul className='ass-h'>
+                  <li>Computer Vision</li>
+                </ul>
+              </div>
+              <div className='assignment'>
+                <div className='assName-container'>
+                  <h5 className='ass-name'>Assignment 1</h5>
+                  <h6 className='ass-zeros'>00.00.0000</h6>
+                </div>
+                <button className='ass-btn' style={{cursor: "unset"}}>
+                      Done
+                </button>
+              </div>
+            </div>
+          </Col>
         </>
       )}
     </>

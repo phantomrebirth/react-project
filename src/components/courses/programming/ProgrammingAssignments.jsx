@@ -10,6 +10,7 @@ const ProgrammingAssignments = () => {
   const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
+  const [submited, setSubmited] = useState(false)
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -23,6 +24,7 @@ const ProgrammingAssignments = () => {
     // clear after submission
     setSelectedFiles([]);
     setDescription('');
+    setSubmited(true);
   };
 
   const handleInProgressClick = () => {
@@ -38,18 +40,18 @@ const ProgrammingAssignments = () => {
   return (
     <>
       <Row style={{ margin: "0", padding: "0"}} className='assignments-container'>
-        {showFirstAssignment && (
+        {showFirstAssignment && !submited && (
          <>
-          <Col style={{ margin: "0", padding: "0"}}>
+          <Col style={{ margin: "0", padding: "0"}} className='asscol2'>
             <div className="assignment-container2">
               <div className='assignment-header'>
                 <ul className='ass-h'>
-                    <li>Assignment</li>
+                    <li>Programming</li>
                 </ul>
               </div>
               <div className='assignment'>
                 <div className='assName-container'>
-                  <h5 className='ass-name'>Programming Assignment</h5>
+                  <h5 className='ass-name'>Assignment 1</h5>
                   <h6 className='ass-zeros'>00.00.0000</h6>
                 </div>
                 <button className='ass-btn2' onClick={handleInProgressClick}>
@@ -61,7 +63,7 @@ const ProgrammingAssignments = () => {
          </>
         )}
       </Row>
-      {!showFirstAssignment && (
+      {!showFirstAssignment && !submited && (
         <>
           <Row>
             <div className='inProgress-ass'>
@@ -69,12 +71,12 @@ const ProgrammingAssignments = () => {
                 <div className="assignment-container2" style={{marginLeft: "0px"}}>
                   <div className='assignment-header'>
                     <ul className='ass-h'>
-                        <li>Assignment</li>
+                        <li>Programming</li>
                     </ul>
                   </div>
                   <div className='assignment'>
                     <div className='assName-container'>
-                      <h5 className='ass-name'>Programming Assignment</h5>
+                      <h5 className='ass-name'>Assignment 1</h5>
                       <h6 className='ass-zeros'>00.00.0000</h6>
                     </div>
                     <button className='ass-btn2' style={{cursor: "unset"}}>
@@ -85,12 +87,10 @@ const ProgrammingAssignments = () => {
               </Col>
               <Col >
                 <div className='upAss-container'>
-                  {/* Use label to trigger file input */}
                   <label htmlFor='assignmentInput' className='headUp-ass'>
                     Upload Assignment
                     <TbFileUpload className='upAss-icon'/>
                   </label>
-                  {/* file input, hidden */}
                   <input
                     id='assignmentInput'
                     type='file'
@@ -122,6 +122,28 @@ const ProgrammingAssignments = () => {
                 </Button>
               </Form>
           </div>
+        </>
+      )}
+      {submited && (
+        <>
+          <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
+            <div className='assignment-container'>
+              <div className='assignment-header'>
+                <ul className='ass-h'>
+                  <li>Programming</li>
+                </ul>
+              </div>
+              <div className='assignment'>
+                <div className='assName-container'>
+                  <h5 className='ass-name'>Assignment 1</h5>
+                  <h6 className='ass-zeros'>00.00.0000</h6>
+                </div>
+                <button className='ass-btn' style={{cursor: "unset"}}>
+                      Done
+                </button>
+              </div>
+            </div>
+          </Col>
         </>
       )}
     </>

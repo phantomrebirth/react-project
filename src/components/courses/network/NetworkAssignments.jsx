@@ -3,13 +3,14 @@ import { useDispatch } from 'react-redux';
 import { navigateToAssignment } from '../../../redux/slices/assignmentSlice';
 import { TbFileUpload } from "react-icons/tb";
 import { Button, Form } from 'react-bootstrap';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 const NetworkAssignments = () => {
   const dispatch = useDispatch();
   const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
+  const [submited, setSubmited] = useState(false)
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -23,6 +24,7 @@ const NetworkAssignments = () => {
     // clear after submission
     setSelectedFiles([]);
     setDescription('');
+    setSubmited(true);
   };
 
   const handleInProgressClick = () => {
@@ -38,36 +40,18 @@ const NetworkAssignments = () => {
   return (
     <>
       <Row style={{ margin: "0", padding: "0"}} className='assignments-container'>
-        {showFirstAssignment && (
+        {showFirstAssignment && !submited && (
          <>
-          <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
-            <div className='assignment-container'>
-              <div className='assignment-header'>
-                <ul className='ass-h'>
-                  <li>Assignment 1</li>
-                </ul>
-              </div>
-              <div className='assignment'>
-                <div className='assName-container'>
-                  <h5 className='ass-name'>Network Assignment</h5>
-                  <h6 className='ass-zeros'>00.00.0000</h6>
-                </div>
-                <button className='ass-btn' style={{cursor: "unset"}}>
-                      Done
-                </button>
-              </div>
-            </div>
-          </Col>
           <Col style={{ margin: "0", padding: "0"}} className='asscol2'>
             <div className="assignment-container2">
               <div className='assignment-header'>
                 <ul className='ass-h'>
-                    <li>Assignment 2</li>
+                    <li>Network</li>
                 </ul>
               </div>
               <div className='assignment'>
                 <div className='assName-container'>
-                  <h5 className='ass-name'>Assignment 2</h5>
+                  <h5 className='ass-name'>Assignment 1</h5>
                   <h6 className='ass-zeros'>00.00.0000</h6>
                 </div>
                 <button className='ass-btn2' onClick={handleInProgressClick}>
@@ -79,7 +63,7 @@ const NetworkAssignments = () => {
          </>
         )}
       </Row>
-      {!showFirstAssignment && (
+      {!showFirstAssignment && !submited && (
         <>
           <Row>
             <div className='inProgress-ass'>
@@ -87,12 +71,12 @@ const NetworkAssignments = () => {
                 <div className="assignment-container2" style={{marginLeft: "0px"}}>
                   <div className='assignment-header'>
                     <ul className='ass-h'>
-                        <li>Assignment 2</li>
+                        <li>Network</li>
                     </ul>
                   </div>
                   <div className='assignment'>
                     <div className='assName-container'>
-                      <h5 className='ass-name'>Assignment 2</h5>
+                      <h5 className='ass-name'>Assignment 1</h5>
                       <h6 className='ass-zeros'>00.00.0000</h6>
                     </div>
                     <button className='ass-btn2' style={{cursor: "unset"}}>
@@ -103,12 +87,10 @@ const NetworkAssignments = () => {
               </Col>
               <Col >
                 <div className='upAss-container'>
-                  {/* Use label to trigger file input */}
                   <label htmlFor='assignmentInput' className='headUp-ass'>
                     Upload Assignment
                     <TbFileUpload className='upAss-icon'/>
                   </label>
-                  {/* file input, hidden */}
                   <input
                     id='assignmentInput'
                     type='file'
@@ -140,6 +122,28 @@ const NetworkAssignments = () => {
                 </Button>
               </Form>
           </div>
+        </>
+      )}
+      {submited && (
+        <>
+          <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
+            <div className='assignment-container'>
+              <div className='assignment-header'>
+                <ul className='ass-h'>
+                  <li>Network</li>
+                </ul>
+              </div>
+              <div className='assignment'>
+                <div className='assName-container'>
+                  <h5 className='ass-name'>Assignment 1</h5>
+                  <h6 className='ass-zeros'>00.00.0000</h6>
+                </div>
+                <button className='ass-btn' style={{cursor: "unset"}}>
+                      Done
+                </button>
+              </div>
+            </div>
+          </Col>
         </>
       )}
     </>

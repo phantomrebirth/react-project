@@ -4,6 +4,8 @@ import assignmentReducer from "./slices/assignmentSlice";
 import croppedImageReducer from "./slices/croppedImageSlice";
 import authReducer from "./slices/authSlice";
 import imageUrlReducer from './slices/profilePictureSlice'
+import flexWrapReducer from "./slices/flexWrapSlice";
+import logOutModalReducer from "./slices/logOutModalSlice"
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +14,7 @@ export const store = configureStore({
         croppedImage: croppedImageReducer,
         auth: authReducer,
         profilePicture: imageUrlReducer,
+        flexWrap: flexWrapReducer,
+        logOutModal: logOutModalReducer,
     },
 });

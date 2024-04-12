@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
              md={isSidebarOpen ? 9 : 12}
              lg={isSidebarOpen ? 9 : 12}
              xl={isSidebarOpen ? 10 : 12}
-             style={{margin: "0", overflowY: "scroll", height: "94vh", paddingBottom: "2%" }}
+             style={{margin: "0", overflowY: "scroll", height: "94vh"}}
              className="content-container" >
           <div className="content">{children}</div>
         </Col>
