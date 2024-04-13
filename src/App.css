@@ -434,11 +434,9 @@ color: #7939FF !important;
     font-size: 92% !important;
     /* padding: 7.3% 0px 0px 4% !important; */
   }
-  .bars {
-    width: 3rem !important;
-  }
   .userIconContainer {
-    right: 1rem !important;
+    right: 0.5rem !important;
+    width: 2.4rem !important;
   }
   .pfMenu {
     font-size: 0.9rem !important;
@@ -452,6 +450,8 @@ color: #7939FF !important;
     margin-bottom: 3px;
   }
   .dropdownMenu {
+    /* border-top-right-radius: 0% !important; */
+    /* border-bottom-right-radius: 0% !important; */
     padding: 10px 0.69rem !important;
     top: 3.193rem !important;
   }
@@ -480,13 +480,24 @@ color: #7939FF !important;
   justify-content: center;
   width: 2.2rem;
   height: 2.2rem;
+  background-color: transparent;
+  color: #000;
   /* font-size: 200%; */
   /* padding-left: 1rem; */
 }
 
+.bars:hover {
+  background-color: #8a4bfffb;
+  border-radius: 50%;
+}
+
+.bars:active {
+  background-color: #9a6bffe7;
+}
+
 .barsIcon {
-  width: 100%;
-  height: 100%;
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
 }
 
@@ -502,20 +513,20 @@ color: #7939FF !important;
 
 .userIconContainer {
   position: relative;
-  right: 27px;
+  right: 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
   width: 3.3rem;
-  height: 2.3rem;
+  height: 2.4rem;
 }
 
 .nav-pfPicture {
-  /* border-radius: 50%; */
-  border-radius: 9px;
+  border-radius: 50%;
+  /* border-radius: 9px; */
   border: none;
-  width: 2.3rem;
+  width: 2.4rem;
   height: 100%;
 }
 
@@ -538,7 +549,7 @@ color: #7939FF !important;
   color: #fff;
   /* width: auto; */
   right: 0px;
-  top: 60px;
+  top: 62px;
   border-radius: 13px;
   text-align: center;
   transition:all 0.5s;
@@ -3134,9 +3145,82 @@ iframe {
     left: 12% !important;
   }
   .searchBar-container {
-    margin-left: 17%;
+    border-radius: 0.44rem !important;
+    margin-left: 11%;
     display: flex;
-    width: 39% !important;
+    width: 41% !important;
+    height: 54% !important;
+  }
+  .searchIcon-container {
+    width: 2rem !important;
+  }
+  .search-icon {
+    height: 1.22rem !important;
+  }
+  .notifications-container {
+    width: 2.3rem !important;
+    height: 2.3rem !important;
+    right: 3.5rem !important;
+  }
+  .bell-container {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  .notifications {
+    top: 5%;
+    width: 1.1rem !important;
+    right: -10% !important;
+  }
+  .notifications-num {
+    font-size: 66% !important;
+  }
+  .bell {
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+  }
+  .bars {
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+  }
+  .barsIcon {
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+  }
+  .navLogo-container {
+    width: 5.5rem !important;
+    height: 90% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 8.8% !important;
+  }
+  .logOutModal {
+    width: 18rem !important;
+    height: 16rem !important;
+    border-radius: 1.6rem !important;
+  }
+  .logOutModal-icon {
+    font-size: 444% !important;
+  }
+  .logOut-header {
+    font-size: 100%;
+  }
+  .logOut-confirmBtn {
+    font-size: 111% !important;
+    width: 13rem !important;
+    height: 2.1rem !important;
+  }
+  .logOut-confirmBtn:hover {
+    transform: scale(1.03) !important;
+  }
+  .logOut-closeBtn {
+    margin-top: 0.7rem !important;
+    font-size: 111% !important;
+    width: 13rem !important;
+    height: 2.1rem !important;
+  }
+  .logOutModalBtn-container {
+    margin-top: 0.8rem !important;
   }
 }
 
@@ -3220,7 +3304,7 @@ iframe {
   width: 9rem;
   height: 100%;
   position: absolute;
-  left: 6%;
+  left: 4%;
 }
 
 .nav-logo {
@@ -3231,9 +3315,14 @@ iframe {
 .searchBar-container {
   border-radius: 0.6rem;
   display: flex;
+  align-items: center;
   width: 30%;
   height: 61%;
   background-color: #fff;
+}
+
+.searchBar-container:focus-within {
+  border: rgba(4, 0, 255, 0.979) 1px solid;
 }
 
 .search-container {
@@ -3245,17 +3334,18 @@ iframe {
 }
 
 .searchIcon-container {
-  width: 2.5rem;
-  height: 100%;
+  width: 2.6rem;
+  height: fit-content;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+  /* border-right:solid #00000060 1px; */
 }
 
 .search-icon {
   color: #7939ff;
-  width: 100%;
-  height: 56%;
+  width: 92%;
+  height: 1.6rem;
 }
 
 .searchBar-hr {
@@ -3281,5 +3371,58 @@ iframe {
   outline: none;
   border: none;
   box-shadow: none;
+}
+
+.notifications-container {
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  right: 5.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bell-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+}
+
+.notifications {
+  position: absolute;
+  top: 5%;
+  right: 0;
+  width: 1.4rem;
+  right: -17%;
+  text-align: center;
+  height: max-content;
+  background-color: red;
+  border-radius: 1rem;
+}
+
+.notifications-num {
+  cursor:default;
+  font-size: 76%;
+  color: #fff;
+}
+
+.bell {
+  color: #000;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+}
+
+.bell:hover {
+  cursor: pointer;
+}
+
+.bell-container:hover {
+  background-color: #8d57fff3;
 }
 

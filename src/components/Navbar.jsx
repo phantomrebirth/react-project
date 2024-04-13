@@ -9,7 +9,7 @@ import { selectToken } from '../redux/slices/authSlice';
 import LogOutModal from "../redux/actions/LogOutModal";
 import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { CiSearch } from "react-icons/ci";
-import { HiOutlineMinus } from "react-icons/hi2";
+import { FaRegBell } from "react-icons/fa";
 
 const Navbar = ({ toggleSidebar }) => {
   const imageUrl = useSelector(selectImageUrl);
@@ -63,23 +63,31 @@ const Navbar = ({ toggleSidebar }) => {
         </div>
         {/* <div className="searchBar-hr">|</div> */}
         <div className="search-container">
-          <input className="search"/>
+          <input className="search" type="text" placeholder="Search"/>
+        </div>
+      </div>
+      <div className="notifications-container">
+        <div className="bell-container">
+          {/* <div className="notifications">
+            <div className="notifications-num">2+</div>
+          </div> */}
+          <FaRegBell className="bell"/>
         </div>
       </div>
       <div className="userIconContainer" ref={userIconRef} onClick={handleClickUserIcon}>
-      {isLoading ? (
-        <div>
-          <FaUser className="userIcon"/>
-        </div>
-      ) : error ? (
-        <div>
-          {/* Error: {error} */}
-          <FaUser className="userIcon"/>
-        </div>
-      ) : (
-        <img src={imageUrl} alt="" className="nav-pfPicture"/>
-      )}
-        <FaChevronDown className="userChevron"/>
+        {isLoading ? (
+          <div>
+            <FaUser className="userIcon"/>
+          </div>
+        ) : error ? (
+          <div>
+            {/* Error: {error} */}
+            <FaUser className="userIcon"/>
+          </div>
+        ) : (
+          <img src={imageUrl} alt="" className="nav-pfPicture"/>
+        )}
+        {/* <FaChevronDown className="userChevron"/> */}
       </div>
       {dropdownOpen && (
         <div className="dropdownMenu" ref={dropdownRef}>
