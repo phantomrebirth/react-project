@@ -101,7 +101,7 @@ const HomePage = () => {
         </Container>
       </Container>
       <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}}>
-        <Container style={{padding: "0 0 0 2%", maxWidth: "100%", display: "inline-block"}} className='home-AssContainer'>
+        <Container style={{maxWidth: "100%", display: "inline-block"}} className='home-AssContainer'>
           <Row>
             <h3 className='home-myAssHeader'>
               My Assignments

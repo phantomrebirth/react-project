@@ -8,8 +8,8 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 const Assignments = () => {
   return (
-    <Container style={{ margin: "0"}} className='mt-4'>
-      <Row> 
+    <Container style={{margin: "0 1% 0 auto"}} className='mt-4'>
+      <Row>
         <Col style={{padding: "1.2%"}}>
           <CVAssignments/>
         </Col>

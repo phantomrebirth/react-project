@@ -3,7 +3,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 const NetworkAttendanceRate = () => {
   return (
-    <Container fluid className='last-container'>
+    <Container fluid className='mt-3 last-container' style={{padding: "0"}}>
         <Row className='grades-container' style={{ margin: "0", padding: "0"}}>
             <Col style={{ margin: "0", padding: "0"}}>
                 <div className='AR-container'>

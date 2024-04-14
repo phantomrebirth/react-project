@@ -6,6 +6,7 @@ const ProgrammingProjects = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
   const fileInputRef = useRef(null);
+  const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -19,6 +20,7 @@ const ProgrammingProjects = () => {
     // clear after submission
     setSelectedFiles([]);
     setDescription('');
+    setSubmitted(true);
   };
 
   const handleFileSelect = (event) => {
@@ -32,6 +34,8 @@ const ProgrammingProjects = () => {
 
   return (
     <Container className='projects-container' style={{margin: "0", padding: "0"}} fluid>
+      {!submitted && (
+      <>
       <Row className='project-inProgress' style={{margin: "0", padding: "0"}}>
         <Col style={{margin: "0", padding: "0"}}>
           <div className='project-container'>
@@ -94,6 +98,30 @@ const ProgrammingProjects = () => {
           </Form>
         </Col>
       </Row>
+      </>
+      )}
+      {submitted && (
+      <>
+        <Col style={{margin: "0", padding: "0"}}>
+          <div className='project-container'>
+            <div className='projectH-container'>
+              <ul className='project-header'>
+                <li>Project 1</li>
+              </ul>
+            </div>
+            <div className='project'>
+              <div className='projectName-container'>
+                <h5 className='project-name'>Programming Project</h5>
+                <h6 className='project-zeros'>00.00.0000</h6>
+              </div>
+              <button className='project-btn' style={{cursor: "unset", backgroundColor: "#7939ff"}}>
+                Submitted
+              </button>
+            </div>
+          </div>
+        </Col>
+      </>
+      )}
     </Container>
   );
 };

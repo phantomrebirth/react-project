@@ -20,7 +20,7 @@ const CVQuizzes = () => {
         {showFinishedQuiz && !showQuiz && (
           <>
             <Row className='quizzes-container' style={{ margin: "0", padding: "0"}}>
-                <Col style={{ margin: "0", padding: "0"}} className='quiz-col1'>
+                {/* <Col style={{ margin: "0", padding: "0"}} className='quiz-col1'>
                     <div className='fQ-container'>
                         <div className='quiz-header'>
                             <ul className='q-head'>
@@ -37,7 +37,7 @@ const CVQuizzes = () => {
                             </button>
                         </div>
                     </div>
-                </Col>
+                </Col> */}
                 <Col style={{ margin: "0", padding: "0"}} className='quiz-col2'>
                     <div className='aQ-container'>
                         <div className='quiz-header'>

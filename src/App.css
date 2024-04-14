@@ -450,10 +450,11 @@ color: #7939FF !important;
     margin-bottom: 3px;
   }
   .dropdownMenu {
-    /* border-top-right-radius: 0% !important; */
-    /* border-bottom-right-radius: 0% !important; */
+    border-top-right-radius: 0% !important;
+    border-bottom-right-radius: 0% !important;
     padding: 10px 0.69rem !important;
-    top: 3.193rem !important;
+    /* top: 3.193rem !important; */
+    top: 3.905rem !important;
   }
   .navbar {
     height: 3.9rem !important;
@@ -590,16 +591,17 @@ color: #7939FF !important;
 }
 
 .content-container {
-  padding-bottom: 2%;
+  padding-bottom: 1.4%;
 }
 
 .content {
-  padding: 0;
+  padding: 0 0 1% 0;
   margin: 0;
 }
 
 .pfContainer {
-  max-width: 808px;
+  /* max-width: 808px; */
+  max-width: 666px;
   /* min-width: 666px;
   padding: 0;
   margin: 0;
@@ -644,6 +646,7 @@ color: #7939FF !important;
 }
 
 .pfName {
+  border: 1px solid #ccc;
   margin-top: 0;
   padding-top: 0;
   margin-bottom: 0.9rem;
@@ -654,19 +657,39 @@ color: #7939FF !important;
   border: 1px solid #7839ff71 !important;
 }
 .pfEmail {
+  border: 1px solid #ccc;
   margin-bottom: 0.9rem;
 }
 .pfEmail:focus {
   box-shadow: 0 0 0 0.2rem rgba(145, 84, 255, 0.20);
   border: 1px solid #7839ff71 !important;
 }
-.pfPass {
-  margin-bottom: 1.2rem;
-}
+
 .pfPass:focus {
   box-shadow: 0 0 0 0.2rem rgba(145, 84, 255, 0.20);
   border: 1px solid #7839ff71 !important;
 }
+
+.password-group {
+  position: relative;
+}
+
+.pfPass-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  margin-bottom: 1.2rem;
+  /* padding: 0.375rem 0.75rem; */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
 .pfNewPass {
   margin-bottom: 16px;
 }
@@ -1140,7 +1163,7 @@ input[type="file"]::placeholder {
   width: 100%;
   /* height: 100vh; */
   margin-left: 0.5%;
-  margin-bottom: 6.66%;
+  /* margin-bottom: 6.66%; */
 }
 
 .announcements-container {
@@ -1629,6 +1652,9 @@ input[type="file"]::placeholder {
   }
   .question-container {
     margin-left: 2% !important;
+  }
+  .navLogo-container {
+    left: 7% !important;
   }
 }
 
@@ -2910,6 +2936,10 @@ iframe {
   border-radius: 0.9rem;
 }
 
+.home-myAssBtn:hover {
+  cursor: default;
+}
+
 .home-QuizContainer {
   width: 19rem;
   /* display: flex; */
@@ -3067,6 +3097,7 @@ iframe {
     height: 1.9rem !important;
     border: none;
     border-radius: 0.8rem !important;
+    cursor: default !important;
   }
   .home-QuizContainer {
     width: 12.2rem !important;
@@ -3146,10 +3177,10 @@ iframe {
   }
   .searchBar-container {
     border-radius: 0.44rem !important;
-    margin-left: 11%;
+    margin-left: 12%;
     display: flex;
-    width: 41% !important;
-    height: 54% !important;
+    width: 40% !important;
+    height: 50% !important;
   }
   .searchIcon-container {
     width: 2rem !important;
@@ -3160,7 +3191,7 @@ iframe {
   .notifications-container {
     width: 2.3rem !important;
     height: 2.3rem !important;
-    right: 3.5rem !important;
+    right: 3.3rem !important;
   }
   .bell-container {
     width: 2rem !important;
@@ -3179,20 +3210,23 @@ iframe {
     height: 1.2rem !important;
   }
   .bars {
-    width: 1.7rem !important;
-    height: 1.7rem !important;
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+  }
+  .bars:active {
+    background-color: transparent;
   }
   .barsIcon {
     width: 1.7rem !important;
     height: 1.7rem !important;
   }
   .navLogo-container {
-    width: 5.5rem !important;
-    height: 90% !important;
+    width: 4.8rem !important;
+    height: 1.03rem !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    left: 8.8% !important;
+    left: 10% !important;
   }
   .logOutModal {
     width: 18rem !important;
@@ -3301,10 +3335,10 @@ iframe {
 }
 
 .navLogo-container {
-  width: 9rem;
-  height: 100%;
+  width: 8.7rem;
+  height: 1.6rem;
   position: absolute;
-  left: 4%;
+  left: 6%;
 }
 
 .nav-logo {

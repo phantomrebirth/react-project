@@ -4,6 +4,7 @@ import axios from 'axios';
 import ProfileHead from '../components/ProfileHead';
 import { useSelector } from 'react-redux';
 import { selectToken } from '../redux/slices/authSlice';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Profile = () => {
   const token = useSelector(selectToken);
@@ -12,6 +13,7 @@ const Profile = () => {
     email: '',
     password: ""
   });
+  const [showPassword, setShowPassword] = useState(false);
   
   useEffect(() => {
     fetchProfileData();
@@ -24,6 +26,7 @@ const Profile = () => {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log(response.data); // Log the response data to check if password is included
       const { name, email, password } = response.data;
       setUserData(prevState => ({
         ...prevState,
@@ -113,7 +116,7 @@ const Profile = () => {
             </Form.Group>
             <Form.Group controlId="formPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control className='pfPass' 
+              {/* <Form.Control className='pfPass' 
                             type="password" 
                             placeholder="New Password" 
                             name="password" 
@@ -122,7 +125,22 @@ const Profile = () => {
                               ...prevState,
                               password: e.target.value
                             }))}  
-              />
+              /> */}
+              <div className="pfPass-input">
+                <Form.Control className='pfPass'
+                  type={showPassword ? "text" : "password"}
+                  placeholder="New Password"
+                  name="password"
+                  value={userData.password}
+                  onChange={(e) => setUserData(prevState => ({
+                    ...prevState,
+                    password: e.target.value
+                  }))}
+                />
+                <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </Form.Group>
             {/* <Form.Group controlId="formNewPassword">
               <Form.Label>New Password</Form.Label>

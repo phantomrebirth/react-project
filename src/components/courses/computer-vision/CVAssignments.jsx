@@ -10,7 +10,7 @@ const CVAssignments = () => {
   const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
-  const [submit, setSubmit] = useState(false)
+  const [submited, setSubmited] = useState(false)
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -24,7 +24,7 @@ const CVAssignments = () => {
     // clear after submission
     setSelectedFiles([]);
     setDescription('');
-    setSubmit(true);
+    setSubmited(true);
   };
 
   const handleInProgressClick = () => {
@@ -40,7 +40,7 @@ const CVAssignments = () => {
   return (
     <>
       <Row style={{ margin: "0", padding: "0"}} className='assignments-container'>
-        {showFirstAssignment && !submit && (
+        {showFirstAssignment && !submited && (
          <>
           {/* <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
             <div className='assignment-container'>
@@ -81,7 +81,7 @@ const CVAssignments = () => {
          </>
         )}
       </Row>
-      {!showFirstAssignment && !submit && (
+      {!showFirstAssignment && !submited && (
         <>
           <Row>
             <div className='inProgress-ass'>
@@ -144,7 +144,7 @@ const CVAssignments = () => {
           </div>
         </>
       )}
-      {submit && (
+      {submited && (
         <>
           <Col style={{ margin: "0", padding: "0"}} className='asscol1'>
             <div className='assignment-container'>
@@ -163,6 +163,7 @@ const CVAssignments = () => {
                 </button>
               </div>
             </div>
+
           </Col>
         </>
       )}
