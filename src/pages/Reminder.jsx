@@ -68,7 +68,7 @@ const Reminder = () => {
     <Container className='reminder-container' style={{ margin: "0" }}>
       <Row>
         {!showNoteForm && (
-          <Col md={4} lg={3} xl={3} xxl={3} className='reminder-card'>
+          <Col md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
             <Card style={{ padding: "0" }} className='addR-container' onClick={() => setShowNoteForm(true)}>
               <Card.Body>
                 <Card.Title className='addReminder-body'>
@@ -79,7 +79,7 @@ const Reminder = () => {
           </Col>
         )}
         {!showNoteForm && notes.map((note, index) => (
-          <Col key={index} md={4} lg={3} xl={3} xxl={3} className='reminder-card'>
+          <Col key={index} md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
             <Card style={{ padding: "0" }} className='addedR-container'>
               <Card.Body className='addedReminder-body'>
                 <Card.Title className='addedReminder-title'>
@@ -112,7 +112,7 @@ const Reminder = () => {
         <Container className='note-container' style={{ padding: "0", marginLeft: "1rem" }}>
         <Form className='mt-5'>
           <Row>
-            <Col xs={10} sm={8} md={4} lg={3} xg={2} style={{ padding: "0" }}>
+            <Col xs={10} sm={8} md={5} lg={3} xg={2} style={{ padding: "0" }}>
               <Form.Label className='note-label'>
                 Add Note
               </Form.Label>
@@ -128,7 +128,7 @@ const Reminder = () => {
             </Col>
           </Row>
           <Row>
-            <Col xs={10} sm={8} md={4} lg={3} xg={2}>
+            <Col xs={10} sm={8} md={5} lg={3} xg={2}>
               <Form.Group controlId="noteTitle">
                 {/* <Form.Label>Title</Form.Label> */}
                 <Form.Control
@@ -142,7 +142,7 @@ const Reminder = () => {
             </Col>
           </Row>
           <Row>
-            <Col xs={10} sm={8} md={4} lg={3} xg={2}>
+            <Col xs={10} sm={8} md={5} lg={3} xg={2}>
               <Form.Group controlId="noteBody" className='noteB-text'>
                 {/* <Form.Label>Note</Form.Label> */}
                 <Form.Control

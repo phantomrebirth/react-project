@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
         <Col xs={isSidebarOpen ? 5 : 12}
              sm={isSidebarOpen ? 4 : 12}
              md={isSidebarOpen ? 3 : 12}
-             lg={isSidebarOpen ? 3 : 12}
+             lg={isSidebarOpen ? 2 : 12}
              xl={isSidebarOpen ? 2 : 12}
              style={{ padding: "0", margin: "0", maxWidth: isSidebarOpen ? "200px" : "none" }}>
           {isSidebarOpen && 
@@ -29,7 +29,7 @@ const Layout = ({ children }) => {
         <Col xs={isSidebarOpen ? 7 : 12}
              sm={isSidebarOpen ? 8 : 12}
              md={isSidebarOpen ? 9 : 12}
-             lg={isSidebarOpen ? 9 : 12}
+             lg={isSidebarOpen ? 10 : 12}
              xl={isSidebarOpen ? 10 : 12}
              style={{margin: "0", overflowY: "scroll", height: "94vh"}}
              className="content-container" >

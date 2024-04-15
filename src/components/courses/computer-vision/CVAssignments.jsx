@@ -85,7 +85,7 @@ const CVAssignments = () => {
         <>
           <Row>
             <div className='inProgress-ass'>
-              <Col md={7} lg={6} xl={6}>
+              <Col md={7} lg={7} xl={7}>
                 <div className="assignment-container2" style={{marginLeft: "0px"}}>
                   <div className='assignment-header'>
                     <ul className='ass-h'>
@@ -103,7 +103,7 @@ const CVAssignments = () => {
                   </div>
                 </div>
               </Col>
-              <Col >
+              <Col md={5} lg={5} xl={5}>
                 <div className='upAss-container'>
                   {/* Use label to trigger file input */}
                   <label htmlFor='assignmentInput' className='headUp-ass'>

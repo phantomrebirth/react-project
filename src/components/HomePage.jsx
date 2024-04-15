@@ -152,7 +152,7 @@ const HomePage = () => {
             </div>
           </Row>
         </Container>
-        <Container style={{padding: "0 0 0 2%", maxWidth: "100%", margin: "1.5rem 0 0 0"}} className='home-QuizContainer'>
+        <Container style={{paddingBottom: "1%", maxWidth: "100%", margin: "1.5rem 0 0 0"}} className='home-QuizContainer'>
           <Row>
             <h3 className='home-QuizHeader'>
               Quiz

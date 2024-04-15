@@ -8,31 +8,27 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 const Assignments = () => {
   return (
-    <Container style={{margin: "0 1% 0 auto"}} className='mt-4'>
-      <Row>
-        <Col style={{padding: "1.2%"}}>
-          <CVAssignments/>
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{padding: "1.2%"}}>
-          <ProgrammingAssignments/>
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{padding: "1.2%"}}>
-          <AIAssignments/>
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{padding: "1.2%"}}>
-          <NetworkAssignments/>
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{padding: "1.2%"}}>
-          <SWAssignments/>
-        </Col>
+    <Container  fluid className='mt-4 side-assContainer'>
+      <Row style={{width: "100%"}}>
+        <Row  className='side-assRow'>
+          <Col style={{padding: "1.2%"}} xl={12} lg={12}>
+            <CVAssignments/>
+          </Col>
+          <Col style={{padding: "1.2%"}} xl={12} lg={12}>
+            <ProgrammingAssignments/>
+          </Col>
+          <Col style={{padding: "1.2%"}} xl={12} lg={12}>
+            <SWAssignments/>
+          </Col>
+        </Row>
+        <Row  className='side-assRow'>
+          <Col style={{padding: "1.2%"}} xl={12} lg={12}>
+            <AIAssignments/>
+          </Col>
+          <Col style={{padding: "1.2%"}} xl={12} lg={12}>
+            <NetworkAssignments/>
+          </Col>
+        </Row>
       </Row>
     </Container>
   );
