@@ -85,7 +85,7 @@ const NetworkAssignments = () => {
                   </div>
                 </div>
               </Col>
-              <Col md={5} lg={5} xl={5}>
+              <Col md={5} lg={5} xl={5} style={{marginLeft: "21px"}}>
                 <div className='upAss-container'>
                   <label htmlFor='assignmentInput' className='headUp-ass'>
                     Upload Assignment

@@ -103,7 +103,7 @@ const CVAssignments = () => {
                   </div>
                 </div>
               </Col>
-              <Col md={5} lg={5} xl={5}>
+              <Col md={5} lg={5} xl={5} style={{marginLeft: "21px"}}>
                 <div className='upAss-container'>
                   {/* Use label to trigger file input */}
                   <label htmlFor='assignmentInput' className='headUp-ass'>

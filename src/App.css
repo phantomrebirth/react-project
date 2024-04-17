@@ -3281,7 +3281,7 @@ iframe {
     width: 100%;
     margin-right: 0% !important;
     padding-right: 0% !important;
-    margin-left: 2% !important;
+    margin-left: 0% !important;
   }
   .side-assRow {
     width: 100% !important;
@@ -3497,7 +3497,11 @@ iframe {
 
 .side-assContainer {
   width: 100%;
-  margin: 0 0 0 auto;
+  /* margin: 0 0 0 auto; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0%;
 }
 
 .side-assRow {
@@ -3507,5 +3511,49 @@ iframe {
   flex-direction: column;
   padding: 0%;
   margin: 0%;
+}
+
+@media screen and (min-width: 901px) and (max-width: 1080px) {
+  .side-assContainer {
+    width: 100%;
+    margin-right: 0% !important;
+    padding-right: 0% !important;
+    margin-left: 2% !important;
+  }
+  .side-assRow {
+    width: 100% !important;
+    display: inline !important;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: auto !important;
+    margin: auto !important;
+  }
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background-color: #202124;
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  color: #fff;
+  height: 16rem;
+}
+
+.notification-dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.notification-dropdown-item:hover {
+  background-color: #424242;
+}
+
+.notification-dropdown-item:last-child {
+  border-bottom: none;
 }
 

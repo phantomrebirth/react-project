@@ -10,6 +10,7 @@ import LogOutModal from "../redux/actions/LogOutModal";
 import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { CiSearch } from "react-icons/ci";
 import { FaRegBell } from "react-icons/fa";
+import { FaBell } from "react-icons/fa6";
 
 const Navbar = ({ toggleSidebar }) => {
   const imageUrl = useSelector(selectImageUrl);
@@ -21,6 +22,9 @@ const Navbar = ({ toggleSidebar }) => {
   const token = useSelector(selectToken);
   const dispatch = useDispatch();
   const isOpen = useSelector(state => state.logOutModal.isOpen);
+  const [bellClicked, setBellClicked] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
+  const notificationRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchProfilePicture(token));
@@ -30,23 +34,45 @@ const Navbar = ({ toggleSidebar }) => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
           userIconRef.current && !userIconRef.current.contains(event.target)) {
+
         setDropdownOpen(false);
+        setNotificationDropdownOpen(false);
+      }
+    };
+
+    const handleNotificationClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target) &&
+        notificationRef.current.querySelector('.notification-dropdown') &&
+        !notificationRef.current.querySelector('.notification-dropdown').contains(event.target)
+      ) {
+        setNotificationDropdownOpen(false);
+        setBellClicked(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleNotificationClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handleNotificationClickOutside);
     };
   }, []);
 
   const handleClickUserIcon = () => {
     setDropdownOpen(!dropdownOpen);
+    setNotificationDropdownOpen(false);
   };
 
   const handleLogout = () => {
     dispatch(openLogOutModal());
+  };
+
+  const handleBellClick = () => {
+    setNotificationDropdownOpen(!notificationDropdownOpen);
+    setBellClicked(prevState => !prevState);
   };
 
   return (
@@ -66,12 +92,21 @@ const Navbar = ({ toggleSidebar }) => {
           <input className="search" type="text" placeholder="Search"/>
         </div>
       </div>
-      <div className="notifications-container">
-        <div className="bell-container">
+      <div className="notifications-container" ref={notificationRef}>
+        <div className="bell-container" onClick={handleBellClick}>
           {/* <div className="notifications">
             <div className="notifications-num">2+</div>
           </div> */}
-          <FaRegBell className="bell"/>
+          {bellClicked ? (
+            <FaBell className="bell clicked" style={{color: "white"}} />
+          ) : (
+            <FaRegBell className="bell" />
+          )}
+          {notificationDropdownOpen && (
+            <div className="notification-dropdown">
+              {/* Your notification items here */}
+            </div>
+          )}
         </div>
       </div>
       <div className="userIconContainer" ref={userIconRef} onClick={handleClickUserIcon}>
