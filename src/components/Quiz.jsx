@@ -71,70 +71,81 @@ const Quiz = () => {
                 <div className='questions-container'>
                     <div className='allQuestions-container'>
                         <Col >
-                        <div className='QA-container'>
-                            <div className='photoOrAudio-container'>
-                                <p>
-                                    Photo/Audio
-                                </p>
-                            </div>
-                            <div className='page-container'>
-                                <div className='question-container'>
-                                    <p className='question'>
-                                    ......... will get me out of here here?
+                            <div className='QA-container'>
+                                <div style={{display: "flex"}}>
+                                <div className='photoOrAudio-container'>
+                                    <p className='photoOrAudio'>
+                                        Photo/Audio
                                     </p>
                                 </div>
-                                {/* <div className='ahaa'> */}
-                                <div className='answers-container' style={{padding: "0", margin: "0"}}>
-                                    <Row className='all-answers' style={{padding: "0", margin: "0"}}>
-                                        <Col md={12}>
-                                        <div className='answer-container'>
-                                            <button className={`answer ${selectedAnswers[activePage - 1] === "A" ? 'selected' : ''}`} onClick={() => handleAnswerClick("A")}>
-                                                A. Who
-                                            </button>
-                                        </div>
-                                        </Col>
-                                        <Col md={12}>
-                                        <div className='answer-container'>
-                                            <button className={`answer ${selectedAnswers[activePage - 1] === "B" ? 'selected' : ''}`} onClick={() => handleAnswerClick("B")}>
-                                                B. What
-                                            </button>
-                                        </div>
-                                        </Col>
-                                    </Row>
-                                    <Row className='all-answers' style={{padding: "0", margin: "0"}}>
-                                        <Col md={12}>
-                                        <div className='answer-container'>
-                                            <button className={`answer ${selectedAnswers[activePage - 1] === "C" ? 'selected' : ''}`} onClick={() => handleAnswerClick("C")}>
-                                                C. Where
-                                            </button>
-                                        </div>
-                                        </Col>
-                                        <Col md={12}>
-                                        <div className='answer-container'>
-                                            <button className={`answer ${selectedAnswers[activePage - 1] === "D" ? 'selected' : ''}`} onClick={() => handleAnswerClick("D")}>
-                                                D. When
-                                            </button>
-                                        </div>
-                                        </Col>
-                                    </Row>
-                                {/* </div> */}
+                                <div className='quiz-timeContainer'>
+                                    <div className='quiz-timeLeft'>Time left 20:20</div>
+                                </div>
+                                </div>
+                                <div className='page-container'>
+                                    <div className='question-container'>
+                                        <p className='question'>
+                                        ......... will get me out of here?
+                                        </p>
+                                    </div>
+                                    <div className='answers-container' style={{padding: "0", margin: "0"}}>
+                                        <Row className='all-answers' style={{padding: "0", margin: "0"}}>
+                                            <Col md={12}>
+                                            <div className='answer-container'>
+                                                <button className={`answer ${selectedAnswers[activePage - 1] === "A" ? 'selected' : ''}`} 
+                                                        onClick={() => handleAnswerClick("A")}
+                                                        >
+                                                    A. Who
+                                                </button>
+                                            </div>
+                                            </Col>
+                                            <Col md={12}>
+                                            <div className='answer-container'>
+                                                <button className={`answer ${selectedAnswers[activePage - 1] === "B" ? 'selected' : ''}`}
+                                                        onClick={() => handleAnswerClick("B")}
+                                                        >
+                                                    B. What
+                                                </button>
+                                            </div>
+                                            </Col>
+                                        </Row>
+                                        <Row className='all-answers' style={{padding: "0", margin: "0"}}>
+                                            <Col md={12}>
+                                            <div className='answer-container'>
+                                                <button className={`answer ${selectedAnswers[activePage - 1] === "C" ? 'selected' : ''}`}
+                                                        onClick={() => handleAnswerClick("C")}
+                                                        >
+                                                    C. Where
+                                                </button>
+                                            </div>
+                                            </Col>
+                                            <Col md={12}>
+                                            <div className='answer-container'>
+                                                <button className={`answer ${selectedAnswers[activePage - 1] === "D" ? 'selected' : ''}`}
+                                                        onClick={() => handleAnswerClick("D")}
+                                                        >
+                                                    D. When
+                                                </button>
+                                            </div>
+                                            </Col>
+                                        </Row>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </Col>
-                        
                         <div className='qPages-container'>
                             <div className='question-pages'>
                             {[...Array(15)].map((_, index) => (
                                 <div className='question-page' key={index}>
-                                    <button className={`page-num ${activePage === index + 1 ? 'active' : ''}`} onClick={() => handlePageClick(index + 1)}>
+                                    <button className={`page-num ${activePage === index + 1 ? 'active' : ''}`} 
+                                            onClick={() => handlePageClick(index + 1)}
+                                            >
                                         {index + 1}
                                     </button>
                                 </div>
                             ))}
                             </div>
                         </div>
-                        
                     </div>
                     <div className='nextBtn-container'>
                         <Button className='nextBtn' onClick={activePage === 15 ? handleFinishClick : handleNextClick}>
