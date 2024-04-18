@@ -10,7 +10,7 @@ const NetworkAssignments = () => {
   const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
-  const [submited, setSubmited] = useState(false)
+  const [submited, setSubmited] = useState(false);
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -49,12 +49,12 @@ const NetworkAssignments = () => {
                     <li>Network</li>
                 </ul>
               </div>
-              <div className='assignment'>
+              <div className='assignment' onClick={handleInProgressClick} style={{cursor: "pointer"}}>
                 <div className='assName-container'>
                   <h5 className='ass-name'>Assignment 1</h5>
-                  <h6 className='ass-zeros'>00.00.0000</h6>
+                  <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
                 </div>
-                <button className='ass-btn2' onClick={handleInProgressClick}>
+                <button className='ass-btn2'>
                     In progress
                 </button>
               </div>
@@ -77,7 +77,7 @@ const NetworkAssignments = () => {
                   <div className='assignment'>
                     <div className='assName-container'>
                       <h5 className='ass-name'>Assignment 1</h5>
-                      <h6 className='ass-zeros'>00.00.0000</h6>
+                      <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
                     </div>
                     <button className='ass-btn2' style={{cursor: "unset"}}>
                         In progress
@@ -136,7 +136,7 @@ const NetworkAssignments = () => {
               <div className='assignment'>
                 <div className='assName-container'>
                   <h5 className='ass-name'>Assignment 1</h5>
-                  <h6 className='ass-zeros'>00.00.0000</h6>
+                  <h6 className='ass-zeros'>uploaded 00/00 - submitted 00/00</h6>
                 </div>
                 <button className='ass-btn' style={{cursor: "unset"}}>
                       Done

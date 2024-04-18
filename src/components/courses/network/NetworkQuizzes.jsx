@@ -20,37 +20,19 @@ const NetworkQuizzes = () => {
         {showFinishedQuiz && !showQuiz && (
           <>
             <Row className='quizzes-container' style={{ margin: "0", padding: "0"}}>
-                <Col style={{ margin: "0", padding: "0"}} className='quiz-col1'>
-                    <div className='fQ-container'>
-                        <div className='quiz-header'>
-                            <ul className='q-head'>
-                                <li>Quiez 1</li>
-                            </ul>
-                        </div>
-                        <div className='finished-quiz'>
-                            <div className='fQName-container'>
-                                <h5 className='fQ-name'>Network Quiz</h5>
-                                <h6 className='fQ-zeros'>00.00.0000</h6>
-                            </div>
-                            <button className='fQ-btn'>
-                                Finished
-                            </button>
-                        </div>
-                    </div>
-                </Col>
                 <Col style={{ margin: "0", padding: "0"}} className='quiz-col2'>
                     <div className='aQ-container'>
                         <div className='quiz-header'>
                             <ul className='q-head'>
-                                <li>Quiez 2</li>
+                                <li>Network</li>
                             </ul>
                         </div>
-                        <div className='attempt-quiz'>
+                        <div className='attempt-quiz' onClick={handleAttemptQuizClick} style={{cursor: "pointer"}}>
                             <div className='aQName-container'>
-                                <h5 className='aQ-name'>Quiz 2</h5>
-                                <h6 className='aQ-zeros'>00.00.0000</h6>
+                                <h5 className='aQ-name'>Quiz 1</h5>
+                                <h6 className='ass-zeros'>uploaded 00/00</h6>
                             </div>
-                            <button className='aQ-btn' onClick={handleAttemptQuizClick}>
+                            <button className='aQ-btn'>
                                 Attempt Quiz
                             </button>
                         </div>
@@ -67,16 +49,16 @@ const NetworkQuizzes = () => {
                         <div className='aQ-container' style={{marginLeft: "0px"}}>
                             <div className='quiz-header'>
                                 <ul className='q-head'>
-                                    <li>Quiez 2</li>
+                                    <li>Network</li>
                                 </ul>
                             </div>
                             <div className='attempt-quiz'>
                                 <div className='aQName-container'>
-                                    <h5 className='aQ-name'>Quiz 2</h5>
-                                    <h6 className='aQ-zeros'>00.00.0000</h6>
+                                    <h5 className='aQ-name'>Quiz 1</h5>
+                                    {/* <h6 className='ass-zeros'>uploaded 00/00</h6> */}
                                 </div>
                                 <button className='aQ-btn' style={{cursor: "unset"}}>
-                                    Attempt Quiz
+                                    Attempt now
                                 </button>
                             </div>
                         </div>

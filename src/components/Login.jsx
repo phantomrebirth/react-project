@@ -118,9 +118,9 @@ const Login = () => {
                         <form onSubmit={handleSubmit} id="loginForm" className="loginForm">
                             <div className="fontEmail"></div>
                             <div id="emailInput" style={{ borderColor: "silver" }}>
-                            <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                <img id="emailIcon" src="src/assets/images/email.png" alt="email" />
-                            </div>
+                                <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                                    <img id="emailIcon" src="src/assets/images/email.png" alt="email" />
+                                </div>
                                 <input type="email"
                                        name="email" 
                                        id="email" 
@@ -135,9 +135,9 @@ const Login = () => {
                             </div>
                             <div className="fontPassword"></div>
                             <div id="passwordInput">
-                            <div style={{width: "10%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                <img id="passwordIcon" src="src/assets/images/password.png" alt="password" />
-                            </div>
+                                <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                                    <img id="passwordIcon" src="src/assets/images/password.png" alt="password" />
+                                </div>
                                 <input type={passwordVisibility} 
                                        required 
                                        name="password" 
@@ -145,13 +145,13 @@ const Login = () => {
                                        placeholder="Password" 
                                        value={password} 
                                        onChange={handleInputChange}/>
-                                       <div style={{width: "10%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                {isEyeClosed ? (
-                                    <img src={closedEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
-                                ) : (
-                                    <img src={openEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
-                                )}
-                                       </div>
+                                <div className='eyeIcon-container'>
+                                    {isEyeClosed ? (
+                                        <img src={closedEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
+                                    ) : (
+                                        <img src={openEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
+                                    )}
+                               </div>
                             </div>
                             <div id="pass-error">
                                 <div id="password_error" style={{ display: "none" }}>

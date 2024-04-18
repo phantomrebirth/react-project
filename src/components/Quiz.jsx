@@ -27,8 +27,28 @@ const Quiz = () => {
   const handleNextClick = () => {
     if (activePage === 15) {
       // Add logic here to handle last page actions
-      return; // Do nothing when already on the last page
-    }
+      return 
+    //   (
+    //       <Col style={{ margin: "0", padding: "0"}} className='quiz-col1'>
+    //           <div className='fQ-container'>
+    //               <div className='quiz-header'>
+    //                   <ul className='q-head'>
+    //                       <li>Quiez 1</li>
+    //                   </ul>
+    //               </div>
+    //               <div className='finished-quiz'>
+    //                   <div className='fQName-container'>
+    //                       <h5 className='fQ-name'>CV Quiz</h5>
+    //                       <h6 className='fQ-zeros'>00.00.0000</h6>
+    //                   </div>
+    //                   <button className='fQ-btn'>
+    //                         Finished
+    //                   </button>
+    //               </div>
+    //           </div>
+    //       </Col>
+    //   );
+    };
     setActivePage(prevPage => prevPage + 1);
   };
 
@@ -46,13 +66,13 @@ const Quiz = () => {
             <div className='fQ-container'>
                 <div className='quiz-header'>
                     <ul className='q-head'>
-                        <li>Quiez 1</li>
+                        <li>Computer Vision</li>
                     </ul>
                 </div>
                 <div className='finished-quiz'>
                     <div className='fQName-container'>
-                        <h5 className='fQ-name'>CV Quiz</h5>
-                        <h6 className='fQ-zeros'>00.00.0000</h6>
+                        <h5 className='fQ-name'>Quiz 1</h5>
+                        <h6 className='fQ-zeros'>submitted 00/00/0000 at 00:00</h6>
                     </div>
                     <button className='fQ-btn'>
                         Finished
@@ -79,7 +99,7 @@ const Quiz = () => {
                                     </p>
                                 </div>
                                 <div className='quiz-timeContainer'>
-                                    <div className='quiz-timeLeft'>Time left 20:20</div>
+                                    <div className='quiz-timeLeft'>Time left 20:00</div>
                                 </div>
                                 </div>
                                 <div className='page-container'>
