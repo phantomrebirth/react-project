@@ -1222,7 +1222,7 @@ input[type="file"]::placeholder {
 }
 
 .annP-container {
-  text-align: center;
+  /* text-align: center; */
   /* height: fit-content; */
   /* width: calc(max-content + 1%); */
   /* display: flex; */
@@ -1231,12 +1231,12 @@ input[type="file"]::placeholder {
 }
 
 .announcement-p {
-  font-size: 111%;
+  font-size: 99%;
   font-weight: 100%;
-  padding: 0px !important;
+  padding: 0px 0.25rem !important;
   margin-bottom: 0px !important;
   /* margin-top: 0.2rem; */
-  text-align: center;
+  /* text-align: center; */
   text-decoration: none;
   border: none;
   color: #000;
@@ -1265,7 +1265,7 @@ input[type="file"]::placeholder {
     left: 0;
   }
   .announcement-p {
-    font-size: 100%;
+    font-size: 94%;
   }
   .annIcon-container {
     width: 1.5rem;
@@ -3354,6 +3354,30 @@ iframe {
     padding: auto !important;
     margin: auto !important;
   }
+  .notification-dropdown {
+    top: 100%;
+    right: 0;
+    width: 17rem !important;
+    border-radius: 0.75rem !important;
+    height: 24rem !important;
+  }
+  .notifications-headerContainer {
+    height: 2.5rem !important;
+    width: 17rem !important;
+  }
+  .notifications-header {
+    font-size: 100% !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  .notification-items {
+    height: 91% !important;
+    margin-top: 2.5rem !important;
+    overflow-y: scroll;
+    padding-bottom: 0.25rem;
+  }
+  /* .notification-dropdown-item:last-child {
+    padding-bottom: 1rem !important;
+  } */
 }
 
 .logOutModal-container {
@@ -3606,6 +3630,28 @@ iframe {
   z-index: 2000;
   color: #fff;
   height: 26.5rem;
+  overflow: hidden;
+}
+
+.notifications-headerContainer {
+  position: fixed;
+  height: 3rem;
+  border-bottom: 1px solid #66666636;
+  width: 30rem;
+}
+
+.notifications-header {
+  font-size: 106%;
+  margin: 0%;
+  padding: 0.75rem 1rem;
+  color: #000;
+}
+
+.notification-items {
+  height: 90%;
+  margin-top: 3rem;
+  overflow-y: scroll;
+  padding-bottom: 0.25rem;
 }
 
 .notification-dropdown-item {
@@ -3614,10 +3660,12 @@ iframe {
 }
 
 .notification-dropdown-item:hover {
-  background-color: #424242;
+  /* background-color: #424242; */
+  background-color: #f0f0f0;
 }
 
 .notification-dropdown-item:last-child {
   border-bottom: none;
+  padding-bottom: 1rem;
 }
 

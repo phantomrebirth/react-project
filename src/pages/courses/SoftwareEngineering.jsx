@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
-import SWAnnouncements from '../../components/courses/software-engineering/SWAnnouncements';
 import SWFiles from '../../components/courses/software-engineering/SWFiles';
 import SWAssignments from '../../components/courses/software-engineering/SWAssignments';
 import SWProjects from '../../components/courses/software-engineering/SWProjects';
@@ -26,7 +25,7 @@ const SoftwareEngineering = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
                 <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
-                  <Nav.Link id='tabz' className='tab-link' eventKey="Tab 1">Announcements</Nav.Link>
+                  <Nav.Link id='tabz' className='tab-link' eventKey="Tab 1">Chat</Nav.Link>
                   <Nav.Link id='tabz' className='tab-link' eventKey="Tab 2">Videos</Nav.Link>
                   <Nav.Link id='tabz' className='tab-link' eventKey="Tab 3">Files</Nav.Link>
                   <Nav.Link id='tabz' className='tab-link' eventKey="Tab 4">Assignments</Nav.Link>
@@ -43,7 +42,7 @@ const SoftwareEngineering = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div><SWAnnouncements/></div>}
+            {activeTab === 'Tab 1' && <div>messages</div>}
             {activeTab === 'Tab 2' && <div><SWVideos/></div>}
             {activeTab === 'Tab 3' && <div><SWFiles/></div>}
             {activeTab === 'Tab 4' && <div><SWAssignments/></div>}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
-import CVAnnouncements from '../../components/courses/computer-vision/CVAnnouncements';
 import CVFiles from '../../components/courses/computer-vision/CVFiles';
 import CVAssignments from '../../components/courses/computer-vision/CVAssignments';
 import CVProjects from '../../components/courses/computer-vision/CVProjects';
@@ -26,7 +25,7 @@ const ComputerVision = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
                 <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
-                  <Nav.Link id='tabz' className='tab-link' eventKey="Tab 1">Announcements</Nav.Link>
+                  <Nav.Link id='tabz' className='tab-link' eventKey="Tab 1">Chat</Nav.Link>
                   <Nav.Link id='tabz' className='tab-link' eventKey="Tab 2">Videos</Nav.Link>
                   <Nav.Link id='tabz' className='tab-link' eventKey="Tab 3">Files</Nav.Link>
                   <Nav.Link id='tabz' className='tab-link' eventKey="Tab 4">Assignments</Nav.Link>
@@ -44,7 +43,7 @@ const ComputerVision = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}} fluid>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div><CVAnnouncements/></div>}
+            {activeTab === 'Tab 1' && <div>messages</div>}
             {activeTab === 'Tab 2' && <div><CVVideos/></div>}
             {activeTab === 'Tab 3' && <div><CVFiles/></div>}
             {activeTab === 'Tab 4' && <div><CVAssignments/></div>}

@@ -11,6 +11,12 @@ import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { CiSearch } from "react-icons/ci";
 import { FaRegBell } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
+import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
+import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
+import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
+import NetworkAnnouncements from "./courses/network/NetworkAnnouncements";
+import SWAnnouncements from "./courses/software-engineering/SWAnnouncements";
+import DeadlineNotification from "./DeadlineNotification";
 
 const Navbar = ({ toggleSidebar }) => {
   const imageUrl = useSelector(selectImageUrl);
@@ -48,7 +54,7 @@ const Navbar = ({ toggleSidebar }) => {
         !notificationRef.current.querySelector('.notification-dropdown').contains(event.target)
       ) {
         setNotificationDropdownOpen(false);
-        setBellClicked(false);
+        // setBellClicked(false);
       }
     };
 
@@ -72,7 +78,8 @@ const Navbar = ({ toggleSidebar }) => {
 
   const handleBellClick = () => {
     setNotificationDropdownOpen(!notificationDropdownOpen);
-    setBellClicked(prevState => !prevState);
+    // setBellClicked(prevState => !prevState);
+    setBellClicked(true);
   };
 
   return (
@@ -94,17 +101,50 @@ const Navbar = ({ toggleSidebar }) => {
       </div>
       <div className="notifications-container" ref={notificationRef}>
         <div className="bell-container" onClick={handleBellClick}>
-          {/* <div className="notifications">
-            <div className="notifications-num">2+</div>
-          </div> */}
-          {bellClicked ? (
-            <FaBell className="bell clicked" style={{color: "white"}} />
-          ) : (
+          <div className="notifications">
+            {!bellClicked && (<div className="notifications-num">6+</div>)}
+          </div>
+          {notificationDropdownOpen && (
+            <FaBell className="bell" style={{color: "white"}} />
+          )}
+          {!notificationDropdownOpen && (
             <FaRegBell className="bell" />
           )}
           {notificationDropdownOpen && (
             <div className="notification-dropdown">
-              {/* Your notification items here */}
+              <div className="notifications-headerContainer">
+                <p className="notifications-header">Notifications</p>
+              </div>
+              <div className="notification-items">
+                <div className='notification-dropdown-item'>
+                  <DeadlineNotification/>
+                </div>
+                <div className='notification-dropdown-item'>
+                  <NavLink to='/courses/software-engineering' style={{textDecoration: "none"}}>
+                    <SWAnnouncements/>
+                  </NavLink>
+                </div>
+                <div className='notification-dropdown-item'>
+                  <NavLink to='/courses/network' style={{textDecoration: "none"}}>
+                    <NetworkAnnouncements/>
+                  </NavLink>
+                </div>
+                <div className='notification-dropdown-item'>
+                  <NavLink to='/courses/artificial-intelligence' style={{textDecoration: "none"}}>
+                    <AIAnnouncements/>
+                  </NavLink>
+                </div>
+                <div className='notification-dropdown-item'>
+                  <NavLink to='/courses/programming' style={{textDecoration: "none"}}>
+                    <ProgrammingAnnouncements/>
+                  </NavLink>
+                </div>
+                <div className='notification-dropdown-item'>
+                  <NavLink to='/courses/computer-vision' style={{textDecoration: "none"}}>
+                    <CVAnnouncements/>
+                  </NavLink>
+                </div>
+              </div>
             </div>
           )}
         </div>
