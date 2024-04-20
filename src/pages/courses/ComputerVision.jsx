@@ -7,6 +7,7 @@ import CVQuizzes from '../../components/courses/computer-vision/CVQuizzes';
 import CVVideos from '../../components/courses/computer-vision/CVVideos';
 import CVGrades from '../../components/courses/computer-vision/CVGrades';
 import CVAttendanceRate from '../../components/courses/computer-vision/CVAttendanceRate';
+import CVChat from '../../components/courses/computer-vision/CVChat';
 
 const ComputerVision = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -43,7 +44,7 @@ const ComputerVision = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}} fluid>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div>messages</div>}
+            {activeTab === 'Tab 1' && <div><CVChat/></div>}
             {activeTab === 'Tab 2' && <div><CVVideos/></div>}
             {activeTab === 'Tab 3' && <div><CVFiles/></div>}
             {activeTab === 'Tab 4' && <div><CVAssignments/></div>}
