@@ -5,14 +5,14 @@ import { HiOutlinePhotograph } from "react-icons/hi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import CameraModal from '../../CameraModel';
 
-const CVChat = () => {
+const AIChat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [recordedBlob, setRecordedBlob] = useState(null);
-  const [intentToSend, setIntentToSend] = useState('message'); // 'message' or 'recording'
+  const [intentToSend, setIntentToSend] = useState('message');
   const [showCamera, setShowCamera] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [capturedPhotoPending, setCapturedPhotoPending] = useState(false);
@@ -28,7 +28,6 @@ const CVChat = () => {
   }, []);
 
   useEffect(() => {
-    // Update recording duration every second
     const interval = setInterval(() => {
       if (isRecording && recordingStartTime) {
         const elapsed = (new Date() - recordingStartTime) / 1000;
@@ -44,28 +43,25 @@ const CVChat = () => {
       const newMessages = [...messages, { text: newMessage, sender: 'user', timestamp: new Date().toLocaleTimeString() }];
       setMessages(newMessages);
       setNewMessage('');
-      setIsRecording(false); // Reset recording state
+      setIsRecording(false);
       setRecordingStartTime(null);
       setRecordingDuration(0);
-      setIntentToSend('message'); // Reset intent to send a message
+      setIntentToSend('message');
       inputRef.current.focus();
     }
     handleSendCapturedPhoto();
   };
   const handleSendRecordedBlob = () => {
-    console.log("Sending recorded blob");
-    console.log("recordedBlob:", recordedBlob);
-    console.log("intentToSend:", intentToSend);
     
     if (recordedBlob && intentToSend === 'recording') {
       const audioUrl = URL.createObjectURL(recordedBlob);
       const voiceNoteMessage = { audioUrl, sender: 'user', timestamp: new Date().toLocaleTimeString() };
       setMessages([...messages, voiceNoteMessage]);
       setRecordedBlob(null);
-      setIsRecording(false); // Reset recording state
+      setIsRecording(false);
       setRecordingStartTime(null);
       setRecordingDuration(0);
-      setIntentToSend('message'); // Reset intent to send a message
+      setIntentToSend('message');
       chunksRef.current = [];
       scrollToBottom();
     } else {
@@ -94,7 +90,6 @@ const CVChat = () => {
 
   const handleMicClick = () => {
     if (!isRecording) {
-      // Start recording voice note
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
           .then(stream => {
@@ -120,7 +115,6 @@ const CVChat = () => {
         console.error('getUserMedia not supported on your browser');
       }
     } else {
-      // Stop recording voice note
       mediaRecorderRef.current.stop();
     }
   };
@@ -132,42 +126,33 @@ const CVChat = () => {
   };
 
   const handleDeleteRecording = () => {
-    // Reset recorded blob and intent to send
     setRecordedBlob(null);
     setIntentToSend('message');
   
-    // Stop recording if in progress
     if (isRecording) {
       setMessages([...messages]);
       setRecordedBlob(null);
-      setIsRecording(false); // Reset recording state
+      setIsRecording(false);
       setRecordingStartTime(null);
       setRecordingDuration(0);
-      setIntentToSend('message'); // Reset intent to send a message
+      setIntentToSend('message');
       chunksRef.current = [];
       scrollToBottom();
     }
   
-    // Scroll to bottom after deletion
     scrollToBottom();
   };
 
   const handlePhotoInputChange = (e) => {
-    // Handle selected photo
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Generate a random number for the filename
         const randomNumber = Math.floor(Math.random() * 1000000);
-        // Extract file extension
         const fileExtension = file.name.split('.').pop();
-        // Create a Blob with the file data
         const blob = new Blob([reader.result], { type: file.type });
-        // Create a new File object with the Blob and the random filename
         const renamedFile = new File([blob], `${randomNumber}.${fileExtension}`, { type: file.type });
         
-        // Use the renamedFile object as needed
         const photoUrl = URL.createObjectURL(renamedFile);
         const photoMessage = { photoUrl, sender: 'user', timestamp: new Date().toLocaleTimeString() };
         setMessages([...messages, photoMessage]);
@@ -189,10 +174,10 @@ const CVChat = () => {
         sender: 'user',
         timestamp: new Date().toLocaleTimeString(),
       };
-      setMessages([...messages, photoMessage]); // Send the captured photo as a message
-      setCapturedPhoto(null); // Clear the captured photo URL
-      setCapturedPhotoPending(false); // Reset capturedPhotoPending
-      scrollToBottom(); // Scroll to bottom after sending the photo
+      setMessages([...messages, photoMessage]);
+      setCapturedPhoto(null);
+      setCapturedPhotoPending(false);
+      scrollToBottom();
     }
   };
 
@@ -248,9 +233,6 @@ const CVChat = () => {
         {capturedPhotoPending && (
           <div className="captured-photo-container">
             <img src={capturedPhoto} alt="Captured" className='captured-photo'/>
-            {/* <button className="send-button" onClick={handleSendCapturedPhoto}>
-              <FaPaperPlane className='send-icon'/>
-            </button> */}
               <button className="captured-deleteBtn" onClick={handleDeleteCapturedPhoto}>
                 X
               </button>
@@ -287,13 +269,6 @@ const CVChat = () => {
           </button>
         </>
         )}
-        {/* {(isRecording || recordedBlob) && (
-          <button className="chat-recordDelete" 
-                  onClick={() => { handleDeleteRecording(); }}
-          >
-              <MdOutlineDeleteOutline className='delete-record'/>
-          </button>
-        )} */}
         {isRecording && !recordedBlob && (
           <button className="chat-recordDelete" 
           onClick={() => { handleDeleteRecording(); }}
@@ -340,4 +315,4 @@ const CVChat = () => {
   );
 };
 
-export default CVChat;
+export default AIChat;

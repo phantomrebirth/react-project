@@ -7,6 +7,7 @@ import ProgrammingVideos from '../../components/courses/programming/ProgrammingV
 import ProgrammingQuizzes from '../../components/courses/programming/ProgrammingQuizzes';
 import ProgrammingGrades from '../../components/courses/programming/ProgrammingGrades';
 import ProgrammingAttendanceRate from '../../components/courses/programming/ProgrammingAttendanceRate';
+import ProgrammingChat from '../../components/courses/programming/ProgrammingChat';
 
 const Programming = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -42,7 +43,7 @@ const Programming = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div>messages</div>}
+            {activeTab === 'Tab 1' && <div><ProgrammingChat/></div>}
             {activeTab === 'Tab 2' && <div><ProgrammingVideos/></div>}
             {activeTab === 'Tab 3' && <div><ProgrammingFiles/></div>}
             {activeTab === 'Tab 4' && <div><ProgrammingAssignments/></div>}

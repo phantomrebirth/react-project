@@ -7,6 +7,7 @@ import AIVideos from '../../components/courses/artificial-intelligence/AIVideos'
 import AIQuizzes from '../../components/courses/artificial-intelligence/AIQuizzes';
 import AIGrades from '../../components/courses/artificial-intelligence/AIGrades';
 import AIAttendanceRate from '../../components/courses/artificial-intelligence/AIAttendanceRate';
+import AIChat from '../../components/courses/artificial-intelligence/AIChat';
 
 const AI = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -42,7 +43,7 @@ const AI = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div> messages</div>}
+            {activeTab === 'Tab 1' && <div><AIChat/></div>}
             {activeTab === 'Tab 2' && <div><AIVideos/></div>}
             {activeTab === 'Tab 3' && <div><AIFiles/></div>}
             {activeTab === 'Tab 4' && <div><AIAssignments/></div>}

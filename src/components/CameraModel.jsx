@@ -55,8 +55,10 @@ const CameraModal = ({ onClose, onCapture }) => {
       <div className="modal-overlay" onClick={handleClose}></div>
       <div className="modal-content">
         <video ref={videoRef} autoPlay playsInline />
-        <button onClick={handleCapturePhoto}>Capture Photo</button>
-        <button onClick={handleClose}>Close</button>
+        <div style={{display: "flex", justifyContent: "space-evenly"}}>
+          <button onClick={handleCapturePhoto} className='take-photo'>Capture Photo</button>
+          <button onClick={handleClose} className='close-camera'>Close</button>
+        </div>
       </div>
     </div>
   );

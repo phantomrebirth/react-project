@@ -7,6 +7,7 @@ import SWVideos from '../../components/courses/software-engineering/SWVideos';
 import SWQuizzes from '../../components/courses/software-engineering/SWQuizzes';
 import SWGrades from '../../components/courses/software-engineering/SWGrades';
 import SWAttendanceRate from '../../components/courses/software-engineering/SWAttendanceRate';
+import SWChat from '../../components/courses/software-engineering/SWChat';
 
 const SoftwareEngineering = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -42,7 +43,7 @@ const SoftwareEngineering = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div>messages</div>}
+            {activeTab === 'Tab 1' && <div><SWChat/></div>}
             {activeTab === 'Tab 2' && <div><SWVideos/></div>}
             {activeTab === 'Tab 3' && <div><SWFiles/></div>}
             {activeTab === 'Tab 4' && <div><SWAssignments/></div>}

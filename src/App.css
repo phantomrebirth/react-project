@@ -1280,6 +1280,81 @@ input[type="file"]::placeholder {
   .announcements-hr {
     width: 96%;
   }
+  .chat-container {
+    width: calc(100vw - 10%) !important;
+    bottom: 1.5rem !important;
+    /* z-index: -1; */
+  }
+  .chat-messages {
+    max-height: calc(100vh - 30vh) !important;
+  }
+  .message {
+    width: max-content;
+    max-width: 18.75rem !important;
+    display: flex;
+  }
+  .chat-input {
+    height: 2.5rem !important;
+  }
+  .chat-input input {
+    padding: 8px 7.25rem 8px 2.75rem !important;
+  }
+  .chat-input input::placeholder {
+    font-size: 92%;
+  }
+  .send-button {
+    padding: 8px;
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+  }
+  .send-icon {
+    font-size: 1rem !important;
+  }
+  .chat-mic {
+    right: 4rem !important;
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  .mic-icon {
+    padding: 2px !important;
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  .chat-recordDelete {
+    right: 6rem !important;
+    padding: 2px;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+  .chat-deleteRecord {
+    right: 4.25rem !important;
+    padding: 2px;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .chat-gallery {
+    right: 2.375rem !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+  .gallery-icon {
+    font-size: 1.125rem !important;
+  }
+  .chat-camera {
+    padding: 4px !important;
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+  }
+  .camera-icon {
+    font-size: 1rem !important;
+  }
+  .captured-photo-container {
+    bottom: 2.6rem !important;
+    width: 242px;
+  }
+  .captured-photo {
+    width: 240px;
+  }
   .files-hr {
     width: 96%;
   }
@@ -2710,7 +2785,7 @@ iframe {
   border-radius: 0.6rem;
   background-image: linear-gradient(to bottom, #7939ff, #382074);
   box-shadow: 0 4px 1px rgba(0, 0, 0, .1), 
-              0 4px 1px rgba(0, 0, 0, .2);
+  0 4px 1px rgba(0, 0, 0, .2);
   cursor: pointer;
 }
 
@@ -2738,7 +2813,7 @@ iframe {
   height: 15rem;
   border-radius: 0.6rem;
   box-shadow: 0 4px 1px rgba(0, 0, 0, .1), 
-              0 4px 1px rgba(0, 0, 0, .2);
+  0 4px 1px rgba(0, 0, 0, .2);
   /* cursor: pointer; */
   border: 0.1rem solid #7939ff;
   position: relative;
@@ -3671,8 +3746,10 @@ iframe {
 
 .chat-container {
   /* top: 0.5rem; */
-  width: 100%;
-  max-width: 66rem;
+  /* width: 100%; */
+  /* max-width: 66rem; */
+  width: calc(100vw - 50%);
+  max-width: 56rem;
   /* margin: auto; */
   position: fixed;
   bottom: 2rem;
@@ -3698,6 +3775,10 @@ iframe {
   width: max-content;
   max-width: 666px;
   display: flex;
+}
+
+.message-content {
+  width: 100%;
 }
 
 .user {
@@ -3735,7 +3816,7 @@ iframe {
   width: 100%;
   height: 100%;
   flex: 1;
-  padding: 8px 8px 8px 3.25rem;
+  padding: 8px 9.5rem 8px 3.25rem;
   border: none;
   /* margin-right: 10px; */
   outline: none;
@@ -3917,10 +3998,10 @@ iframe {
   bottom: 0;
   right: 0; */
   /* width: 100%;
-  height: 100%;
+  height: 100%; */
   display: flex;
   justify-content: center;
-  align-items: center; */
+  align-items: center;
 }
 
 .modal-overlay {
@@ -3929,7 +4010,7 @@ iframe {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust the opacity for the blur effect */
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modal-content {
@@ -3941,7 +4022,66 @@ iframe {
 
 .camera-modal video {
   width: 100%;
-  max-width: 400px; /* Adjust as needed */
+  max-width: 400px;
   border-radius: 8px;
+}
+
+.take-photo {
+  margin: 0.75rem 0.75rem 0 0.75rem;
+  width: 10rem;
+  height: 2.5rem;
+  font-size: 106%;
+  background-color: transparent;
+  color: #7939FF;
+  border: 1px solid #7939FF;
+  border-radius: 2rem;
+}
+
+.close-camera {
+  margin: 0.75rem 0.75rem 0 0.75rem;
+  width: 6rem;
+  height: 2.5rem;
+  font-size: 106%;
+  background-color: transparent;
+  color: #7939FF;
+  border: 1px solid #7939FF;
+  border-radius: 2rem;
+}
+
+.take-photo:hover, .close-camera:hover {
+  background-color: #7939FF;
+  color: #fff;
+  border: none;
+}
+
+.captured-photo-container {
+  position: fixed;
+  bottom: 3.1rem;
+}
+
+.captured-deleteBtn {
+  right: -1.75rem;
+  width: 1.6rem;
+  position: absolute;
+  border-radius: 50%;
+  padding: 0;
+  color: #fff;
+  border:1px solid #000000c0;
+  border: none !important;
+  text-decoration: none;
+  height: 1.6rem;
+  background-color: rgb(233, 0, 0);
+}
+
+.captured-deleteBtn:hover {
+  /* border:1px solid rgba(196, 0, 0, 0.89); */
+  border: 1px solid red;
+  color: rgb(233, 0, 0);
+  background-color: #fff;
+}
+
+
+audio {
+  width: 100%;
 }
 

@@ -7,6 +7,7 @@ import NetworkVideos from '../../components/courses/network/NetworkVideos';
 import NetworkQuizzes from '../../components/courses/network/NetworkQuizzes';
 import NetworkGrades from '../../components/courses/network/NetworkGrades';
 import NetworkAttendanceRate from '../../components/courses/network/NetworkAttendanceRate';
+import NetworkChat from '../../components/courses/network/NetworkChat';
 
 const Network = () => {
     const [activeTab, setActiveTab] = useState('Tab 1');
@@ -42,7 +43,7 @@ const Network = () => {
       <Container className='tabs-container' style={{margin: "0", padding: "0"}}>
         <Row style={{margin: "0", padding: "0"}} className='courseRow2'>
           <Col style={{padding: "0"}} className='tab-content'>
-            {activeTab === 'Tab 1' && <div>messages</div>}
+            {activeTab === 'Tab 1' && <div><NetworkChat/></div>}
             {activeTab === 'Tab 2' && <div><NetworkVideos/></div>}
             {activeTab === 'Tab 3' && <div><NetworkFiles/></div>}
             {activeTab === 'Tab 4' && <div><NetworkAssignments/></div>}
