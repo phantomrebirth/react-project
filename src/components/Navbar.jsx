@@ -78,7 +78,6 @@ const Navbar = ({ toggleSidebar }) => {
 
   const handleBellClick = () => {
     setNotificationDropdownOpen(!notificationDropdownOpen);
-    // setBellClicked(prevState => !prevState);
     setBellClicked(true);
   };
 

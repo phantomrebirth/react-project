@@ -16,10 +16,10 @@ const Layout = ({ children }) => {
         <Col xs={12} sm={12} md={12} lg={12} xl={12} style={{ padding: "0" }}>
           <Navbar toggleSidebar={toggleSidebar} />
         </Col>
-        <Col xs={isSidebarOpen ? 5 : 12}
+        <Col xs={isSidebarOpen ? 12 : 12}
              sm={isSidebarOpen ? 4 : 12}
              md={isSidebarOpen ? 3 : 12}
-             lg={isSidebarOpen ? 2 : 12}
+             lg={isSidebarOpen ? 3 : 12}
              xl={isSidebarOpen ? 2 : 12}
              style={{ padding: "0", margin: "0", maxWidth: isSidebarOpen ? "200px" : "none" }}>
           {isSidebarOpen && 
@@ -29,9 +29,9 @@ const Layout = ({ children }) => {
         <Col xs={isSidebarOpen ? 7 : 12}
              sm={isSidebarOpen ? 8 : 12}
              md={isSidebarOpen ? 9 : 12}
-             lg={isSidebarOpen ? 10 : 12}
+             lg={isSidebarOpen ? 9 : 12}
              xl={isSidebarOpen ? 10 : 12}
-             style={{margin: "0", overflowY: "scroll", height: "94vh"}}
+             style={{margin: "0", overflowY: "scroll", height: "92vh"}}
              className="content-container" >
           <div className="content">{children}</div>
         </Col>
