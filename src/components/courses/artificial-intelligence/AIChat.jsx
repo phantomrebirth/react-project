@@ -243,7 +243,7 @@ const AIChat = () => {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Type your message..."
+          placeholder="Message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyPress}
