@@ -115,30 +115,30 @@ const Navbar = ({ toggleSidebar }) => {
                 <p className="notifications-header">Notifications</p>
               </div>
               <div className="notification-items">
-                <div className='notification-dropdown-item'>
+                <div className='notification-dropdown-item' title="Open">
                   <DeadlineNotification/>
                 </div>
-                <div className='notification-dropdown-item'>
+                <div className='notification-dropdown-item' title="Open">
                   <NavLink to='/courses/software-engineering' style={{textDecoration: "none"}}>
                     <SWAnnouncements/>
                   </NavLink>
                 </div>
-                <div className='notification-dropdown-item'>
+                <div className='notification-dropdown-item' title="Open">
                   <NavLink to='/courses/network' style={{textDecoration: "none"}}>
                     <NetworkAnnouncements/>
                   </NavLink>
                 </div>
-                <div className='notification-dropdown-item'>
+                <div className='notification-dropdown-item' title="Open">
                   <NavLink to='/courses/artificial-intelligence' style={{textDecoration: "none"}}>
                     <AIAnnouncements/>
                   </NavLink>
                 </div>
-                <div className='notification-dropdown-item'>
+                <div className='notification-dropdown-item' title="Open">
                   <NavLink to='/courses/programming' style={{textDecoration: "none"}}>
                     <ProgrammingAnnouncements/>
                   </NavLink>
                 </div>
-                <div className='notification-dropdown-item'>
+                <div className='notification-dropdown-item' title="Open">
                   <NavLink to='/courses/computer-vision' style={{textDecoration: "none"}}>
                     <CVAnnouncements/>
                   </NavLink>

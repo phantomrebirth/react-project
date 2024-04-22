@@ -251,7 +251,7 @@ const CVChat = () => {
             {/* <button className="send-button" onClick={handleSendCapturedPhoto}>
               <FaPaperPlane className='send-icon'/>
             </button> */}
-              <button className="captured-deleteBtn" onClick={handleDeleteCapturedPhoto}>
+              <button className="captured-deleteBtn" onClick={handleDeleteCapturedPhoto} title='Cancel'>
                 X
               </button>
           </div>
@@ -269,11 +269,11 @@ const CVChat = () => {
         {!recordedBlob && (
           <button className={`chat-mic ${isRecording ? 'recording' : ''}`} onClick={handleMicClick}>
             {!isRecording && (
-              <IoMicOutline className='mic-icon'/>
+              <IoMicOutline className='mic-icon' title='Record voice note'/>
             )}
             {isRecording && (
               <>
-                <span className='recorded-time'>
+                <span className='recorded-time' title='Stop recording'>
                   {formatDuration(recordingDuration)}
                 </span>
               </>
@@ -283,7 +283,7 @@ const CVChat = () => {
         {recordedBlob && intentToSend === 'recording' && (
         <>
           <button className="send-button" onClick={handleSendRecordedBlob} onKeyDown={handleKeyPress}>
-            <FaPaperPlane className='send-icon'/>
+            <FaPaperPlane className='send-icon' title='Send voice note'/>
           </button>
         </>
         )}
@@ -298,14 +298,14 @@ const CVChat = () => {
           <button className="chat-recordDelete" 
           onClick={() => { handleDeleteRecording(); }}
           >
-              <MdOutlineDeleteOutline className='delete-record'/>
+              <MdOutlineDeleteOutline className='delete-record' title='Delete record'/>
           </button>
         )}
         {recordedBlob && !isRecording &&(
           <button className="chat-deleteRecord" 
           onClick={() => { handleDeleteRecording(); }}
           >
-              <MdOutlineDeleteOutline className='delete-record'/>
+              <MdOutlineDeleteOutline className='delete-record' title='Delete record'/>
           </button>
         )}
         <input
@@ -316,14 +316,19 @@ const CVChat = () => {
           onChange={handlePhotoInputChange}
         />
         <button className="chat-gallery" onClick={() => photoInputRef.current.click()}>
-          <HiOutlinePhotograph className='gallery-icon'/>
+          <HiOutlinePhotograph className='gallery-icon' title='Open gallery'/>
         </button>
         <button className="chat-camera" onClick={handleCameraClick}>
-          <FaCamera className='camera-icon'/>
+          <FaCamera className='camera-icon' title='take a picture'/>
         </button>
-        {!recordedBlob && (
+        {!recordedBlob && !isRecording && (
           <button className="send-button" onClick={handleSendMessage} onKeyDown={handleKeyPress}>
-            <FaPaperPlane className='send-icon'/>
+            <FaPaperPlane className='send-icon' title='Send message'/>
+          </button>
+        )}
+        {isRecording && (
+          <button className="send-button" onClick={handleSendMessage} onKeyDown={handleKeyPress}>
+            <FaPaperPlane className='send-icon' title="Can't send message while recording"/>
           </button>
         )}
       </div>

@@ -6,7 +6,7 @@ const AIVideos = () => {
   const videoUrl = "https://www.youtube.com/watch?v=fkZK4MqqNTY"
     // const videoUrl = require('/home/phantom/Documents/react-project/src/assets/test/vid0.mp4');
     // const thumbnailUrl = "https://www.rollingstone.com/wp-content/uploads/2020/02/THE-WEEKND-by-Duncan-Loudon.jpg?w=1600&h=900&crop=1"
-    const thumbnailUrl = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.nme.com%2Fwp-content%2Fuploads%2F2021%2F08%2FWeeknd-May-2021.jpg&f=1&nofb=1&ipt=84d351d89baf82c8fc1770c8a1d010db1ad5b96bb7c268b1c852c6697e98ce57&ipo=images"
+    const thumbnailUrl = "rgb(240, 240, 240)"
   // const [videoUrl, setVideoUrl] = useState('');
 
   // useEffect(() => {

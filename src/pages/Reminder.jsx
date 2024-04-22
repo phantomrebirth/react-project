@@ -69,7 +69,7 @@ const Reminder = () => {
       <Row>
         {!showNoteForm && (
           <Col md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
-            <Card style={{ padding: "0" }} className='addR-container' onClick={() => setShowNoteForm(true)}>
+            <Card style={{ padding: "0" }} className='addR-container' onClick={() => setShowNoteForm(true)} title='Create note'>
               <Card.Body>
                 <Card.Title className='addReminder-body'>
                   <IoAdd className='addReminder-icon'/>
