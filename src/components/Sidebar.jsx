@@ -10,6 +10,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { BsGrid } from "react-icons/bs";
 import { Col, Row } from "react-bootstrap";
 import { IoHomeOutline } from "react-icons/io5";
+import { LiaHomeSolid } from "react-icons/lia";
 import LogOutModal from "../redux/actions/LogOutModal";
 import { useSelector, useDispatch } from 'react-redux'
 import { openLogOutModal } from "../redux/slices/logOutModalSlice";
@@ -23,7 +24,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     {
       path: "/",
       name: "Home",
-      icon: <IoHomeOutline />
+      icon: <LiaHomeSolid />
     },
     {
       path: "/courses",

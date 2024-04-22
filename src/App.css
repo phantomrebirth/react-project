@@ -3095,6 +3095,27 @@ iframe {
   width: 100%;
 }
 
+.homepage-description {
+  text-align: center;
+  font-weight: bolder;
+  font-family:'Times New Roman', Times, serif;
+  font-size: 240%;
+  margin-top: 1.375rem;
+}
+
+.arrow-animation {
+  animation: bounce 777ms infinite alternate;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(8px);
+  }
+}
+
 .homeCourses-container {
   /* height: 30vh !important; */
   overflow-x: scroll;
@@ -3112,7 +3133,7 @@ iframe {
 
 .home-myAssHeader {
   padding: 0%;
-  margin-top: 2.3rem;
+  margin-top: 2rem;
   /* margin-bottom: 1.6rem; */
   margin-bottom: 0%;
   font-weight: bold;
@@ -3120,7 +3141,8 @@ iframe {
 }
 
 .home-myAssContainer {
-  background-color: #d6d6d6;
+  /* background-color: #d6d6d6; */
+  background-color: #e0e0e0;
   width: 100%;
   height: 6.7rem;
   border-radius: 1.4rem;
@@ -3131,6 +3153,7 @@ iframe {
   align-items: center;
   justify-content: space-between;
   margin-top: 1.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .home-myAssTitleContainer {
@@ -3194,7 +3217,8 @@ iframe {
 .home-myQuizContainer {
   cursor: pointer;
   padding: 0% 1rem;
-  background-color: #d6d6d6;
+  /* background-color: #d6d6d6; */
+  background-color: #e0e0e0;
   width: 100%;
   height: 5.3rem;
   border-radius: 1rem;
@@ -3203,6 +3227,7 @@ iframe {
   align-items: center;
   justify-content: space-between;
   margin-top: 1.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .home-QuizTitleContainer {
@@ -3264,6 +3289,13 @@ iframe {
   .homepage-container {
     width: 100%;
   }
+  .homepage-description {
+    /* text-align: start !important; */
+    font-weight: bolder;
+    font-family:'Times New Roman', Times, serif;
+    font-size: 177% !important;
+    margin-top: 1rem !important;
+  }
   .homeCourses-container {
     /* height: 30vh !important; */
     overflow-x: scroll;
@@ -3286,7 +3318,7 @@ iframe {
     font-size: 150% !important;
   }
   .home-myAssContainer {
-    background-color: #d6d6d6;
+    /* background-color: #d6d6d6; */
     width: 100%;
     height: 6.7rem;
     border-radius: 1.4rem;
@@ -3352,7 +3384,7 @@ iframe {
   .home-myQuizContainer {
     cursor: pointer;
     padding: 0% 1rem;
-    background-color: #d6d6d6;
+    /* background-color: #d6d6d6; */
     width: 100%;
     height: 4.4rem;
     border-radius: 1rem;
