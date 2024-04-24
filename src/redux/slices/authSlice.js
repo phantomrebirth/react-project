@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// retrieve token from localStorage if it exists
+const tokenFromStorage = localStorage.getItem('token');
+
 const initialState = {
-  token: null,
+  token: tokenFromStorage ? tokenFromStorage : null,
 };
 
 const authSlice = createSlice({
@@ -10,9 +13,11 @@ const authSlice = createSlice({
   reducers: {
     setToken(state, action) {
       state.token = action.payload;
+      localStorage.setItem('token', action.payload);
     },
     clearToken(state) {
       state.token = null;
+      localStorage.removeItem('token');
     },
   },
 });

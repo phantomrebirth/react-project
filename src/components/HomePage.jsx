@@ -22,6 +22,8 @@ const HomePage = () => {
           <h1 className='homepage-description'>
             <span style={{color: "#7939ff"}}>EZ</span>learn the e-learning we <span style={{textDecoration: "line-through", fontWeight: "normal"}}>know</span> deserve.
           </h1>
+        </Row>
+        <Row>
           <h5 style={{marginTop: "0.75rem", display: "flex" , alignItems: "center"}}>Latest updates <span className="arrow-animation" style={{marginLeft: "1rem"}}>&#9660;</span></h5>
         </Row>
       </Container>
