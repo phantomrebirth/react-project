@@ -5,7 +5,7 @@ const NetworkAttendanceRate = () => {
   return (
     <Container fluid className='mt-3 last-container' style={{padding: "0"}}>
         <Row className='grades-container' style={{ margin: "0", padding: "0"}}>
-            <Col style={{ margin: "0", padding: "0"}}>
+            <Col style={{ margin: "0" }}>
                 <div className='AR-container'>
                     <div className='AR-title'>
                         Network

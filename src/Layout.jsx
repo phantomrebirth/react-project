@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
@@ -6,6 +6,20 @@ import { connect } from "react-redux";
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [contentHeight, setContentHeight] = useState(window.innerHeight - 73);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setContentHeight(window.innerHeight - 73);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -21,17 +35,19 @@ const Layout = ({ children }) => {
              md={isSidebarOpen ? 3 : 12}
              lg={isSidebarOpen ? 3 : 12}
              xl={isSidebarOpen ? 2 : 12}
-             style={{ padding: "0", margin: "0", maxWidth: isSidebarOpen ? "200px" : "none" }}>
+             style={{ padding: "0", margin: "0" }}
+             className="sidCol">
           {isSidebarOpen && 
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
           }
         </Col>
-        <Col xs={isSidebarOpen ? 7 : 12}
+        <Col 
+             xs={isSidebarOpen ? 7 : 12}
              sm={isSidebarOpen ? 8 : 12}
              md={isSidebarOpen ? 9 : 12}
              lg={isSidebarOpen ? 9 : 12}
              xl={isSidebarOpen ? 10 : 12}
-             style={{margin: "0", overflowY: "scroll", height: "92vh"}}
+             style={{ margin: "0", overflowY: "auto", height: `${contentHeight}px` }}
              className="content-container" >
           <div className="content">{children}</div>
         </Col>

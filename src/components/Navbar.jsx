@@ -104,7 +104,7 @@ const Navbar = ({ toggleSidebar }) => {
             {!bellClicked && (<div className="notifications-num">6+</div>)}
           </div>
           {notificationDropdownOpen && (
-            <FaBell className="bell" style={{color: "white"}} />
+            <FaBell className="bell" style={{color: "#fff"}} />
           )}
           {!notificationDropdownOpen && (
             <FaRegBell className="bell" />

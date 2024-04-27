@@ -20,20 +20,48 @@ const HomePage = () => {
       <Container style={{padding: "0px", margin: "0", width: "100%", maxWidth:"100%", display: "inline-block"}}>
         <Row>
           <h1 className='homepage-description'>
-            <span style={{color: "#7939ff"}}>EZ</span>learn the e-learning we <span style={{textDecoration: "line-through", fontWeight: "normal"}}>know</span> deserve.
+            {/* <span style={{color: "#7939ff"}}
+              >EZ
+            </span> */}
+            the e-learning we <span style={{textDecoration: "line-through", fontWeight: "normal"}}
+              >know
+            </span> deserve.
           </h1>
         </Row>
         <Row>
-          <h5 style={{marginTop: "0.75rem", display: "flex" , alignItems: "center"}}>Latest updates <span className="arrow-animation" style={{marginLeft: "1rem"}}>&#9660;</span></h5>
+          <h5 style={{marginTop: "0.75rem", display: "flex" , alignItems: "center", marginLeft: "1rem"}}
+              className='latest-updates'
+          >
+              Latest updates
+              <span className="arrow-animation" style={{marginLeft: "1rem"}}
+                >&#9660;
+              </span>
+          </h5>
         </Row>
       </Container>
       <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}} className='homeCourses-container'>
         <Container className='cards-container' style={{padding: "0", width: "100%"}} fluid>
-          <Row xs={1} md={2} xl={12} className="g-4" style={{padding: "0", flexWrap: "nowrap", justifyContent: "normal", width: "100%", maxWidth:"100%"}} id='cardsRow'>
+          <Row xs={1} md={2} xl={12} className="g-4" style={{padding: "0",
+                                                             flexWrap: "nowrap",
+                                                             justifyContent: "space-between",
+                                                             width: "100%",
+                                                             maxWidth:"100%"}}
+                                     id='cardsRow'
+          >
             {courses.map((course, idx) => (
-              <Col key={idx} className='cards' style={{margin: "1rem 3% 1rem 0%", padding: "0"}}>
+            // margin: "1rem 3% 1rem 4px",
+              <Col key={idx} className='cards' style={{margin: "1rem 5% 1rem 5px", padding: "0 4px 0 0", maxWidth: "34rem"}}>
                 <Link to={course.path} className='cards-link'>
-                  <Card style={{transform: "none", minHeight: "252px", backgroundColor: "#fff", border: "1px solid #000", boxShadow: "0 1px 4px rgba(0, 0, 0, 0.3)"}}>
+                  <Card style={{transform: "none",
+                                minHeight: "252px",
+                                backgroundColor: "#fff",
+                                border: "1px solid #000",
+                                // outline: "1px solid rgb(121 57 255 / 10%)",
+                                // outlineOffset: "4px",
+                                boxShadow: "0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.3) inset, 0 0 8px rgba(121, 57, 255, 0.3) inset",
+                              }} 
+                        title='Open course'
+                  >
                     <Card.Body>
                       <Card.Title className='card-title' style={{color: "#000"}}>{course.title}</Card.Title>
                       <div className='progress-container'>
@@ -55,7 +83,9 @@ const HomePage = () => {
         </Container>
       </Container>
       <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}}>
-        <Container style={{maxWidth: "100%", display: "inline-block"}} className='home-AssContainer'>
+        <Container style={{maxWidth: "100%", display: "inline-block"}}
+                   className='home-AssContainer'
+        >
           <Row>
             <h3 className='home-myAssHeader'>
               My Assignments
@@ -107,7 +137,9 @@ const HomePage = () => {
           </Row>
         </Container>
         {/* paddingBottom: "1%", */}
-        <Container style={{ maxWidth: "100%", margin: "0.5rem 0 0 0"}} className='home-QuizContainer'>
+        <Container style={{ maxWidth: "100%", margin: "0.5rem 0 0 0"}}
+                   className='home-QuizContainer'
+        >
           <Row>
             <h3 className='home-QuizHeader'>
               Quiz
