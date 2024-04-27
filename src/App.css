@@ -948,12 +948,15 @@ input[type="file"]::placeholder {
 .card {
   /* margin-bottom: 1rem; */
   color: #fff;
-  background-color: #000;
+  /* background-color: #000; */
+  background-color: #fff;
   padding: 19px;
   /* width: 83%; */
   /* min-height: 250px; */
   height: max-content;
-  border: none;
+  border: 1px solid #000;
+  /* box-shadow: 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.3) inset, 0 0 8px rgba(121, 57, 255, 0.3) inset; */
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.4);
   border-radius: 2rem;
   width: auto;
   text-decoration: none;
@@ -962,14 +965,15 @@ input[type="file"]::placeholder {
 
 .card:hover {
   /* background-color: #0f0f0ff6; */
-  background-color: #000;
-  transform: scale(1.06);
+  background-color: #fff;
+  transform: scale(1.05);
 }
 
 .card-title {
   font-weight:800;
   font-size: 200%;
-  color: #fff;
+  /* color: #fff; */
+  color: #000;
   /* font-weight: bolder; */
 }
 
@@ -988,7 +992,8 @@ input[type="file"]::placeholder {
   height: 5px;
   /* border: none; */
   border-radius: 7rem;
-  background-color: #6d6d6d;
+  /* background-color: #6d6d6d; */
+  background-color: #bbb;
   position: relative;
   top: 6%;
   overflow: hidden;
@@ -996,7 +1001,8 @@ input[type="file"]::placeholder {
 
 .progress {
   height: 5px;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
+  background-color: #7939ff;
   /* border: solid #7839ffd3 1px; */
   /* border-radius: 1rem; */
   position: absolute;
@@ -1008,7 +1014,8 @@ input[type="file"]::placeholder {
 .card-text {
   /* position: relative; */
   /* top: 44px; */
-  color: #eee;
+  /* color: #eee; */
+  color: #000;
   margin-bottom: 3%;
 }
 
@@ -1030,7 +1037,8 @@ input[type="file"]::placeholder {
 .arrow-tail {
   border-radius: 1rem;
   height: 1px;
-  background-color: #fff;
+  /* background-color: #fff; */
+  background-color: #000;
   position: absolute;
   /* top: 100px;
   left: 304px; */
@@ -1046,7 +1054,8 @@ input[type="file"]::placeholder {
   /* border: solid #7839ffd3 1px; */
   /* border-radius: 1rem; */
   position: absolute;
-  color: #fff;
+  /* color: #fff; */
+  color: #000;
   font-size: 19px;
   top: 2%;
   /* left: 389px; */
@@ -1837,13 +1846,47 @@ input[type="file"]::placeholder {
     width: 7.7rem !important;
     height: 7.7rem !important;
   }
+  .allQuestions-container {
+    display: inline !important;
+    /* height: 100vh; */
+    /* justify-content: space-between; */
+  }
   .question-pages {
     top: 24%;
   }
-  .quiz-timeContainer {
+  /* .quiz-timeContainer {
     top: 15%;
     right: 3% !important;
+  } */
+  .quiz-timeContainer {
+    margin-top: 1% !important;
+    right: 0 !important;
+    width: 7.7rem !important;
+    height: 2rem !important;
   }
+  .quiz-timeLeft {
+    text-align: center;
+    font-size: 100% !important;
+    padding: 3% !important;
+  }
+  .qPages-container {
+    width: 100% !important;
+  }
+  .question-pages {
+    width: 100% !important;
+    /* margin-right: 2% !important; */
+    justify-content: center;
+    margin-top: 3% !important;
+    /* margin-bottom: 2%; */
+    position: unset !important;
+    /* flex-wrap: nowrap; */
+  }
+  .question-page {
+    margin: 0.8% !important;
+  }
+  .page-num {
+    width: 1.5rem !important;
+  } 
   .all-answers {
     width: 100% !important;
   }
@@ -2851,8 +2894,9 @@ iframe {
 
 .crop-settings {
   display: flex;
-  justify-content:right;
+  justify-content:center;
   align-items: center;
+  width: 175px;
 }
 
 .deleteBtn {
@@ -2861,8 +2905,8 @@ iframe {
   color: #7939ff;
   cursor: pointer;
   font-size: 148%;
-  /* margin-left: 0.8rem; */
-  width: 21%;
+  margin-left: 0.5rem;
+  width: 17%;
 }
 
 /* .reminder-container {
@@ -3319,7 +3363,7 @@ iframe {
   }
   .homeCourses-container {
     /* height: 30vh !important; */
-    overflow-x: scroll;
+    overflow-x: auto;
     /* overflow-y: hidden; Hide vertical scrollbar */
     /* white-space: nowrap; Prevent content from wrapping */
   }
@@ -3583,7 +3627,7 @@ iframe {
   .notification-items {
     height: 91% !important;
     margin-top: 2.5rem !important;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-bottom: 0.25rem;
   }
   /* .notification-dropdown-item:last-child {
@@ -3782,7 +3826,7 @@ iframe {
 }
 
 .bell {
-  color: #000;
+  color: #fff;
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
@@ -3918,7 +3962,7 @@ iframe {
 .notification-items {
   height: 90%;
   margin-top: 3rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-bottom: 0.25rem;
 }
 

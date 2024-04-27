@@ -49,7 +49,7 @@ const SWAssignments = () => {
                     <li>Software Engineering</li>
                 </ul>
               </div>
-              <div className='assignment' onClick={handleInProgressClick} style={{cursor: "pointer"}}>
+              <div className='assignment' onClick={handleInProgressClick} style={{cursor: "pointer", backgroundColor: "#f0f0f0"}}>
                 <div className='assName-container'>
                   <h5 className='ass-name'>Assignment 1</h5>
                   <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>

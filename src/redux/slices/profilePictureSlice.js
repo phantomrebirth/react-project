@@ -5,7 +5,7 @@ export const fetchProfilePicture = createAsyncThunk(
   'profilePicture/fetchProfilePicture',
   async (token, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.get('https://ezlearn.onrender.com/admins/getPP', {
+      const response = await axios.get('https://ezlearn.onrender.com/users/getPP', {
         headers: {
           Authorization: `Bearer ${token}`
         },

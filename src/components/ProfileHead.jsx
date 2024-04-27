@@ -10,7 +10,7 @@ import { canvasPreview } from './canvasPreview';
 import { useDebounceEffect } from './useDebounceEffect';
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import 'react-image-crop/dist/ReactCrop.css';
-import { Modal } from 'react-bootstrap';
+import { Modal , Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { selectToken } from '../redux/slices/authSlice';
 import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
@@ -48,6 +48,9 @@ export default function ProfileHead() {
   const [fetchedImage, setFetchedImage] = useState(imageUrl);
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   // async function fetchImage() {
   //   try {
@@ -255,7 +258,7 @@ export default function ProfileHead() {
           
           console.log('Sending request with FormData:', formData);
 
-        const response = await axios.post('https://ezlearn.onrender.com/admins/profilePicture',
+        const response = await axios.post('https://ezlearn.onrender.com/users/profilePicture',
           formData, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -264,6 +267,8 @@ export default function ProfileHead() {
             }
           });
           console.log('Profile picture updated successfully:', response.data);
+          setShowSuccess(true); // Show success message
+          setShowError(false); // Hide error message
           // fetchImage();
           dispatch(fetchProfilePicture(token));
         }, 'image/jpeg');
@@ -272,6 +277,8 @@ export default function ProfileHead() {
       }
     } catch (error) {
       console.error('Error updating profile picture:', error);
+      setShowError(true); // Show error message
+      setShowSuccess(false); // Hide success message
     }
   }
   //     if (completedCrop && imgRef.current) {
@@ -326,7 +333,7 @@ export default function ProfileHead() {
       //   console.error('No profile picture fetched for deletion');
       //   return;
       // }
-      const avatar = await axios.delete('https://ezlearn.onrender.com/admins/deletePP', {
+      const avatar = await axios.delete('https://ezlearn.onrender.com/users/deletePP', {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -338,8 +345,12 @@ export default function ProfileHead() {
     setCrop(null);
     setImgSrc(null);
     setCompletedCrop(null);
+    setShowDelete(true); // Show success message
+    setShowError(false); // Hide error message
     } catch (error) {
       console.error('Error deleting profile picture:', error);
+      setShowError(true); // Show error message
+      setShowDelete(false); // Hide success message
     }
   }
 
@@ -353,6 +364,21 @@ export default function ProfileHead() {
     
   return (
     <div className="profile-head">
+      {showSuccess && (
+        <Alert variant="primary" onClose={() => setShowSuccess(false)} dismissible>
+          Profile picture updated successfully!
+        </Alert>
+      )}
+      {showDelete && (
+        <Alert variant="secondary" onClose={() => setShowSuccess(false)} dismissible>
+          Profile picture deleted successfully!
+        </Alert>
+      )}
+      {showError && (
+        <Alert variant="danger" onClose={() => setShowError(false)} dismissible>
+          Error updating profile picture. Please try again.
+        </Alert>
+      )}
       <Modal show={showModal} onHide={handleCloseModal} size="lg">
         <Modal.Body className='pfModalBody'>
           {imgSrc && (
@@ -461,19 +487,21 @@ export default function ProfileHead() {
               id="fileInput"
               style={{ display: 'none' }}
               />
-              <div className='crop-settings'>
-                <button className='chooseImage' 
-                        onClick={handleChooseImageClick}>
-                          Choose Image
-                </button>
-                {(!!fetchedImage || !!completedCrop) && (
-                  <MdOutlineDeleteOutline className='deleteBtn' onClick={handleDeleteButtonClick} />
-                )}
-                {/* {!!completedCrop && (
-                <MdOutlineDeleteOutline className='deleteBtn' 
-                                        onChange={handleDeleteButtonClick}>
-                </MdOutlineDeleteOutline>
-                )} */}
+              <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
+                <div className='crop-settings'>
+                  <button className='chooseImage' 
+                          onClick={handleChooseImageClick}>
+                            Choose Image
+                  </button>
+                  {(!!fetchedImage || !!completedCrop) && (
+                    <MdOutlineDeleteOutline className='deleteBtn' onClick={handleDeleteButtonClick} />
+                  )}
+                  {/* {!!completedCrop && (
+                  <MdOutlineDeleteOutline className='deleteBtn' 
+                                          onChange={handleDeleteButtonClick}>
+                  </MdOutlineDeleteOutline>
+                  )} */}
+                </div>
               </div>
             </>
           )}

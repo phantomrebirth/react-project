@@ -74,7 +74,7 @@ const Login = () => {
         e.preventDefault();
         if (validated()) {
             try {
-                const response = await axios.post('https://ezlearn.onrender.com/admins/login', { email, password });
+                const response = await axios.post('https://ezlearn.onrender.com/users/login', { email, password });
                 const token = response.data.token;
                 dispatch(setToken(token));
                 // localStorage.setItem('token', token);
