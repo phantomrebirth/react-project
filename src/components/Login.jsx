@@ -1,9 +1,10 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../redux/slices/authSlice';
+import { setToken, setRole } from '../redux/slices/authSlice';
+import { loginUser } from '../redux/slices/authSlice';
 
 const Login = () => {
 
@@ -51,43 +52,45 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    // const handleSubmit = (e) => {
+    // const handleSubmit = async (e) => {
     //     e.preventDefault();
     //     if (validated()) {
-    //         axios
-    //             .post('https://ezlearn.onrender.com/admins/login', { email, password })
-    //             .then((res) => {
-    //                 navigate('/');
-    //             })
-    //             .catch((err) => {
-    //                 console.error(err);
-    //                 if (err.response && err.response.data && err.response.data.error) {
-    //                     setErrorMessage(err.response.data.error);
-    //                 } else {
-    //                     setErrorMessage("An error occurred during login.");
-    //                 }
-    //             });
+    //         try {
+    //             const response = await axios.post('https://ezlearn.onrender.com/users/login', { email, password });
+    //             const token = response.data.token;
+    //             const role = response.data.role;
+    //             dispatch(setToken(token), setRole(role));
+    //             console.log("role: ", role);
+    //             // localStorage.setItem('token', token);
+    //             navigate('/');
+    //             // console.log(token);
+    //         } catch (error) {
+    //             console.error(error);
+    //             if (error.response && error.response.data && error.response.data.error) {
+    //                 setErrorMessage(error.response.data.error);
+    //             } else {
+    //                 setErrorMessage("An error occurred during login.");
+    //             }
+    //         }
     //     }
     // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validated()) {
-            try {
-                const response = await axios.post('https://ezlearn.onrender.com/users/login', { email, password });
-                const token = response.data.token;
-                dispatch(setToken(token));
-                // localStorage.setItem('token', token);
-                navigate('/');
-                // console.log(token);
-            } catch (error) {
-                console.error(error);
-                if (error.response && error.response.data && error.response.data.error) {
-                    setErrorMessage(error.response.data.error);
-                } else {
-                    setErrorMessage("An error occurred during login.");
-                }
+          try {
+            const actionResult = await dispatch(loginUser({ email, password }));
+            const { token, role } = actionResult.payload;
+            dispatch(setToken(token));
+            dispatch(setRole(role));
+            navigate('/');
+          } catch (error) {
+            if (error.payload && error.payload.error) {
+              setErrorMessage(error.payload.error);
+            } else {
+              setErrorMessage("An error occurred during login.");
             }
+          }
         }
     };
 
