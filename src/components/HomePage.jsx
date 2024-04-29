@@ -185,7 +185,7 @@ const HomePage = () => {
       </Container>
     )}
     {teacher && (
-      <div>aha</div>
+      <div>ana mo3id</div>
     )}
 
       </>

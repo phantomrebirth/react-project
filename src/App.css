@@ -929,7 +929,8 @@ input[type="file"]::placeholder {
 
 #cardsRow {
   margin: 0rem 0px 0px 0px;
-  max-width: max-content;
+  /* max-width: max-content; */
+  max-width: 100%;
   max-height: max-content;
   /* min-width: 101%; */
   display: flex;

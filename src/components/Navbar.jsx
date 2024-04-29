@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import { TbLogout2 } from "react-icons/tb";
 import { useSelector, useDispatch } from 'react-redux'
 import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
-import { selectToken } from '../redux/slices/authSlice';
+import { selectRole, selectToken } from '../redux/slices/authSlice';
 import LogOutModal from "../redux/actions/LogOutModal";
 import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { CiSearch } from "react-icons/ci";
@@ -19,6 +19,7 @@ import SWAnnouncements from "./courses/software-engineering/SWAnnouncements";
 import DeadlineNotification from "./DeadlineNotification";
 
 const Navbar = ({ toggleSidebar }) => {
+
   const imageUrl = useSelector(selectImageUrl);
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
@@ -31,10 +32,22 @@ const Navbar = ({ toggleSidebar }) => {
   const [bellClicked, setBellClicked] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const notificationRef = useRef(null);
-
+  const role = useSelector(selectRole);
+  const [teacher, setTeacher] = useState(false);
+  const [student, setStudent] = useState(false);
+  console.log(role);
+  
   useEffect(() => {
     dispatch(fetchProfilePicture(token));
   }, [dispatch, token]);
+
+  useEffect(() => {
+    if (role === 'student') {
+      setStudent(true);
+    } else if (role === 'teacher') {
+      setTeacher(true);
+    }
+  }, [role]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -115,34 +128,38 @@ const Navbar = ({ toggleSidebar }) => {
                 <p className="notifications-header">Notifications</p>
               </div>
               <div className="notification-items">
-                <div className='notification-dropdown-item' title="Open">
-                  <DeadlineNotification/>
-                </div>
-                <div className='notification-dropdown-item' title="Open">
-                  <NavLink to='/courses/software-engineering' style={{textDecoration: "none"}}>
-                    <SWAnnouncements/>
-                  </NavLink>
-                </div>
-                <div className='notification-dropdown-item' title="Open">
-                  <NavLink to='/courses/network' style={{textDecoration: "none"}}>
-                    <NetworkAnnouncements/>
-                  </NavLink>
-                </div>
-                <div className='notification-dropdown-item' title="Open">
-                  <NavLink to='/courses/artificial-intelligence' style={{textDecoration: "none"}}>
-                    <AIAnnouncements/>
-                  </NavLink>
-                </div>
-                <div className='notification-dropdown-item' title="Open">
-                  <NavLink to='/courses/programming' style={{textDecoration: "none"}}>
-                    <ProgrammingAnnouncements/>
-                  </NavLink>
-                </div>
-                <div className='notification-dropdown-item' title="Open">
-                  <NavLink to='/courses/computer-vision' style={{textDecoration: "none"}}>
-                    <CVAnnouncements/>
-                  </NavLink>
-                </div>
+                {student && (
+                  <>
+                    <div className='notification-dropdown-item' title="Open">
+                      <DeadlineNotification/>
+                    </div>
+                    <div className='notification-dropdown-item' title="Open">
+                      <NavLink to='/courses/software-engineering' style={{textDecoration: "none"}}>
+                        <SWAnnouncements/>
+                      </NavLink>
+                    </div>
+                    <div className='notification-dropdown-item' title="Open">
+                      <NavLink to='/courses/network' style={{textDecoration: "none"}}>
+                        <NetworkAnnouncements/>
+                      </NavLink>
+                    </div>
+                    <div className='notification-dropdown-item' title="Open">
+                      <NavLink to='/courses/artificial-intelligence' style={{textDecoration: "none"}}>
+                        <AIAnnouncements/>
+                      </NavLink>
+                    </div>
+                    <div className='notification-dropdown-item' title="Open">
+                      <NavLink to='/courses/programming' style={{textDecoration: "none"}}>
+                        <ProgrammingAnnouncements/>
+                      </NavLink>
+                    </div>
+                    <div className='notification-dropdown-item' title="Open">
+                      <NavLink to='/courses/computer-vision' style={{textDecoration: "none"}}>
+                        <CVAnnouncements/>
+                      </NavLink>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}

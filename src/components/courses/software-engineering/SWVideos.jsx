@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Row } from 'react-bootstrap';
 import ReactPlayer from 'react-player';
+import { selectRole } from '../../../redux/slices/authSlice';
+import { useSelector } from 'react-redux';
 
 const SWVideos = () => {
+
+    const role = useSelector(selectRole);
+    const [teacher, setTeacher] = useState(false);
+    const [student, setStudent] = useState(false);
+    console.log(role);
+    
+    useEffect(() => {
+      if (role === 'student') {
+        setStudent(true);
+      } else if (role === 'teacher') {
+        setTeacher(true);
+      }
+    }, [role]);
+
   const videoUrl = "https://www.youtube.com/watch?v=fkZK4MqqNTY"
     // const videoUrl = require('/home/phantom/Documents/react-project/src/assets/test/vid0.mp4');
     // const thumbnailUrl = "https://www.rollingstone.com/wp-content/uploads/2020/02/THE-WEEKND-by-Duncan-Loudon.jpg?w=1600&h=900&crop=1"
@@ -29,60 +45,67 @@ const SWVideos = () => {
   // };
 
   return (
-    <Container className='videos-container' style={{padding: "0"}}>
-      <Row className='players-container' style={{padding: "0", margin: "0"}}>
-          <div className='player-container'>
-              <div className='video-player'>
-                  <ReactPlayer className='video'
-                              url={videoUrl} 
-                              controls 
-                              light={thumbnailUrl}>
-                  </ReactPlayer>
-              </div>
-              <p className='video-title'>
-                  Section 1
-              </p>
-          </div>
-          <div className='player-container'>
-              <div className='video-player'>
-                  <ReactPlayer className='video'
-                              url={videoUrl} 
-                              controls 
-                              light={thumbnailUrl}>
-                  </ReactPlayer>
-              </div>
-              <p className='video-title'>
-                  Section 2
-              </p>
-          </div>
-      </Row>
-      <Row className='players-container' style={{padding: "0", margin: "0"}}>
-          <div className='player-container'>
-              <div className='video-player'>
-                  <ReactPlayer className='video'
-                              url={videoUrl} 
-                              controls 
-                              light={thumbnailUrl}>
-                  </ReactPlayer>
-              </div>
-              <p className='video-title'>
-                  Section 3
-              </p>
-          </div>
-          <div className='player-container'>
-              <div className='video-player'>
-                  <ReactPlayer className='video'
-                              url={videoUrl} 
-                              controls 
-                              light={thumbnailUrl}>
-                  </ReactPlayer>
-              </div>
-              <p className='video-title'>
-                  Section 4
-              </p>
-          </div>
-      </Row>
-    </Container>
+    <>
+        {student && (
+            <Container className='videos-container' style={{padding: "0"}}>
+            <Row className='players-container' style={{padding: "0", margin: "0"}}>
+                <div className='player-container'>
+                    <div className='video-player'>
+                        <ReactPlayer className='video'
+                                    url={videoUrl} 
+                                    controls 
+                                    light={thumbnailUrl}>
+                        </ReactPlayer>
+                    </div>
+                    <p className='video-title'>
+                        Section 1
+                    </p>
+                </div>
+                <div className='player-container'>
+                    <div className='video-player'>
+                        <ReactPlayer className='video'
+                                    url={videoUrl} 
+                                    controls 
+                                    light={thumbnailUrl}>
+                        </ReactPlayer>
+                    </div>
+                    <p className='video-title'>
+                        Section 2
+                    </p>
+                </div>
+            </Row>
+            <Row className='players-container' style={{padding: "0", margin: "0"}}>
+                <div className='player-container'>
+                    <div className='video-player'>
+                        <ReactPlayer className='video'
+                                    url={videoUrl} 
+                                    controls 
+                                    light={thumbnailUrl}>
+                        </ReactPlayer>
+                    </div>
+                    <p className='video-title'>
+                        Section 3
+                    </p>
+                </div>
+                <div className='player-container'>
+                    <div className='video-player'>
+                        <ReactPlayer className='video'
+                                    url={videoUrl} 
+                                    controls 
+                                    light={thumbnailUrl}>
+                        </ReactPlayer>
+                    </div>
+                    <p className='video-title'>
+                        Section 4
+                    </p>
+                </div>
+            </Row>
+            </Container>
+        )}
+        {teacher && (
+            <div>_</div>
+        )}
+    </>
   );
 };
 
