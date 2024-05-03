@@ -26,6 +26,7 @@
 
 // export const { setToken, clearToken } = authSlice.actions;
 // export default authSlice.reducer;
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -46,8 +47,9 @@ const tokenFromStorage = localStorage.getItem('token');
 const roleFromStorage = localStorage.getItem('role');
 
 const initialState = {
-  token: tokenFromStorage ? tokenFromStorage : null,
-  role: roleFromStorage ? roleFromStorage : null,
+  token: tokenFromStorage || null,
+  role: roleFromStorage || null,
+  isLoading: false, // Added this line to initialize isLoading property
 };
 
 const authSlice = createSlice({
@@ -70,11 +72,31 @@ const authSlice = createSlice({
       state.role = null;
       localStorage.removeItem('role');
     },
+    setLoading(state, action) {
+      state.isLoading = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.token = action.payload.token;
+        state.role = action.payload.role;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('role', action.payload.role);
+      })
+      .addCase(loginUser.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 
 export const selectToken = (state) => state.auth.token;
 export const selectRole = (state) => state.auth.role;
+export const selectLoading = (state) => state.auth.isLoading;
 
 export const { setToken, clearToken, setRole, clearRole } = authSlice.actions;
 export default authSlice.reducer;

@@ -96,7 +96,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <NavLink 
                       to={item.path}
                       className='sideLinks'
-                      activeClassName='active'
+                      // activeClassName='active'
                       onClick={handleLinkClick}>
                       <div className='sideIcon' id='active'>{item.icon}</div>
                       <div className='sideLink' id='active'>{item.name}</div>

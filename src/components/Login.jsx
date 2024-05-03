@@ -3,8 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setToken, setRole } from '../redux/slices/authSlice';
+import { setToken, setRole, clearToken } from '../redux/slices/authSlice';
 import { loginUser } from '../redux/slices/authSlice';
+import LoadingSpinner from '../redux/actions/LoadingSpinner';
+import { CircularProgress } from '@material-ui/core';
 
 const Login = () => {
 
@@ -22,6 +24,7 @@ const Login = () => {
     const closedEye = "/src/assets/images/eye-closed.png";
     const [isEyeClosed, setIsEyeClosed] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const validated = useCallback(() => {
         if (email && email.length < 8 && email.length !== 0) {
@@ -78,19 +81,30 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validated()) {
-          try {
-            const actionResult = await dispatch(loginUser({ email, password }));
-            const { token, role } = actionResult.payload;
-            dispatch(setToken(token));
-            dispatch(setRole(role));
-            navigate('/');
-          } catch (error) {
-            if (error.payload && error.payload.error) {
-              setErrorMessage(error.payload.error);
-            } else {
-              setErrorMessage("An error occurred during login.");
+            setLoading(true); // Set loading to true when the form is submitted
+            try {
+                const actionResult = await dispatch(loginUser({ email, password }));
+                const { token, role } = actionResult.payload;
+                dispatch(setToken(token));
+                dispatch(setRole(role));
+                if (token) {
+                    // Navigation only occurs if a token is received
+                    navigate('/');
+                } else {
+                    // If no token is received, display an error message
+                    setErrorMessage("Email or password is incorrect, try again.");
+                    dispatch(clearToken());
+                    clearToken();
+                }
+            } catch (error) {
+                // Handle any errors during the login process
+                if (error.payload && error.payload.error) {
+                    setErrorMessage(error.payload.error);
+                } else {
+                    setErrorMessage("An error occurred during login.");
+                }
             }
-          }
+            setLoading(false); // Set loading to false after the login process completes
         }
     };
 
@@ -166,7 +180,18 @@ const Login = () => {
                             </div>
                             <input type="hidden" name="_csrf" value="your_csrf_token" />
                             <div id="sub-btn">
-                                <button className='submit' type='submit'>Login</button>
+                                {loading ? (
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '13vh' }}
+                                    >
+                                    <CircularProgress color="inherit"
+                                                        size={50}
+                                                        thickness={4}
+                                                        style={{color: "#7939ff"}}
+                                                        />
+                                    </div>
+                                ) : (
+                                    <button className='submit' type='submit'>Login</button>
+                                )}
                             </div>
                         </form>
                     </div>

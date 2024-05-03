@@ -575,7 +575,7 @@ input[type="password"] {
   width: 2.5rem;
   height: 2.5rem;
   background-color: transparent;
-  color: #000;
+  color: #fff;
   /* font-size: 200%; */
   /* padding-left: 1rem; */
 }
@@ -622,14 +622,16 @@ input[type="password"] {
 
 .userChevron {
   font-size: 0.9rem;
+  color: #fff;
   /* padding: 1px; */
 }
 
 .userIcon {
   font-size: 32px;
-  padding: 3px;
-  border: 2px solid #000;
-  border-radius: 9px;
+  padding: 2px;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
 }
 
 .dropdownMenu {
