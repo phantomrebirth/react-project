@@ -1,21 +1,22 @@
 import HomePage from './components/HomePage.jsx'
 import Courses from './pages/Courses.jsx'
 // import Assignments from './pages/Assignments.jsx'
-import Messages from './pages/Messages.jsx'
+// import Messages from './pages/Messages.jsx'
 import Reminder from './pages/Reminder.jsx'
 import Settings from './pages/Settings.jsx'
 import Profile from './pages/Profile.jsx'
 import Layout from './Layout.jsx'
-import ComputerVision from './pages/courses/ComputerVision.jsx'
-import Programming from './pages/courses/Programming.jsx'
-import AI from './pages/courses/AI.jsx'
-import Network from './pages/courses/Network.jsx'
-import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
-import AttendanceRate from './pages/AttendanceRate.jsx'
+// import ComputerVision from './pages/courses/ComputerVision.jsx'
+// import Programming from './pages/courses/Programming.jsx'
+// import AI from './pages/courses/AI.jsx'
+// import Network from './pages/courses/Network.jsx'
+// import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
+// import AttendanceRate from './pages/AttendanceRate.jsx'
 import { Route, Routes } from 'react-router-dom'
 import Course from './components/Course.jsx'
-import Assignments from './components/courses/Assignments.jsx'
-import AllAssignments from './pages/Assignments.jsx'
+// import Assignments from './components/courses/Assignments.jsx'
+import AllAssignments from './pages/AllAssignments.jsx'
+import AttendanceRates from './pages/AttendanceRates.jsx'
 
 const ProtectedRoutes = () => {
 
@@ -34,7 +35,7 @@ const ProtectedRoutes = () => {
                 {/* <Route path="/messages" element={<Messages />} /> */}
                 <Route path="/reminder" element={<Reminder />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/attendance" element={<AttendanceRate />} />
+                <Route path="/attendance" element={<AttendanceRates />} />
             </Routes>
       </Layout>
     );

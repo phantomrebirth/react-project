@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Container, Row } from 'react-bootstrap';
 import ReactPlayer from 'react-player';
 import { selectRole } from '../../redux/slices/authSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const Videos = () => {
+
+    const dispatch = useDispatch();
 
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
@@ -19,7 +23,27 @@ const Videos = () => {
       }
     }, [role]);
 
-  const videoUrl = "https://www.youtube.com/watch?v=fkZK4MqqNTY"
+    useEffect(() => {
+        dispatch(fetchCourses());
+      }, [dispatch]);
+      
+      const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+      
+      const course = courses.find(course => course._id === currentCourseId);
+      if (!course) {
+        return <div>No assignments available</div>;
+      };
+      
+      const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseId}/${video._id}`);
+      const videosPaths = course.videos.map(video => {
+        const matchingPath = videoPath.find(path => path.includes(video._id));
+        return {
+          ...video,
+          path: matchingPath || ''
+        };
+      });
+
+//   const videoUrl = "https://www.youtube.com/watch?v=fkZK4MqqNTY"
     // const videoUrl = require('/home/phantom/Documents/react-project/src/assets/test/vid0.mp4');
     // const thumbnailUrl = "https://www.rollingstone.com/wp-content/uploads/2020/02/THE-WEEKND-by-Duncan-Loudon.jpg?w=1600&h=900&crop=1"
     const thumbnailUrl = "rgb(240, 240, 240)"
@@ -44,64 +68,38 @@ const Videos = () => {
   //   return videoUrl;
   // };
 
+  if (loading) {
+    return <LoadingSpinner/>;
+  }
+
   return (
     <>
         {student && (
-            <Container className='videos-container' style={{padding: "0"}}>
-            <Row className='players-container' style={{padding: "0", margin: "0"}}>
-                <div className='player-container'>
-                    <div className='video-player'>
-                        <ReactPlayer className='video'
-                                    url={videoUrl} 
-                                    controls 
-                                    light={thumbnailUrl}
-                                    >
-                        </ReactPlayer>
-                    </div>
-                    <p className='video-title'>
-                        Section 1
-                    </p>
-                </div>
-                <div className='player-container'>
-                    <div className='video-player'>
-                        <ReactPlayer className='video'
-                                    url={videoUrl} 
-                                    controls 
-                                    light={thumbnailUrl}>
-                        </ReactPlayer>
-                    </div>
-                    <p className='video-title'>
-                        Section 2
-                    </p>
-                </div>
-            </Row>
-            <Row className='players-container' style={{padding: "0", margin: "0"}}>
-                <div className='player-container'>
-                    <div className='video-player'>
-                        <ReactPlayer className='video'
-                                    url={videoUrl} 
-                                    controls 
-                                    light={thumbnailUrl}>
-                        </ReactPlayer>
-                    </div>
-                    <p className='video-title'>
-                        Section 3
-                    </p>
-                </div>
-                <div className='player-container'>
-                    <div className='video-player'>
-                        <ReactPlayer className='video'
-                                    url={videoUrl} 
-                                    controls 
-                                    light={thumbnailUrl}>
-                        </ReactPlayer>
-                    </div>
-                    <p className='video-title'>
-                        Section 4
-                    </p>
-                </div>
-            </Row>
+            <Container className='videos-container' style={{ padding: "0" }}>
+                {videosPaths.map((video, index) => {
+                    const fileNameWithoutExtension = video.filename.split('.').slice(0, -1).join('.');                        
+                    return (
+                        <Row key={index} className='players-container' style={{ padding: "0", margin: "0" }}>
+                            <div className='player-container'>
+                                <div className='video-player'>
+                                    <ReactPlayer className='video'
+                                        url={video.path}
+                                        controls
+                                        light={thumbnailUrl}>
+                                    </ReactPlayer>
+                                </div>
+                                <p className='video-title'>
+                                    {/* {`Section ${index + 1}`} */}
+                                    {fileNameWithoutExtension}
+                                </p>
+                            </div>
+                        </Row>
+                    );
+                })}
             </Container>
+        )}
+        {teacher && (
+            <div>_</div>
         )}
     </>
   );
