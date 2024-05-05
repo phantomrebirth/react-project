@@ -1,53 +1,16 @@
-// import React from 'react'
-// import CVAssignments from '../components/courses/computer-vision/CVAssignments';
-// import ProgrammingAssignments from '../components/courses/programming/ProgrammingAssignments';
-// import AIAssignments from '../components/courses/artificial-intelligence/AIAssignments';
-// import NetworkAssignments from '../components/courses/network/NetworkAssignments';
-// import SWAssignments from '../components/courses/software-engineering/SWAssignments';
-// import { Container, Row, Col } from 'react-bootstrap'
-
-// const Assignments = () => {
-//   return (
-//     <Container  fluid className='mt-4 side-assContainer'>
-//       <Row style={{width: "100%"}}>
-//         <Row  className='side-assRow'>
-//           <Col style={{padding: "1.2%"}} xl={12} lg={12}>
-//             <CVAssignments/>
-//           </Col>
-//           <Col style={{padding: "1.2%"}} xl={12} lg={12}>
-//             <ProgrammingAssignments/>
-//           </Col>
-//           <Col style={{padding: "1.2%"}} xl={12} lg={12}>
-//             <SWAssignments/>
-//           </Col>
-//         </Row>
-//         <Row  className='side-assRow'>
-//           <Col style={{padding: "1.2%"}} xl={12} lg={12}>
-//             <AIAssignments/>
-//           </Col>
-//           <Col style={{padding: "1.2%"}} xl={12} lg={12}>
-//             <NetworkAssignments/>
-//           </Col>
-//         </Row>
-//       </Row>
-//     </Container>
-//   );
-// };
-
-// export default Assignments;
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { navigateToAssignment } from '../redux/slices/assignmentSlice';
+import { navigateToAssignment } from '../../redux/slices/assignmentSlice';
 import { TbFileUpload } from "react-icons/tb";
 import { Button, Form } from 'react-bootstrap';
 import { Col, Row } from 'react-bootstrap';
-import { selectRole } from '../redux/slices/authSlice';
-import { fetchCourses, selectCourses } from '../redux/slices/coursesSlice';
-import LoadingSpinner from '../redux/actions/LoadingSpinner';
+import { selectRole } from '../../redux/slices/authSlice';
+import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { PDFDocument } from 'pdf-lib';
 
-const AllAssignments = () => {
+const Assignments = () => {
   
   const dispatch = useDispatch();
   const role = useSelector(selectRole);
@@ -59,8 +22,6 @@ const AllAssignments = () => {
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
   const [submittedAssignments, setSubmittedAssignments] = useState([]);
   const [up, setUp] = useState(false)
-  const [clickedAssignmentId, setClickedAssignmentId] = useState(null);
-  const [clickedCourseId, setClickedCourseId] = useState(null);
 
   useEffect(() => {
     if (role === 'student') {
@@ -74,25 +35,29 @@ const AllAssignments = () => {
     dispatch(fetchCourses());
   }, [dispatch]);
   
-  const { loading, data: courses } = useSelector(selectCourses);
+  const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+  
+  const course = courses.find(course => course._id === currentCourseId);
+  if (!course) {
+    return <div>No assignments available</div>;
+  };
+  
+  const assignmentPath = course.assignments.map(assignment => `https://ezlearn.onrender.com/course/getAssignments/${currentCourseId}/${assignment._id}`);
+  const assignmentsPaths = course.assignments.map(assignment => {
+    const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
+    return {
+      ...assignment,
+      path: matchingPath || ''
+    };
+  });
   
   useEffect(() => {
-    if (!loading) {
-      const allAssignments = courses.flatMap(course => {
-        return course.assignments.map(assignment => ({
-          ...assignment,
-          courseId: course._id,
-          course: course.name
-        }));
-      });
-      setSubmittedAssignments(allAssignments);
-    }
-  }, [courses, loading]);
+    setSubmittedAssignments(assignmentsPaths);
+  }, [course]);
   
   if (loading) {
     return <LoadingSpinner/>;
   }
-
   const handleChange = (event) => {
     setDescription(event.target.value);
   };
@@ -127,21 +92,40 @@ const AllAssignments = () => {
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
+  
+    // // Make the API call to submit the assignment
+    // try {
+    //   const formData = new FormData();
+    //   formData.append('assignment', selectedFiles); // Assuming only one file is selected
+    //   formData.append('description', description); // Add any additional metadata
+  
+    //   const response = await fetch('', {
+    //     method: 'POST',
+    //     body: formData,
+    //     // Add any necessary headers, such as authentication tokens or content-type
+    //   });
+  
+    //   if (response.ok) {
+    //     console.log('Assignment submitted successfully');
+    //     // Handle any further actions after successful submission
+    //   } else {
+    //     console.error('Failed to submit assignment');
+    //     // Handle error scenarios
+    //   }
+    // } catch (error) {
+    //   console.error('Error submitting assignment:', error);
+    //   // Handle network errors or other exceptions
+    // }
   };
 
-  const handleInProgressClick = (assignmentId, courseId) => {
+  const handleInProgressClick = (assignmentId) => {
     // Update the submitted assignment ID with the clicked assignment's ID
     setSubmittedAssignmentId(assignmentId);
-    setClickedAssignmentId(assignmentId);
-    setClickedCourseId(courseId);
     console.log('Submitted assignment ID:', assignmentId);
-    console.log('course ID:', courseId);
     setShowFirstAssignment(false);
     setUp(true);
     dispatch(navigateToAssignment());
   };
-
-  const assignmentPath = `https://ezlearn.onrender.com/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
 
   const handleFileSelect = (event) => {
     const files = event.target.files;
@@ -149,9 +133,9 @@ const AllAssignments = () => {
   };
 
   const handleAssignmentDownload = async (assignment) => {
-    const { filename } = assignment;
+    const { filename, path } = assignment;
     try {
-        const response = await fetch(assignmentPath);
+        const response = await fetch(path);
         const fileData = await response.arrayBuffer();
 
         const pdfDoc = await PDFDocument.load(fileData);
@@ -183,17 +167,17 @@ const AllAssignments = () => {
 
   const handleCancel = () => {
     setShowFirstAssignment(true);
-    setSubmittedAssignmentId(null); // Reset the submitted assignment ID
-    setSelectedFiles([]); // Clear selected files
-    setDescription(''); // Clear description
-    setUp(false); // Reset the "in progress" state
+    setSubmittedAssignmentId(null);
+    setSelectedFiles([]);
+    setDescription('');
+    setUp(false);
   };
 
   return (
     <>
       {student && (
         <>
-          <Row style={{ marginLeft: "1%", marginRight: "0", marginBottom: "0", padding: "0"}} className='mt-3 assignments-container'>
+          <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
             {!up && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
                 {(assignment._id !== submittedAssignmentId) && !assignment.submitted && (
@@ -201,10 +185,10 @@ const AllAssignments = () => {
                     <div className="assignment-container2">
                       <div className='assignment-header'>
                         <ul className='ass-h'>
-                          <li>{assignment.course}</li>
+                          <li>{course.name}</li>
                         </ul>
                       </div>
-                      <div className='assignment' onClick={() => handleInProgressClick(assignment._id, assignment.courseId)} style={{cursor: "pointer", backgroundColor: "#f0f0f0"}} title='Open Assignmet'>
+                      <div className='assignment' onClick={() => handleInProgressClick(assignment._id)} style={{cursor: "pointer", backgroundColor: "#f0f0f0"}} title='Open Assignmet'>
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>
                           <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
@@ -221,7 +205,7 @@ const AllAssignments = () => {
                     <div className='assignment-container'>
                       <div className='assignment-header'>
                         <ul className='ass-h'>
-                            <li>{assignment.course}</li>
+                          <li>{course.name}</li>
                         </ul>
                       </div>
                       <div key={assignment.filename} className='assignment'>
@@ -240,19 +224,14 @@ const AllAssignments = () => {
             ))}
           </Row>
           {up && (
-            <div style={{marginLeft: "1%"}}>
+            <>
               <Row>
                 <div className='inProgress-ass'>
                   <Col md={7} lg={7} xl={7}>
                     <div className="assignment-container2" style={{marginLeft: "0px"}}>
                       <div className='assignment-header'>
                         <ul className='ass-h'>
-                          {submittedAssignments.map((assignment, index) => {
-                            if (assignment._id === submittedAssignmentId) {
-                              return <li key={index}>{assignment.course}</li>;
-                            }
-                            return null;
-                          })}
+                            <li>{course.name}</li>
                         </ul>
                       </div>
                       {submittedAssignments.map((assignment, index) => (
@@ -314,7 +293,7 @@ const AllAssignments = () => {
                     </Button>
                   </Form>
               </div>
-            </div>
+            </>
           )}
         </>
       )}
@@ -325,4 +304,4 @@ const AllAssignments = () => {
   );
 };
 
-export default AllAssignments;
+export default Assignments;

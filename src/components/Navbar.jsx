@@ -35,7 +35,7 @@ const Navbar = ({ toggleSidebar }) => {
   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
-  console.log(role);
+  // console.log(role);
   
   useEffect(() => {
     dispatch(fetchProfilePicture(token));
@@ -100,7 +100,7 @@ const Navbar = ({ toggleSidebar }) => {
         <HiBars3 className="barsIcon"/>
       </div>
       <NavLink to='/' className="navLogo-container">
-        <img src="src/assets/images/logo0.png" alt="" className="nav-logo"/>
+        <img src="src/assets/images/logo00.png" alt="" className="nav-logo"/>
       </NavLink>
       <div className="searchBar-container">
         <div className="searchIcon-container">

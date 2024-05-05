@@ -1,6 +1,6 @@
 import HomePage from './components/HomePage.jsx'
 import Courses from './pages/Courses.jsx'
-import Assignments from './pages/Assignments.jsx'
+// import Assignments from './pages/Assignments.jsx'
 import Messages from './pages/Messages.jsx'
 import Reminder from './pages/Reminder.jsx'
 import Settings from './pages/Settings.jsx'
@@ -13,6 +13,9 @@ import Network from './pages/courses/Network.jsx'
 import SoftwareEngineering from './pages/courses/SoftwareEngineering.jsx'
 import AttendanceRate from './pages/AttendanceRate.jsx'
 import { Route, Routes } from 'react-router-dom'
+import Course from './components/Course.jsx'
+import Assignments from './components/courses/Assignments.jsx'
+import AllAssignments from './pages/Assignments.jsx'
 
 const ProtectedRoutes = () => {
 
@@ -22,13 +25,13 @@ const ProtectedRoutes = () => {
                 <Route exact path="/" element={<HomePage />}/>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/computer-vision/*" element={<ComputerVision />} />
-                <Route path="/courses/programming" element={<Programming />} />
-                <Route path="/courses/artificial-intelligence" element={<AI />} />
-                <Route path="/courses/network" element={<Network />} />
-                <Route path="/courses/software-engineering" element={<SoftwareEngineering />} />
-                <Route path="/assignments" element={<Assignments />} />
-                <Route path="/messages" element={<Messages />} />
+                <Route path="/courses/:path" element={<Course />} />
+                {/* <Route path="/courses/programming" element={<Programming />} /> */}
+                {/* <Route path="/courses/artificial-intelligence" element={<AI />} /> */}
+                {/* <Route path="/courses/network" element={<Network />} /> */}
+                {/* <Route path="/courses/software-engineering" element={<SoftwareEngineering />} /> */}
+                <Route path="/assignments" element={<AllAssignments />} />
+                {/* <Route path="/messages" element={<Messages />} /> */}
                 <Route path="/reminder" element={<Reminder />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/attendance" element={<AttendanceRate />} />

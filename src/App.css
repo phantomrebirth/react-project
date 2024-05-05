@@ -1447,11 +1447,12 @@ input[type="file"]::placeholder {
     font-size: 1rem !important;
   }
   .captured-photo-container {
-    bottom: 2.6rem !important;
-    width: 242px;
+    /* bottom: 2.6rem !important; */
+    bottom: 7.2rem !important;
+    width: 242px !important;
   }
   .captured-photo {
-    width: 240px;
+    width: 240px !important;
   }
   .files-hr {
     width: 96%;
@@ -1467,7 +1468,10 @@ input[type="file"]::placeholder {
     height: 100% !important;
   }
   .assignments-container {
-    display: inline !important;
+    display: block !important;
+  }
+  .ass-h {
+    font-size: 91% !important;
   }
   .assignment-container {
     width: 100% !important;
@@ -1515,7 +1519,7 @@ input[type="file"]::placeholder {
     height: 100% !important;
   }
   .projects-container {
-    display: inline !important;
+    display: block !important;
   }
   .project-container {
     width: 100% !important;
@@ -1724,11 +1728,11 @@ input[type="file"]::placeholder {
   .videos-container {
     margin-top: 1.5rem;
     width: 100%;
-    display: inline !important;
+    display: block !important;
   }
   .players-container {
     width: 100% !important;
-    height: 100%;
+    /* height: 100%; */
     align-items: center;
     display: flex;
     justify-content: center;
@@ -1982,8 +1986,8 @@ input[type="file"]::placeholder {
 
 .assignments-container {
   display: flex;
-  /* align-items: center; */
-  /* justify-content:space-evenly; */
+  align-items: center;
+  /* justify-content:center; */
   flex-wrap: wrap;
 }
 
@@ -1991,7 +1995,7 @@ input[type="file"]::placeholder {
   /* width: 42%; */
   /* flex: none !important; */
   flex: 0.4 0 0% !important;
-  margin-right: 5% !important;
+  /* margin-right: 5% !important; */
 }
 
 .asscol2 {
@@ -2003,7 +2007,7 @@ input[type="file"]::placeholder {
 .assignment-container, .assignment-container2 {
   height: max-content;
   width: max-content;
-  margin-bottom: 2%;
+  margin-bottom: 3%;
 }
 
 .assignment-header {
@@ -2067,6 +2071,7 @@ input[type="file"]::placeholder {
 
 .ass-name {
   margin: 0px 0px 0px 0% !important;
+  font-size: 111%;
 }
 
 .ass-btn {
@@ -2106,8 +2111,16 @@ input[type="file"]::placeholder {
 .inProgress-ass {
   /* max-width: 69%; */
   display: flex;
-  align-items: end;
+  align-items: center;
   /* justify-content: space-between; */
+}
+
+.downloadAss-container {
+  margin-right: 2%;
+  width: 16%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .upAss-container {
@@ -2152,6 +2165,17 @@ input[type="file"]::placeholder {
 
 .ass-submit:active {
   background-color: #6d40ce !important;
+}
+
+.ass-submit:disabled {
+  background-color: transparent;
+  color: #7939FF;
+  border: 1px solid #7939ff;
+}
+
+.ass-cancel {
+  margin-top: 0.7rem;
+  margin-left: 0.7rem;
 }
 
 /* .projects-container {
@@ -2268,10 +2292,16 @@ input[type="file"]::placeholder {
   width: 21.5rem;
   height: 14rem;
   border-radius: 1.5rem;
+  border: 2px solid #00000069;
   background-color: #d6d6d6;
   color: #999999;
   font-weight: bold;
   font-size: 123%;
+}
+
+.projectUp-btn:hover {
+  background-color: #ddddddf0;
+  color: #999999;
 }
 
 .projectUp-icon-container {
@@ -2303,6 +2333,12 @@ input[type="file"]::placeholder {
 
 .project-submitBtn:active {
   background-color: #6d40ce !important;
+}
+
+.project-submitBtn:disabled {
+  background-color: #fff;
+  color: #000;
+  border: #000 1px solid;
 }
 
 .projectDescription-container {
@@ -2712,7 +2748,7 @@ input[type="file"]::placeholder {
 
 .players-container {
   width: 50%;
-  height: 100%;
+  /* height: 100%; */
   align-items: center;
   display: flex;
   justify-content: center;
@@ -2727,13 +2763,13 @@ input[type="file"]::placeholder {
   /* height: 100% !important; */
   /* width: 31rem !important; */
   width: 90%;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .video-player {
   /* border-radius: 3rem !important; */
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -3557,13 +3593,13 @@ iframe {
   }
   .barsIcon {
     width: 1.75rem !important;
-    height: 1.5rem !important;
+    height: 1.75rem !important;
   }
   .navLogo-container {
-    /* width: 4.8rem !important; */
-    width: 5.75rem !important;
+    width: 6rem !important;
+    /* width: 5.75rem !important; */
     /* height: 1.03rem !important; */
-    height: 1.125rem !important;
+    height: 1.4rem !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -3718,8 +3754,10 @@ iframe {
 }
 
 .navLogo-container {
-  width: 8.7rem;
-  height: 1.6rem;
+  /* width: 8.7rem; */
+  width: 9.75rem;
+  height: 1.875rem;
+  /* height: 1.6rem; */
   position: absolute;
   left: 6%;
 }
@@ -4315,7 +4353,14 @@ iframe {
 
 .captured-photo-container {
   position: fixed;
-  bottom: 3.1rem;
+  /* bottom: 3.1rem; */
+  bottom: 7rem;
+  max-width: 484px;
+  max-height: 360px;
+}
+
+.captured-photo {
+  max-width: 480px;
 }
 
 .captured-deleteBtn {
@@ -4326,7 +4371,7 @@ iframe {
   padding: 0;
   color: #fff;
   border:1px solid #000000c0;
-  border: none !important;
+  border: none ;
   text-decoration: none;
   height: 1.6rem;
   background-color: rgb(233, 0, 0);
