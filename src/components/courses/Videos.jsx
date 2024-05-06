@@ -5,6 +5,7 @@ import { selectRole } from '../../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
+import { HiOutlineDownload } from "react-icons/hi";
 
 const Videos = () => {
 
@@ -42,6 +43,23 @@ const Videos = () => {
           path: matchingPath || ''
         };
       });
+
+      const handleVideoDownload = async (video) => {
+        const { filename, path } = video;
+        try {
+            const response = await fetch(path);
+            const fileData = await response.arrayBuffer();
+
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([fileData]));
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        };
+      };
 
 //   const videoUrl = "https://www.youtube.com/watch?v=fkZK4MqqNTY"
     // const videoUrl = require('/home/phantom/Documents/react-project/src/assets/test/vid0.mp4');
@@ -85,13 +103,19 @@ const Videos = () => {
                                     <ReactPlayer className='video'
                                         url={video.path}
                                         controls
+                                        type="video/mp4"
                                         light={thumbnailUrl}>
                                     </ReactPlayer>
                                 </div>
-                                <p className='video-title'>
-                                    {/* {`Section ${index + 1}`} */}
-                                    {fileNameWithoutExtension}
-                                </p>
+                                <div style={{display: "flex", alignItems: "center", justifyContent: "center", margin: "0.3rem 0% 0.5rem 0% "}}>
+                                    <p className='video-title'>
+                                        {/* {`Section ${index + 1}`} */}
+                                        {fileNameWithoutExtension}
+                                    </p>
+                                    <a onClick={() => handleVideoDownload(video)}>
+                                        <HiOutlineDownload className='downloadVideo-icon' title='Download' style={{cursor: "pointer"}}/>
+                                    </a>
+                                </div>
                             </div>
                         </Row>
                     );

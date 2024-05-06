@@ -1757,6 +1757,12 @@ input[type="file"]::placeholder {
     font-weight: bold;
     font-size: 111% !important;
   }
+  .downloadVideo-icon {
+    margin: 13% 0 0 16% !important;
+    color: #7939FF;
+    width: 1.75rem !important;
+    height: 1.375rem !important;
+  }
   .grade {
     font-size: 88% !important;
   }
@@ -2764,6 +2770,7 @@ input[type="file"]::placeholder {
   /* width: 31rem !important; */
   width: 90%;
   /* height: 100%; */
+  margin-bottom: 5%;
 }
 
 .video-player {
@@ -2780,10 +2787,14 @@ input[type="file"]::placeholder {
   width: 28rem !important ;
   /* width: 92% !important;
   height: 90% !important; */
+  border-radius: 1.25rem !important;
+  background: #000 !important;
+  /* box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.2); */
+  /* border: 1px solid #7839ff; */
 }
 
 .react-player__preview {
-  border-radius: 1.5rem !important;
+  border-radius: 1.25rem !important;
   background: #000 !important;
   box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.2);
   border: 1px solid #7839ff;
@@ -2798,16 +2809,48 @@ input[type="file"]::placeholder {
 .video-title {
   padding: 0% !important;
   /* margin: 0.5rem 0% 6.6% 0% !important; */
-  margin: 0.3rem 0% 0.5rem 0% !important;
+  margin: 0.2rem 0% 0 0% !important;
   text-align: center;
   font-weight: bold;
   font-size: 123%;
 }
 
-iframe {
-  border-radius: 2rem !important;
+.downloadVideo-icon {
+  margin: 0 0 0 10%;
+  color: #7939FF;
+  width: 2rem;
+  height: 1.5rem;
+}
+
+iframe{
+  border-radius: 1rem !important;
   border: 1px solid #7939ff;
 }
+
+video{
+  border-radius: 1.25rem !important;
+  /* border: 1px solid #7939ff; */
+  box-shadow: none;
+  border: none;
+}
+
+video:focus {
+  box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.2);
+  /* border: 1px solid #7839ff; */
+  outline: 1px solid #7839ff;
+}
+
+/* video:focus-visible {
+  box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid #7839ff;
+  outline: none;
+}
+
+video:focus-within {
+  box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid #7839ff;
+  outline: none;
+} */
 
 .grade {
   text-align: center;

@@ -4,8 +4,12 @@ import { IoMicOutline } from "react-icons/io5";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import CameraModal from '../CameraModel';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+// import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const Chat = () => {
+  const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -22,11 +26,17 @@ const Chat = () => {
   const photoInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
-
+  
   useEffect(() => {
-    inputRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+  
   useEffect(() => {
     const interval = setInterval(() => {
       if (isRecording && recordingStartTime) {
@@ -34,10 +44,17 @@ const Chat = () => {
         setRecordingDuration(Math.floor(elapsed));
       }
     }, 1000);
-
+    
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
-
+  
+  const { data: courses, currentCourseId } = useSelector(selectCourses);
+  
+  const course = courses.find(course => course._id === currentCourseId);
+  if (!course) {
+    return <div>the course is not available</div>;
+  };
+  
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const newMessages = [...messages, { text: newMessage, sender: 'user', timestamp: new Date().toLocaleTimeString() }];
@@ -68,7 +85,7 @@ const Chat = () => {
       console.log("Unable to send recorded blob");
     }
   };
-
+  
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       if (intentToSend === 'message') {
@@ -78,21 +95,20 @@ const Chat = () => {
       }
     }
   };
-
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
+  
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
-
+  
   const handleMicClick = () => {
     if (!isRecording) {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
-          .then(stream => {
+        .then(stream => {
             mediaRecorderRef.current = new MediaRecorder(stream);
             mediaRecorderRef.current.ondataavailable = e => {
               chunksRef.current.push(e.data);
@@ -111,24 +127,24 @@ const Chat = () => {
             setIsRecording(true);
           })
           .catch(error => console.error('Error accessing microphone:', error));
+        } else {
+          console.error('getUserMedia not supported on your browser');
+        }
       } else {
-        console.error('getUserMedia not supported on your browser');
+        mediaRecorderRef.current.stop();
       }
-    } else {
-      mediaRecorderRef.current.stop();
-    }
-  };
-
-  const formatDuration = (duration) => {
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  };
-
+    };
+    
+    const formatDuration = (duration) => {
+      const minutes = Math.floor(duration / 60);
+      const seconds = duration % 60;
+      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
+    
   const handleDeleteRecording = () => {
     setRecordedBlob(null);
     setIntentToSend('message');
-  
+    
     if (isRecording) {
       setMessages([...messages]);
       setRecordedBlob(null);
@@ -139,10 +155,10 @@ const Chat = () => {
       chunksRef.current = [];
       scrollToBottom();
     }
-  
+    
     scrollToBottom();
   };
-
+  
   const handlePhotoInputChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -161,7 +177,7 @@ const Chat = () => {
       reader.readAsArrayBuffer(file);
     }
   };
-
+  
   const handleCapturePhoto = (photoUrl) => {
     setCapturedPhoto(photoUrl);
     setCapturedPhotoPending(true);
@@ -180,7 +196,7 @@ const Chat = () => {
       scrollToBottom();
     }
   };
-
+  
   useEffect(() => {
     if (capturedPhotoPending) {
       inputRef.current.focus();
@@ -191,14 +207,18 @@ const Chat = () => {
     setCapturedPhoto(null);
     setCapturedPhotoPending(false);
   };
-
+  
   const handleCameraClick = () => {
     setShowCamera(true);
   };
-
+  
   const handleCloseCamera = () => {
     setShowCamera(false);
   };
+  
+  // if (loading) {
+  //   return <LoadingSpinner/>;
+  // }
 
   return (
     <>
