@@ -2,37 +2,43 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import LoadingSpinner from '../redux/actions/LoadingSpinner';
-import { selectCourses, setCurrentCourseId, setCurrentFileId } from '../redux/slices/coursesSlice';
+import { selectCourses, setCurrentAssignmentId, setCurrentCourseId, setCurrentFileId, setCurrentProjectId, setCurrentVideoId } from '../redux/slices/coursesSlice';
 import { fetchCourses } from '../redux/slices/coursesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import CourseContent from './CourseContent';
 import { CircularProgress } from '@material-ui/core';
 
 const Course = () => {
-    const { path } = useParams();
     const dispatch = useDispatch();
-    // console.log(path);
-
+    const { path } = useParams();
     const [activeTab, setActiveTab] = useState('Chat');
-    const [loading, setLoading] = useState(true);
-    const { data: courses, currentFileId } = useSelector(selectCourses);
-
+    
     useEffect(() => {
         dispatch(fetchCourses());
     }, [dispatch]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, []);
-
-    // Find the course object by matching the path
+    const { data: courses} = useSelector(selectCourses);
+    
     const currentCourse = courses.find(course => course.path === path);
-    // console.log(currentCourse);
-    // Extract the course name from the current course object
+    useEffect(() => {
+        if (currentCourse) {
+            dispatch(setCurrentCourseId(currentCourse._id));
+            const fileIds = currentCourse.files.map(file => file._id);
+            dispatch(setCurrentFileId(fileIds));
+            const assignmentIds = currentCourse.assignments.map(assignment => assignment._id);
+            dispatch(setCurrentAssignmentId(assignmentIds));
+            const projectIds = currentCourse.projects.map(project => project._id);
+            dispatch(setCurrentProjectId(projectIds));
+            const videoIds = currentCourse.videos.map(video => video._id);
+            dispatch(setCurrentVideoId(videoIds));
+        }
+    }, [currentCourse, dispatch]);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         setLoading(false);
+    //     }, 1000);
+    
+    //     return () => clearTimeout(timer);
+    // }, []);
     
     const nameLoading = () => {
         if (nameLoading) {
@@ -47,6 +53,7 @@ const Course = () => {
                 </div>
             );
         };
+        return null;
     };
     const courseName = currentCourse ? currentCourse.name : nameLoading();
     // const courseIndex = courses.findIndex(course => course.path === path);
@@ -56,26 +63,23 @@ const Course = () => {
 
     // console.log(courseName);
 
-    useEffect(() => {
-        if (currentCourse) {
-            dispatch(setCurrentCourseId(currentCourse._id));
-            const fileIds = currentCourse.files.map(file => file._id);
-            dispatch(setCurrentFileId(fileIds));
-            const assignmentIds = currentCourse.assignments.map(assignment => assignment._id);
-            dispatch(setCurrentFileId(assignmentIds));
-        }
-    }, [currentCourse, dispatch]);
 
     const handleSelect = (selectedKey) => {
         setActiveTab(selectedKey);
     };
 
-    if (loading) {
-        return <LoadingSpinner />;
-    }
+    // if (loading) {
+    //     return <LoadingSpinner />;
+    // }
 
     return (
         <>
+              {/* {loading ? (
+                <LoadingSpinner/>
+            ) : error ? (
+                <p>Error: {error}</p>
+            ) : (
+                <> */}
             <h1 className='course-header'>{courseName}</h1>
             <Container fluid className='course-container' style={{ margin: "0", padding: "0" }}>
                 <Row style={{ margin: "0", padding: "0" }} className='courseRow1'>
@@ -102,7 +106,9 @@ const Course = () => {
                     </Col>
                 </Row>
             </Container>
-        </>
+                </>
+        //     )}
+        // </>
     );
 };
 

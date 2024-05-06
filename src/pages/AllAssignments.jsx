@@ -61,6 +61,7 @@ const AllAssignments = () => {
   const [up, setUp] = useState(false)
   const [clickedAssignmentId, setClickedAssignmentId] = useState(null);
   const [clickedCourseId, setClickedCourseId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (role === 'student') {
@@ -73,9 +74,17 @@ const AllAssignments = () => {
   useEffect(() => {
     dispatch(fetchCourses());
   }, [dispatch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        setLoading(false);
+  }, 1000);
   
-  const { loading, data: courses } = useSelector(selectCourses);
-  
+    return () => clearTimeout(timer);
+  }, []);
+
+  const { data: courses, currentCourseId } = useSelector(selectCourses);  
+
   useEffect(() => {
     if (!loading) {
       const allAssignments = courses.flatMap(course => {
@@ -89,32 +98,28 @@ const AllAssignments = () => {
     }
   }, [courses, loading]);
   
-  if (loading) {
-    return <LoadingSpinner/>;
-  }
-
   const handleChange = (event) => {
     setDescription(event.target.value);
   };
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+    
     console.log('Selected files:', selectedFiles);
-  
+    
     // Find the index of the submitted assignment in the submittedAssignments array
     const submittedIndex = submittedAssignments.findIndex(assignment => assignment._id === submittedAssignmentId);
-  
+    
     if (submittedIndex !== -1) {
       // Create a copy of the submittedAssignments array
       const updatedAssignmentsPaths = [...submittedAssignments];
-  
+      
       // Update the submitted assignment's status to "submitted"
       updatedAssignmentsPaths[submittedIndex] = {
         ...updatedAssignmentsPaths[submittedIndex],
         submitted: true // Assuming "submitted" is a boolean field
       };
-  
+      
       // Update the state with the modified submittedAssignments array
       setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
       // setSubmittedAssignmentId(null); // Reset the submitted assignment ID
@@ -122,13 +127,13 @@ const AllAssignments = () => {
     } else {
       console.log('Submitted assignment not found!');
     }
-  
+    
     // Clear after submission
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
   };
-
+  
   const handleInProgressClick = (assignmentId, courseId) => {
     // Update the submitted assignment ID with the clicked assignment's ID
     setSubmittedAssignmentId(assignmentId);
@@ -140,47 +145,47 @@ const AllAssignments = () => {
     setUp(true);
     dispatch(navigateToAssignment());
   };
-
+  
   const assignmentPath = `https://ezlearn.onrender.com/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
-
+  
   const handleFileSelect = (event) => {
     const files = event.target.files;
     setSelectedFiles(files);
   };
-
+  
   const handleAssignmentDownload = async (assignment) => {
     const { filename } = assignment;
     try {
-        const response = await fetch(assignmentPath);
-        const fileData = await response.arrayBuffer();
-
-        const pdfDoc = await PDFDocument.load(fileData);
-        const newPdfDoc = await PDFDocument.create();
-
+      const response = await fetch(assignmentPath);
+      const fileData = await response.arrayBuffer();
+      
+      const pdfDoc = await PDFDocument.load(fileData);
+      const newPdfDoc = await PDFDocument.create();
+      
         const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
-
+        
         pages.forEach((page) => {
-            newPdfDoc.addPage(page);
+          newPdfDoc.addPage(page);
         });
-
+        
         const pdfBytes = await newPdfDoc.save();
         const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         const url = URL.createObjectURL(pdfBlob);
-
+        
         const a = document.createElement('a');
         a.href = url;
         a.download = filename;
-
+        
         document.body.appendChild(a);
         a.click();
-
+        
         URL.revokeObjectURL(url);
         document.body.removeChild(a);
-    } catch (error) {
+      } catch (error) {
         console.error('Error downloading file:', error);
-    };
-  }; 
-
+      };
+    }; 
+    
   const handleCancel = () => {
     setShowFirstAssignment(true);
     setSubmittedAssignmentId(null); // Reset the submitted assignment ID
@@ -188,7 +193,11 @@ const AllAssignments = () => {
     setDescription(''); // Clear description
     setUp(false); // Reset the "in progress" state
   };
-
+  
+  if (loading) {
+    return <LoadingSpinner/>;
+  }
+  
   return (
     <>
       {student && (

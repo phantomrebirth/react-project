@@ -16,11 +16,12 @@ const Assignments = () => {
   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
-  const [showFirstAssignment, setShowFirstAssignment] = useState(true);
+  // const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
   const [submittedAssignments, setSubmittedAssignments] = useState([]);
+  // const [loading, setLoading] = useState(true);
   const [up, setUp] = useState(false)
 
   useEffect(() => {
@@ -34,14 +35,17 @@ const Assignments = () => {
   useEffect(() => {
     dispatch(fetchCourses());
   }, [dispatch]);
-  
   const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//         setLoading(false);
+//     }, 1000);
+
+//     return () => clearTimeout(timer);
+// }, []);
   
   const course = courses.find(course => course._id === currentCourseId);
-  if (!course) {
-    return <div>No assignments available</div>;
-  };
-  
   const assignmentPath = course.assignments.map(assignment => `https://ezlearn.onrender.com/course/getAssignments/${currentCourseId}/${assignment._id}`);
   const assignmentsPaths = course.assignments.map(assignment => {
     const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
@@ -55,31 +59,27 @@ const Assignments = () => {
     setSubmittedAssignments(assignmentsPaths);
   }, [course]);
   
-  if (loading) {
-    return <LoadingSpinner/>;
-  }
   const handleChange = (event) => {
     setDescription(event.target.value);
   };
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+    
     console.log('Selected files:', selectedFiles);
-  
     // Find the index of the submitted assignment in the submittedAssignments array
     const submittedIndex = submittedAssignments.findIndex(assignment => assignment._id === submittedAssignmentId);
-  
+    
     if (submittedIndex !== -1) {
       // Create a copy of the submittedAssignments array
       const updatedAssignmentsPaths = [...submittedAssignments];
-  
+      
       // Update the submitted assignment's status to "submitted"
       updatedAssignmentsPaths[submittedIndex] = {
         ...updatedAssignmentsPaths[submittedIndex],
         submitted: true // Assuming "submitted" is a boolean field
       };
-  
+      
       // Update the state with the modified submittedAssignments array
       setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
       // setSubmittedAssignmentId(null); // Reset the submitted assignment ID
@@ -87,24 +87,23 @@ const Assignments = () => {
     } else {
       console.log('Submitted assignment not found!');
     }
-  
-    // Clear after submission
+    
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
-  
+    
     // // Make the API call to submit the assignment
     // try {
     //   const formData = new FormData();
     //   formData.append('assignment', selectedFiles); // Assuming only one file is selected
     //   formData.append('description', description); // Add any additional metadata
-  
+    
     //   const response = await fetch('', {
     //     method: 'POST',
     //     body: formData,
     //     // Add any necessary headers, such as authentication tokens or content-type
     //   });
-  
+    
     //   if (response.ok) {
     //     console.log('Assignment submitted successfully');
     //     // Handle any further actions after successful submission
@@ -117,61 +116,65 @@ const Assignments = () => {
     //   // Handle network errors or other exceptions
     // }
   };
-
+  
   const handleInProgressClick = (assignmentId) => {
     // Update the submitted assignment ID with the clicked assignment's ID
     setSubmittedAssignmentId(assignmentId);
     console.log('Submitted assignment ID:', assignmentId);
-    setShowFirstAssignment(false);
+    // setShowFirstAssignment(false);
     setUp(true);
     dispatch(navigateToAssignment());
   };
-
+  
   const handleFileSelect = (event) => {
     const files = event.target.files;
     setSelectedFiles(files);
   };
-
+  
   const handleAssignmentDownload = async (assignment) => {
     const { filename, path } = assignment;
     try {
-        const response = await fetch(path);
-        const fileData = await response.arrayBuffer();
-
-        const pdfDoc = await PDFDocument.load(fileData);
-        const newPdfDoc = await PDFDocument.create();
-
-        const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
-
-        pages.forEach((page) => {
-            newPdfDoc.addPage(page);
-        });
-
-        const pdfBytes = await newPdfDoc.save();
-        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(pdfBlob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-
-        document.body.appendChild(a);
-        a.click();
-
-        URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+      const response = await fetch(path);
+      const fileData = await response.arrayBuffer();
+      
+      const pdfDoc = await PDFDocument.load(fileData);
+      const newPdfDoc = await PDFDocument.create();
+      
+      const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
+      
+      pages.forEach((page) => {
+        newPdfDoc.addPage(page);
+      });
+      
+      const pdfBytes = await newPdfDoc.save();
+      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(pdfBlob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      
+      document.body.appendChild(a);
+      a.click();
+      
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
     } catch (error) {
-        console.error('Error downloading file:', error);
+      console.error('Error downloading file:', error);
     };
   }; 
-
+  
   const handleCancel = () => {
-    setShowFirstAssignment(true);
+    // setShowFirstAssignment(true);
     setSubmittedAssignmentId(null);
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
   };
+  
+  if (loading) {
+    return <LoadingSpinner/>;
+  }
 
   return (
     <>

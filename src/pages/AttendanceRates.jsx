@@ -10,6 +10,7 @@ const AttendanceRates = () => {
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (role === 'student') {
@@ -23,7 +24,15 @@ const AttendanceRates = () => {
         dispatch(fetchCourses());
     }, [dispatch]);
 
-    const { loading, data: courses } = useSelector(selectCourses);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+    
+        return () => clearTimeout(timer);
+    }, []);
+
+    const { data: courses } = useSelector(selectCourses);
 
     if (loading) {
         return <LoadingSpinner />;

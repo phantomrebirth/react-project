@@ -12,18 +12,33 @@ export const fetchCourses = createAsyncThunk(
           Authorization: `Bearer ${token}`
         }
       });
-      const fileIdArray = response.data.map(course => course.files.map(file => file._id)).flat();
-      const assignmentIdArray = response.data.map(course => course.assignments.map(assignment => assignment._id)).flat();
       const courseIdArray = response.data.map(course => course._id);
       const courseNameArray = response.data.map(course => course.name);
+      const fileIdArray = response.data.map(course => course.files.map(file => file._id)).flat();
+      const assignmentIdArray = response.data.map(course => course.assignments.map(assignment => assignment._id)).flat();
+      const projectIdArray = response.data.map(course => course.projects.map(project => project._id)).flat();
+      const videoIdArray = response.data.map(course => course.videos.map(video => video._id)).flat();
             // Determine current course and file ID based on application state
             let currentCourseId = courses.currentCourseId;
+            let currentCourseName = courses.currentCourseName;
             let currentFileId = courses.currentFileId;
             let currentAssignmentId = courses.currentAssignmentId;
-            let currentCourseName = courses.currentCourseName;
+            let currentProjectId = courses.currentProjectId;
+            let currentVideoId = courses.currentVideoId;
             // console.log(currentCourseId,currentFileId);
-
-      return { courses: response.data, fileIdArray, courseIdArray, assignmentIdArray, courseNameArray, currentCourseId, currentFileId, currentAssignmentId, currentCourseName };
+            return { courses: response.data,
+                              courseIdArray,
+                              currentCourseId,
+                              courseNameArray,
+                              currentCourseName,
+                              videoIdArray,
+                              currentVideoId,
+                              fileIdArray,
+                              currentFileId,
+                              assignmentIdArray,
+                              currentAssignmentId,
+                              projectIdArray,
+                              currentProjectId, };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -33,21 +48,28 @@ export const fetchCourses = createAsyncThunk(
 const coursesSlice = createSlice({
   name: 'courses',
   initialState: {
-    data: [],
-    fileIdArray: [],
-    courseIdArray: [],
-    assignmentIdArray: [],
-    courseNameArray: [],
-    currentCourseId: null,
-    currentFileId: null,
-    currentAssignmentId: null,
-    currentCourseName: null,
     loading: false,
+    data: [],
+    courseIdArray: [],
+    currentCourseId: null,
+    courseNameArray: [],
+    currentCourseName: null,
+    videoIdArray: [],
+    currentVideoId: null,
+    fileIdArray: [],
+    currentFileId: null,
+    assignmentIdArray: [],
+    currentAssignmentId: null,
+    projectIdArray: [],
+    currentProjectId: null,
     error: null
   },
   reducers: {
     setCurrentCourseId: (state, action) => {
       state.currentCourseId = action.payload;
+    },
+    setCurrentCourseName: (state, action) => {
+      state.currentCourseName = action.payload;
     },
     setCurrentFileId: (state, action) => {
       state.currentFileId = action.payload;
@@ -55,8 +77,11 @@ const coursesSlice = createSlice({
     setCurrentAssignmentId: (state, action) => {
       state.currentAssignmentId = action.payload;
     },
-    setCurrentCourseName: (state, action) => {
-      state.currentCourseName = action.payload;
+    setCurrentProjectId: (state, action) => {
+      state.currentProjectId = action.payload;
+    },
+    setCurrentVideoId: (state, action) => {
+      state.currentVideoId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -68,12 +93,17 @@ const coursesSlice = createSlice({
       .addCase(fetchCourses.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.courses;
-        state.fileIdArray = action.payload.fileIdArray;
         state.courseIdArray = action.payload.courseIdArray;
         state.currentCourseId = action.payload.currentCourseId;
-        state.currentFileId = action.payload.currentFileId;
-        state.currentAssignmentId = action.payload.currentAssignmentId;
         state.currentCourseName = action.payload.currentCourseName;
+        state.fileIdArray = action.payload.fileIdArray;
+        state.currentFileId = action.payload.currentFileId;
+        state.assignmentIdArray = action.payload.assignmentIdArray;
+        state.currentAssignmentId = action.payload.currentAssignmentId;
+        state.projectIdArray = action.payload.projectIdArray;
+        state.currentProjectId = action.payload.currentProjectId;
+        state.videoIdArray = action.payload.videoIdArray;
+        state.currentVideoId = action.payload.currentVideoId;
       })
       .addCase(fetchCourses.rejected, (state, action) => {
         state.loading = false;
@@ -83,6 +113,6 @@ const coursesSlice = createSlice({
 });
 
 export const selectCourses = (state) => state.courses;
-export const { setCurrentCourseId, setCurrentFileId, setCurrentAssignmentId, setCurrentCourseName } = coursesSlice.actions;
+export const { setCurrentCourseId, setCurrentCourseName, setCurrentFileId, setCurrentAssignmentId, setCurrentProjectId, setCurrentVideoId } = coursesSlice.actions;
 
 export default coursesSlice.reducer;

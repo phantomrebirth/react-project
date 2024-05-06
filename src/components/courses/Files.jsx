@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFolderClosed } from "react-icons/fa6";
 import { HiOutlineDownload } from "react-icons/hi";
 import { PDFDocument } from 'pdf-lib';
@@ -9,20 +9,24 @@ import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 const Files = () => {
 
     const dispatch = useDispatch();
-    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
-    
     useEffect(() => {
         dispatch(fetchCourses());
     }, [dispatch]);
     
-    if (loading) {
-        return <LoadingSpinner/>;
-    }
+    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);    
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         setLoading(false);
+    //     }, 1000);
+    
+    //     return () => clearTimeout(timer);
+    // }, []);
+
     
     const course = courses.find(course => course._id === currentCourseId);
-    if (!course) {
-        return <div>No files available</div>;
-    };
+    // if (!course) {
+    //     return <div>No files available</div>;
+    // };
     
     const filePath = course.files.map(file => `https://ezlearn.onrender.com/course/getFiles/${currentCourseId}/${file._id}`);
     const filesWithPaths = course.files.map(file => {
@@ -46,33 +50,37 @@ const Files = () => {
         try {
             const response = await fetch(path);
             const fileData = await response.arrayBuffer();
-    
+            
             const pdfDoc = await PDFDocument.load(fileData);
             const newPdfDoc = await PDFDocument.create();
-    
+            
             const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
-    
+            
             pages.forEach((page) => {
                 newPdfDoc.addPage(page);
             });
-    
+            
             const pdfBytes = await newPdfDoc.save();
             const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(pdfBlob);
-    
+            
             const a = document.createElement('a');
             a.href = url;
             a.download = filename;
-    
+            
             document.body.appendChild(a);
             a.click();
-    
+            
             URL.revokeObjectURL(url);
             document.body.removeChild(a);
         } catch (error) {
             console.error('Error downloading file:', error);
         };
     };   
+    
+    if (loading) {
+        return <LoadingSpinner/>;
+    }
 
     return (
         <div className='files-container' key={course._id}>

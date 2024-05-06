@@ -14,6 +14,7 @@ const Quizzes = () => {
     const [student, setStudent] = useState(false);
     const [showFinishedQuiz, setShowFinishedQuiz] = useState(true);
     const [showQuiz, setShowQuiz] = useState(false);
+    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       if (role === 'student') {
@@ -24,26 +25,31 @@ const Quizzes = () => {
     }, [role]);
     useEffect(() => {
         dispatch(fetchCourses());
-      }, [dispatch]);
+    }, [dispatch]);
+
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         setLoading(false);
+    //     }, 1000);
+    
+    //     return () => clearTimeout(timer);
+    // }, []);
+      
 
     const course = courses.find(course => course._id === currentCourseId);
-
-    if (!course) {
-      return <div>No projects available</div>;
-    };
-  
-    if (loading) {
-      return <LoadingSpinner />;
-    }
-
+    
     const handleAttemptQuizClick = () => {
         setShowFinishedQuiz(false);
     };
-
+    
     const handleStartQuizClick = () => {
         setShowQuiz(true);  
     };
+      
+    if (loading) {
+      return <LoadingSpinner />;
+    }
 
   return (
     <div>

@@ -1551,7 +1551,8 @@ input[type="file"]::placeholder {
     margin: 0% !important;
   }
   .projectUp-btn {
-    width: 111% !important;
+    padding: 2% 5%;
+    width: max-content !important;
     height: 111% !important;
     border-radius: 0.5rem !important;
     background-color: #d6d6d6;
@@ -1564,17 +1565,34 @@ input[type="file"]::placeholder {
     font-size: 222% !important;
   }
   .project-submit {
-    margin: 0% 4% 0px 9% !important;
+    margin: 0% 4% 0px 8% !important;
   }
   .project-submitBtn {
-    border-radius: 0.5rem !important;
-    font-size: 77% !important;
+    border-radius: 0.45rem !important;
+    font-size: 80% !important;
     width: 100% !important;
-    height: 20% !important;
+    height: 2.25rem !important;
+  }
+  .project-cancel {
+    height: max-content !important;
+    display: flex;
+    margin-left: 0% !important;
+  }
+  .project-cancelBtn {
+    height: 2rem;
+    font-size: 80%;
+    width: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .headUp-project {
-    width: fit-content !important;
+    width: max-content !important;
     height: 100%;
+    min-width: 36% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .projectD-col {
     flex: 1 0 0% !important;

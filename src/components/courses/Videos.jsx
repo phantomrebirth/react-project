@@ -14,7 +14,7 @@ const Videos = () => {
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
-    console.log(role);
+    // const [loading, setLoading] = useState(true);
     
     useEffect(() => {
       if (role === 'student') {
@@ -26,40 +26,44 @@ const Videos = () => {
 
     useEffect(() => {
         dispatch(fetchCourses());
-      }, [dispatch]);
+    }, [dispatch]);
       
-      const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);      
+    // useEffect(() => {
+    //   const timer = setTimeout(() => {
+    //       setLoading(false);
+    // }, 1000);
       
-      const course = courses.find(course => course._id === currentCourseId);
-      if (!course) {
-        return <div>No assignments available</div>;
-      };
-      
-      const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseId}/${video._id}`);
-      const videosPaths = course.videos.map(video => {
+    //   return () => clearTimeout(timer);
+    // }, []);
+  
+    const course = courses.find(course => course._id === currentCourseId);
+  
+    const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseId}/${video._id}`);
+    const videosPaths = course.videos.map(video => {
         const matchingPath = videoPath.find(path => path.includes(video._id));
-        return {
+      return {
           ...video,
           path: matchingPath || ''
-        };
-      });
-
-      const handleVideoDownload = async (video) => {
-        const { filename, path } = video;
-        try {
-            const response = await fetch(path);
-            const fileData = await response.arrayBuffer();
-
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([fileData]));
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        };
       };
+    });
+
+    const handleVideoDownload = async (video) => {
+      const { filename, path } = video;
+      try {
+          const response = await fetch(path);
+          const fileData = await response.arrayBuffer();
+
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(new Blob([fileData]));
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+      } catch (error) {
+          console.error('Error downloading file:', error);
+      };
+    };
 
 //   const videoUrl = "https://www.youtube.com/watch?v=fkZK4MqqNTY"
     // const videoUrl = require('/home/phantom/Documents/react-project/src/assets/test/vid0.mp4');

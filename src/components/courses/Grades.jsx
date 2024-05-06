@@ -11,6 +11,7 @@ const Grades = () => {
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
+    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       if (role === 'student') {
@@ -21,14 +22,18 @@ const Grades = () => {
     }, [role]);
     useEffect(() => {
         dispatch(fetchCourses());
-      }, [dispatch]);
+    }, [dispatch]);
+
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+    // useEffect(() => {
+    //   const timer = setTimeout(() => {
+    //       setLoading(false);
+    // }, 1000);
+    
+    //   return () => clearTimeout(timer);
+    // }, []);
 
     const course = courses.find(course => course._id === currentCourseId);
-
-    if (!course) {
-      return <div>No projects available</div>;
-    };
   
     if (loading) {
       return <LoadingSpinner />;

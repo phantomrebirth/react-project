@@ -6,7 +6,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import CameraModal from '../CameraModel';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
-// import LoadingSpinner from '../../redux/actions/LoadingSpinner';
+import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const Chat = () => {
   const dispatch = useDispatch();
@@ -20,6 +20,7 @@ const Chat = () => {
   const [showCamera, setShowCamera] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [capturedPhotoPending, setCapturedPhotoPending] = useState(false);
+  // const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const audioInputRef = useRef(null);
@@ -48,12 +49,16 @@ const Chat = () => {
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
   
-  const { data: courses, currentCourseId } = useSelector(selectCourses);
-  
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //       setLoading(false);
+  //   }, 1000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  const { loading, data: courses, currentCourseId } = useSelector(selectCourses);   
   const course = courses.find(course => course._id === currentCourseId);
-  // if (!course) {
-  //   return <div>the course is not available</div>;
-  // };
   
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
@@ -215,10 +220,10 @@ const Chat = () => {
   const handleCloseCamera = () => {
     setShowCamera(false);
   };
-  
-  // if (loading) {
-  //   return <LoadingSpinner/>;
-  // }
+    
+  if (loading) {
+    return <LoadingSpinner/>;
+  }
 
   return (
     <>
