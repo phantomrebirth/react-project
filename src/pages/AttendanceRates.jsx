@@ -32,10 +32,10 @@ const AttendanceRates = () => {
     return (
         <>
             {student && (
-                <Container fluid className='mt-4 last-container' style={{ padding: "2%" }}>
+                <Container fluid className='mt-4 last-container'>
                     <Row className='grades-container' style={{ margin: "0", padding: "0" }}>
                         {courses.map(course => (
-                            <Col key={course._id} style={{ margin: "0" }}>
+                            <Col key={course._id} style={{ margin: "0", padding: "2%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <div className='AR-container'>
                                     <div className='AR-title'>
                                         {course.name}

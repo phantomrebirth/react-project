@@ -51,9 +51,9 @@ const Chat = () => {
   const { data: courses, currentCourseId } = useSelector(selectCourses);
   
   const course = courses.find(course => course._id === currentCourseId);
-  if (!course) {
-    return <div>the course is not available</div>;
-  };
+  // if (!course) {
+  //   return <div>the course is not available</div>;
+  // };
   
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {

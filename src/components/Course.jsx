@@ -6,6 +6,7 @@ import { selectCourses, setCurrentCourseId, setCurrentFileId } from '../redux/sl
 import { fetchCourses } from '../redux/slices/coursesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import CourseContent from './CourseContent';
+import { CircularProgress } from '@material-ui/core';
 
 const Course = () => {
     const { path } = useParams();
@@ -32,8 +33,22 @@ const Course = () => {
     const currentCourse = courses.find(course => course.path === path);
     // console.log(currentCourse);
     // Extract the course name from the current course object
-    const courseName = currentCourse ? currentCourse.name : '';
-
+    
+    const nameLoading = () => {
+        if (nameLoading) {
+            return (
+                <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '100%',  paddingLeft: "50%" }}
+                >
+                  <CircularProgress color="inherit"
+                                    size={50}
+                                    thickness={4}
+                                    style={{color: "#7939ff"}}
+                                    />
+                </div>
+            );
+        };
+    };
+    const courseName = currentCourse ? currentCourse.name : nameLoading();
     // const courseIndex = courses.findIndex(course => course.path === path);
 
     // const courseId = courseIdArray[courseIndex];

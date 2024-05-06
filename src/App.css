@@ -2872,6 +2872,7 @@ video:focus-within {
   justify-content: space-between;
   align-items: center;
   width: 22.2rem;
+  min-width: max-content;
   height: 6rem;
   background-color: #d3d3d3;
   border: none;
@@ -3798,7 +3799,7 @@ video:focus-within {
 
 .navLogo-container {
   /* width: 8.7rem; */
-  width: 9.75rem;
+  width: 10rem;
   height: 1.875rem;
   /* height: 1.6rem; */
   position: absolute;
