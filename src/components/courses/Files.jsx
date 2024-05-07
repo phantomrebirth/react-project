@@ -5,28 +5,25 @@ import { PDFDocument } from 'pdf-lib';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+import { selectRole } from '../../redux/slices/authSlice';
 
 const Files = () => {
 
     const dispatch = useDispatch();
+    const role = useSelector(selectRole);
+    const [teacher, setTeacher] = useState(false);
+    const [student, setStudent] = useState(false);
     useEffect(() => {
+        if (role === 'student') {
+          setStudent(true);
+        } else if (role === 'teacher') {
+          setTeacher(true);
+        }
         dispatch(fetchCourses());
-    }, [dispatch]);
+    }, [role, dispatch]);
     
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);    
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         setLoading(false);
-    //     }, 1000);
-    
-    //     return () => clearTimeout(timer);
-    // }, []);
-
-    
     const course = courses.find(course => course._id === currentCourseId);
-    // if (!course) {
-    //     return <div>No files available</div>;
-    // };
     
     const filePath = course.files.map(file => `https://ezlearn.onrender.com/course/getFiles/${currentCourseId}/${file._id}`);
     const filesWithPaths = course.files.map(file => {
@@ -38,7 +35,6 @@ const Files = () => {
         };
     });
     // console.log('Files with Paths:', filesWithPaths);
-
     const handleFileNameClick = (file) => {
         if (file.path) {
             window.open(file.path, '_blank');
@@ -83,23 +79,30 @@ const Files = () => {
     }
 
     return (
-        <div className='files-container' key={course._id}>
-            {filesWithPaths.map((file, index) => (
-                <div key={index}>
-                    <h6 className='file-header'>Week {index + 1}</h6>
-                    <div key={file._id} className='file-container'>
-                        <div className='fileName-container' title='Open file' onClick={() => handleFileNameClick(file)}>
-                            <FaFolderClosed className='folder-icon'/>
-                            <h5 className='file-name'>{file.filename}</h5>
+        <>
+          {student && (
+            <div className='files-container' key={course._id}>
+                {filesWithPaths.map((file, index) => (
+                    <div key={index}>
+                        <h6 className='file-header'>Week {index + 1}</h6>
+                        <div key={file._id} className='file-container'>
+                            <div className='fileName-container' title='Open file' onClick={() => handleFileNameClick(file)}>
+                                <FaFolderClosed className='folder-icon'/>
+                                <h5 className='file-name'>{file.filename}</h5>
+                            </div>
+                            <a onClick={() => handleFileDownload(file)}>
+                                <HiOutlineDownload className='downloadFile-icon' title='Download' style={{cursor: "pointer"}}/>
+                            </a>
                         </div>
-                        <a onClick={() => handleFileDownload(file)}>
-                            <HiOutlineDownload className='downloadFile-icon' title='Download' style={{cursor: "pointer"}}/>
-                        </a>
+                        <hr className='files-hr'/>
                     </div>
-                    <hr className='files-hr'/>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+          )}
+          {teacher && (
+            <div>_</div>
+          )}
+        </>
     );
 };
 

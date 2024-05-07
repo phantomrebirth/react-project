@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import LoadingSpinner from '../redux/actions/LoadingSpinner';
+// import LoadingSpinner from '../redux/actions/LoadingSpinner';
 import { selectCourses, setCurrentAssignmentId, setCurrentCourseId, setCurrentFileId, setCurrentProjectId, setCurrentVideoId } from '../redux/slices/coursesSlice';
 import { fetchCourses } from '../redux/slices/coursesSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,12 +12,10 @@ const Course = () => {
     const dispatch = useDispatch();
     const { path } = useParams();
     const [activeTab, setActiveTab] = useState('Chat');
-    
     useEffect(() => {
         dispatch(fetchCourses());
     }, [dispatch]);
     const { data: courses} = useSelector(selectCourses);
-    
     const currentCourse = courses.find(course => course.path === path);
     useEffect(() => {
         if (currentCourse) {
@@ -32,13 +30,6 @@ const Course = () => {
             dispatch(setCurrentVideoId(videoIds));
         }
     }, [currentCourse, dispatch]);
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         setLoading(false);
-    //     }, 1000);
-    
-    //     return () => clearTimeout(timer);
-    // }, []);
     
     const nameLoading = () => {
         if (nameLoading) {
@@ -74,12 +65,6 @@ const Course = () => {
 
     return (
         <>
-              {/* {loading ? (
-                <LoadingSpinner/>
-            ) : error ? (
-                <p>Error: {error}</p>
-            ) : (
-                <> */}
             <h1 className='course-header'>{courseName}</h1>
             <Container fluid className='course-container' style={{ margin: "0", padding: "0" }}>
                 <Row style={{ margin: "0", padding: "0" }} className='courseRow1'>
@@ -106,9 +91,7 @@ const Course = () => {
                     </Col>
                 </Row>
             </Container>
-                </>
-        //     )}
-        // </>
+        </>
     );
 };
 

@@ -14,31 +14,17 @@ const Videos = () => {
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
-    // const [loading, setLoading] = useState(true);
-    
     useEffect(() => {
-      if (role === 'student') {
-        setStudent(true);
-      } else if (role === 'teacher') {
-        setTeacher(true);
-      }
-    }, [role]);
-
-    useEffect(() => {
+        if (role === 'student') {
+          setStudent(true);
+        } else if (role === 'teacher') {
+          setTeacher(true);
+        }
         dispatch(fetchCourses());
-    }, [dispatch]);
-      
-    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);      
-    // useEffect(() => {
-    //   const timer = setTimeout(() => {
-    //       setLoading(false);
-    // }, 1000);
-      
-    //   return () => clearTimeout(timer);
-    // }, []);
+    }, [role, dispatch]);
+    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
   
     const course = courses.find(course => course._id === currentCourseId);
-  
     const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseId}/${video._id}`);
     const videosPaths = course.videos.map(video => {
         const matchingPath = videoPath.find(path => path.includes(video._id));

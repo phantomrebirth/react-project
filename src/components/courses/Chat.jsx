@@ -20,24 +20,21 @@ const Chat = () => {
   const [showCamera, setShowCamera] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [capturedPhotoPending, setCapturedPhotoPending] = useState(false);
-  // const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const audioInputRef = useRef(null);
   const photoInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
-  
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-
   useEffect(() => {
     dispatch(fetchCourses());
   }, [dispatch]);
-  
+  const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
   useEffect(() => {
     const interval = setInterval(() => {
       if (isRecording && recordingStartTime) {
@@ -45,21 +42,9 @@ const Chat = () => {
         setRecordingDuration(Math.floor(elapsed));
       }
     }, 1000);
-    
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
-  
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //       setLoading(false);
-  //   }, 1000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  const { loading, data: courses, currentCourseId } = useSelector(selectCourses);   
   const course = courses.find(course => course._id === currentCourseId);
-  
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const newMessages = [...messages, { text: newMessage, sender: 'user', timestamp: new Date().toLocaleTimeString() }];

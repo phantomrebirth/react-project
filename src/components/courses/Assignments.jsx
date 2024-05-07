@@ -21,30 +21,17 @@ const Assignments = () => {
   const [description, setDescription] = useState('');
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
   const [submittedAssignments, setSubmittedAssignments] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const [up, setUp] = useState(false)
-
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
     } else if (role === 'teacher') {
       setTeacher(true);
     }
-  }, [role]);
-  
-  useEffect(() => {
     dispatch(fetchCourses());
-  }, [dispatch]);
+}, [role, dispatch]);
   const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
 
-//   useEffect(() => {
-//     const timer = setTimeout(() => {
-//         setLoading(false);
-//     }, 1000);
-
-//     return () => clearTimeout(timer);
-// }, []);
-  
   const course = courses.find(course => course._id === currentCourseId);
   const assignmentPath = course.assignments.map(assignment => `https://ezlearn.onrender.com/course/getAssignments/${currentCourseId}/${assignment._id}`);
   const assignmentsPaths = course.assignments.map(assignment => {

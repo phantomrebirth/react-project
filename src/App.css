@@ -3026,8 +3026,9 @@ video:focus-within {
   height: 15rem;
   border-radius: 0.6rem;
   background-image: linear-gradient(to bottom, #7939ff, #382074);
-  box-shadow: 0 4px 1px rgba(0, 0, 0, .1), 
-  0 4px 1px rgba(0, 0, 0, .2);
+  color: #fff;
+  box-shadow: 0 3px 1px rgba(0, 0, 0, .1), 
+  0 3px 1px rgba(0, 0, 0, .2);
   cursor: pointer;
 }
 
@@ -3047,6 +3048,7 @@ video:focus-within {
   text-align: center;
   font-weight: bold;
   font-size: 212%;
+  color: #fff;
 }
 
 .addedR-container {
@@ -3054,8 +3056,10 @@ video:focus-within {
   width: 15rem;
   height: 15rem;
   border-radius: 0.6rem;
-  box-shadow: 0 4px 1px rgba(0, 0, 0, .1), 
-  0 4px 1px rgba(0, 0, 0, .2);
+  box-shadow: 0 2px 1px rgba(0, 0, 0, .1), 
+  0 2px 1px rgba(0, 0, 0, .2);
+  background-color: #000;
+  color: #fff;
   /* cursor: pointer; */
   border: 0.1rem solid #7939ff;
   position: relative;
@@ -3063,6 +3067,7 @@ video:focus-within {
 
 .addedR-container:hover {
   transform: none;
+  background-color: #000;
 }
 
 .addedReminder-body {
@@ -3073,9 +3078,11 @@ video:focus-within {
   font-size: 131%;
   font-weight: normal;
   margin-bottom: 5%;
+  color: #fff;
 }
 
 .addedReminder-text {
+  color: #fff;
   font-size: 77%;
   font-weight: normal;
   white-space: pre-wrap;
@@ -3112,8 +3119,9 @@ video:focus-within {
 }
 
 .addedR-footer {
+  border-top: 1px solid #ffffffb7;
   display: flex;
-  width: 85%;
+  width: 89%;
   justify-content: space-between;
   position: absolute;
   bottom: 1%;

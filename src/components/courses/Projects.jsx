@@ -18,7 +18,6 @@ const Projects = () => {
   const [submittedProjectId, setSubmittedProjectId] = useState(null);
   const [submittedProjects, setSubmittedProjects] = useState([]);
   const [up, setUp] = useState(false)
-  // const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   
   useEffect(() => {

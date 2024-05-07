@@ -14,29 +14,16 @@ const Quizzes = () => {
     const [student, setStudent] = useState(false);
     const [showFinishedQuiz, setShowFinishedQuiz] = useState(true);
     const [showQuiz, setShowQuiz] = useState(false);
-    // const [loading, setLoading] = useState(true);
-
     useEffect(() => {
-      if (role === 'student') {
-        setStudent(true);
-      } else if (role === 'teacher') {
-        setTeacher(true);
-      }
-    }, [role]);
-    useEffect(() => {
+        if (role === 'student') {
+          setStudent(true);
+        } else if (role === 'teacher') {
+          setTeacher(true);
+        }
         dispatch(fetchCourses());
-    }, [dispatch]);
-
+    }, [role, dispatch]);
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         setLoading(false);
-    //     }, 1000);
     
-    //     return () => clearTimeout(timer);
-    // }, []);
-      
-
     const course = courses.find(course => course._id === currentCourseId);
     
     const handleAttemptQuizClick = () => {

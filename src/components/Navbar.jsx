@@ -35,12 +35,9 @@ const Navbar = ({ toggleSidebar }) => {
   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
-  // console.log(role);
-  
   useEffect(() => {
     dispatch(fetchProfilePicture(token));
   }, [dispatch, token]);
-
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
@@ -48,7 +45,6 @@ const Navbar = ({ toggleSidebar }) => {
       setTeacher(true);
     }
   }, [role]);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 

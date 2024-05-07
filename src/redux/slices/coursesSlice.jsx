@@ -27,18 +27,19 @@ export const fetchCourses = createAsyncThunk(
             let currentVideoId = courses.currentVideoId;
             // console.log(currentCourseId,currentFileId);
             return { courses: response.data,
-                              courseIdArray,
-                              currentCourseId,
-                              courseNameArray,
-                              currentCourseName,
-                              videoIdArray,
-                              currentVideoId,
-                              fileIdArray,
-                              currentFileId,
-                              assignmentIdArray,
-                              currentAssignmentId,
-                              projectIdArray,
-                              currentProjectId, };
+                                      courseIdArray,
+                                      currentCourseId,
+                                      courseNameArray,
+                                      currentCourseName,
+                                      videoIdArray,
+                                      currentVideoId,
+                                      fileIdArray,
+                                      currentFileId,
+                                      assignmentIdArray,
+                                      currentAssignmentId,
+                                      projectIdArray,
+                                      currentProjectId,
+                    };
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

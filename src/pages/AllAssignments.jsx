@@ -53,7 +53,7 @@ const AllAssignments = () => {
   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
-  const [showFirstAssignment, setShowFirstAssignment] = useState(true);
+  // const [showFirstAssignment, setShowFirstAssignment] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
@@ -61,7 +61,6 @@ const AllAssignments = () => {
   const [up, setUp] = useState(false)
   const [clickedAssignmentId, setClickedAssignmentId] = useState(null);
   const [clickedCourseId, setClickedCourseId] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (role === 'student') {
@@ -69,21 +68,9 @@ const AllAssignments = () => {
     } else if (role === 'teacher') {
       setTeacher(true);
     }
-  }, [role]);
-  
-  useEffect(() => {
     dispatch(fetchCourses());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-        setLoading(false);
-  }, 1000);
-  
-    return () => clearTimeout(timer);
-  }, []);
-
-  const { data: courses, currentCourseId } = useSelector(selectCourses);  
+  }, [role, dispatch]);
+  const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
 
   useEffect(() => {
     if (!loading) {
@@ -107,41 +94,34 @@ const AllAssignments = () => {
     
     console.log('Selected files:', selectedFiles);
     
-    // Find the index of the submitted assignment in the submittedAssignments array
     const submittedIndex = submittedAssignments.findIndex(assignment => assignment._id === submittedAssignmentId);
     
     if (submittedIndex !== -1) {
-      // Create a copy of the submittedAssignments array
       const updatedAssignmentsPaths = [...submittedAssignments];
       
-      // Update the submitted assignment's status to "submitted"
       updatedAssignmentsPaths[submittedIndex] = {
         ...updatedAssignmentsPaths[submittedIndex],
-        submitted: true // Assuming "submitted" is a boolean field
+        submitted: true
       };
       
-      // Update the state with the modified submittedAssignments array
-      setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
-      // setSubmittedAssignmentId(null); // Reset the submitted assignment ID
+      setSubmittedAssignments(updatedAssignmentsPaths);
       console.log('Submitted assignment:', updatedAssignmentsPaths[submittedIndex]);
     } else {
       console.log('Submitted assignment not found!');
     }
     
-    // Clear after submission
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
   };
   
   const handleInProgressClick = (assignmentId, courseId) => {
-    // Update the submitted assignment ID with the clicked assignment's ID
     setSubmittedAssignmentId(assignmentId);
     setClickedAssignmentId(assignmentId);
     setClickedCourseId(courseId);
     console.log('Submitted assignment ID:', assignmentId);
     console.log('course ID:', courseId);
-    setShowFirstAssignment(false);
+    // setShowFirstAssignment(false);
     setUp(true);
     dispatch(navigateToAssignment());
   };
@@ -187,11 +167,11 @@ const AllAssignments = () => {
     }; 
     
   const handleCancel = () => {
-    setShowFirstAssignment(true);
-    setSubmittedAssignmentId(null); // Reset the submitted assignment ID
-    setSelectedFiles([]); // Clear selected files
-    setDescription(''); // Clear description
-    setUp(false); // Reset the "in progress" state
+    // setShowFirstAssignment(true);
+    setSubmittedAssignmentId(null);
+    setSelectedFiles([]);
+    setDescription('');
+    setUp(false);
   };
   
   if (loading) {
