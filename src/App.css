@@ -2838,6 +2838,25 @@ input[type="file"]::placeholder {
   color: #7939FF;
   width: 2rem;
   height: 1.5rem;
+  cursor: pointer;
+}
+
+.downloadVideo-icon:hover {
+  border-radius: 0.75rem;
+  background-color: #eeeeee;
+}
+
+.deleteVideo-icon {
+  color: #dc3545;
+  width: 2rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.deleteVideo-icon:hover {
+  border-radius: 0.75rem;
+  background-color: #dc35462d;
+  color: red;
 }
 
 iframe{
