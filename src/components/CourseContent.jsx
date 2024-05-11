@@ -44,20 +44,22 @@ import Grades from './courses/Grades';
 import AttendanceRate from './courses/AttendanceRate';
 import Quizzes from './courses/Quizzes';
 import { selectCourses } from '../redux/slices/coursesSlice';
+import Submitted from './courses/Submitted';
 
 const CourseContent = ({ course, activeTab }) => {
-    const { loading } = useSelector(selectCourses);
+    const {     coursesLoading    } = useSelector(selectCourses);
 
     return (
         <>
-            {activeTab === 'Chat' && <Chat courseId={course} loading={loading} />}
-            {activeTab === 'Files' && <Files courseId={course} loading={loading} />}
-            {activeTab === 'Videos' && <Videos courseId={course} loading={loading} />}
-            {activeTab === 'Assignments' && <Assignments courseId={course} loading={loading} />}
-            {activeTab === 'Projects' && <Projects courseId={course} loading={loading} />}
-            {activeTab === 'Grades' && <Grades courseId={course} loading={loading} />}
-            {activeTab === 'Attendance Rate' && <AttendanceRate courseId={course} loading={loading} />}
-            {activeTab === 'Quizzes' && <Quizzes courseId={course} loading={loading} />}
+            {activeTab === 'Chat' && <Chat courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Files' && <Files courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Videos' && <Videos courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Assignments' && <Assignments courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Projects' && <Projects courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Grades' && <Grades courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Attendance Rate' && <AttendanceRate courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Quizzes' && <Quizzes courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Submitted' && <Submitted courseId={course} loading={coursesLoading} />}
         </>
     );
 };

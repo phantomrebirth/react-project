@@ -8,7 +8,7 @@ import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const Quizzes = () => {
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
@@ -20,8 +20,8 @@ const Quizzes = () => {
         } else if (role === 'teacher') {
           setTeacher(true);
         }
-        dispatch(fetchCourses());
-    }, [role, dispatch]);
+        // dispatch(fetchCourses());
+    }, [role]);
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
     
     const course = courses.find(course => course._id === currentCourseId);

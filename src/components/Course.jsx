@@ -1,24 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-// import LoadingSpinner from '../redux/actions/LoadingSpinner';
+import LoadingSpinner from '../redux/actions/LoadingSpinner';
 import { selectCourses, setCurrentAssignmentId, setCurrentCourseId, setCurrentFileId, setCurrentProjectId, setCurrentVideoId } from '../redux/slices/coursesSlice';
 import { fetchCourses } from '../redux/slices/coursesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import CourseContent from './CourseContent';
 import { CircularProgress } from '@material-ui/core';
+import { selectRole } from '../redux/slices/authSlice';
 
 const Course = () => {
     const dispatch = useDispatch();
     const { path } = useParams();
-    const [activeTab, setActiveTab] = useState('Chat');
+    const role = useSelector(selectRole);
+    const [teacher, setTeacher] = useState(false);
+    const [student, setStudent] = useState(false);
     useEffect(() => {
-        dispatch(fetchCourses());
-    }, [dispatch]);
-    const { data: courses} = useSelector(selectCourses);
+      if (role === 'student') {
+        setStudent(true);
+      } else if (role === 'teacher') {
+        setTeacher(true);
+      }
+    }, [role]);
+    const [activeTab, setActiveTab] = useState('Chat');
+    const {
+        coursesLoading,
+        filesLoading,
+        assignmentsLoading,
+        projectsLoading,
+        videosLoading,
+        data: courses,
+        error
+    } = useSelector(selectCourses);
     const currentCourse = courses.find(course => course.path === path);
     useEffect(() => {
-        if (currentCourse) {
+        if(!currentCourse && !coursesLoading){
+            dispatch(fetchCourses());
+        }
+    }, [path, currentCourse, coursesLoading]);
+    useEffect(() => {
+        if (currentCourse && !coursesLoading) {
             dispatch(setCurrentCourseId(currentCourse._id));
             const fileIds = currentCourse.files.map(file => file._id);
             dispatch(setCurrentFileId(fileIds));
@@ -29,8 +50,8 @@ const Course = () => {
             const videoIds = currentCourse.videos.map(video => video._id);
             dispatch(setCurrentVideoId(videoIds));
         }
-    }, [currentCourse, dispatch]);
-    
+    }, [currentCourse]);
+
     const nameLoading = () => {
         if (nameLoading) {
             return (
@@ -59,38 +80,82 @@ const Course = () => {
         setActiveTab(selectedKey);
     };
 
-    // if (loading) {
-    //     return <LoadingSpinner />;
-    // }
+    if (
+        coursesLoading ||
+        filesLoading ||
+        assignmentsLoading ||
+        projectsLoading ||
+        videosLoading
+    ) {
+        return (
+            <LoadingSpinner/>
+        );
+    }
+    
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <>
-            <h1 className='course-header'>{courseName}</h1>
-            <Container fluid className='course-container' style={{ margin: "0", padding: "0" }}>
-                <Row style={{ margin: "0", padding: "0" }} className='courseRow1'>
-                    <Col className='navtabs-container' style={{ padding: "0" }} >
-                        <Navbar className='course-navbar'>
-                            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                            <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
-                                <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
-                                    {/* Assuming you have a list of tab names */}
-                                    {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Grades', 'Attendance Rate'].map(tabName => (
-                                        <Nav.Link key={tabName} id='tabz' className='tab-link' eventKey={tabName}>{tabName}</Nav.Link>
-                                    ))}
-                                </Nav>
-                            </Navbar.Collapse>
-                        </Navbar>
-                    </Col>
-                </Row>
-            </Container>
-            <Container className='tabs-container' style={{ margin: "0", padding: "0" }} fluid>
-                <Row style={{ margin: "0", padding: "0" }} className='courseRow2'>
-                    <Col style={{ padding: "0" }} className='tab-content'>
-                        {/* Render course content based on selected tab */}
-                        <CourseContent course={path} activeTab={activeTab} />
-                    </Col>
-                </Row>
-            </Container>
+          {student && (
+            <>
+                <h1 className='course-header'>{courseName}</h1>
+                <Container fluid className='course-container' style={{ margin: "0", padding: "0" }}>
+                    <Row style={{ margin: "0", padding: "0" }} className='courseRow1'>
+                        <Col className='navtabs-container' style={{ padding: "0" }} >
+                            <Navbar className='course-navbar'>
+                                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                                <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
+                                    <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
+                                        {/* Assuming you have a list of tab names */}
+                                        {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Grades', 'Attendance Rate'].map(tabName => (
+                                            <Nav.Link key={tabName} id='tabz' className='tab-link' eventKey={tabName}>{tabName}</Nav.Link>
+                                        ))}
+                                    </Nav>
+                                </Navbar.Collapse>
+                            </Navbar>
+                        </Col>
+                    </Row>
+                </Container>
+                <Container className='tabs-container' style={{ margin: "0", padding: "0" }} fluid>
+                    <Row style={{ margin: "0", padding: "0" }} className='courseRow2'>
+                        <Col style={{ padding: "0" }} className='tab-content'>
+                            {/* Render course content based on selected tab */}
+                            <CourseContent course={path} activeTab={activeTab} />
+                        </Col>
+                    </Row>
+                </Container>
+            </>
+          )}
+          {teacher && (
+            <>
+                <h1 className='course-header'>{courseName}</h1>
+                <Container fluid className='course-container' style={{ margin: "0", padding: "0" }}>
+                    <Row style={{ margin: "0", padding: "0" }} className='courseRow1'>
+                        <Col className='navtabs-container' style={{ padding: "0" }} >
+                            <Navbar className='course-navbar'>
+                                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                                <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
+                                    <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
+                                        {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Submitted', 'Attendance Rate'].map(tabName => (
+                                            <Nav.Link key={tabName} id='tabz' className='tab-link' eventKey={tabName}>{tabName}</Nav.Link>
+                                        ))}
+                                    </Nav>
+                                </Navbar.Collapse>
+                            </Navbar>
+                        </Col>
+                    </Row>
+                </Container>
+                <Container className='tabs-container' style={{ margin: "0", padding: "0" }} fluid>
+                    <Row style={{ margin: "0", padding: "0" }} className='courseRow2'>
+                        <Col style={{ padding: "0" }} className='tab-content'>
+                            <CourseContent course={path} activeTab={activeTab} />
+                        </Col>
+                    </Row>
+                </Container>
+            </>
+          )}
         </>
     );
 };

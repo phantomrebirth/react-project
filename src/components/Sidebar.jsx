@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from 'react-router-dom';
 import { CgNotes } from "react-icons/cg";
 import { AiOutlineBars } from "react-icons/ai";
@@ -14,11 +14,81 @@ import { LiaHomeSolid } from "react-icons/lia";
 import LogOutModal from "../redux/actions/LogOutModal";
 import { useSelector, useDispatch } from 'react-redux'
 import { openLogOutModal } from "../redux/slices/logOutModalSlice";
+import { TbCameraCheck } from "react-icons/tb";
+import { selectRole } from "../redux/slices/authSlice";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const dispatch = useDispatch();
+  const role = useSelector(selectRole);
+  const [teacher, setTeacher] = useState(false);
+  const [student, setStudent] = useState(false);
+  useEffect(() => {
+    if (role === 'student') {
+      setStudent(true);
+    } else if (role === 'teacher') {
+      setTeacher(true);
+    }
+  }, [role]);
   const logOut = useSelector(state => state.logOutModal.isOpen);
+
+  // const commonItems = [
+  //   {
+  //     path: "/",
+  //     name: "Home",
+  //     icon: <LiaHomeSolid />
+  //   },
+  //   {
+  //     path: "/courses",
+  //     name: "Courses",
+  //     icon: <BsGrid />
+  //   },
+  //   {
+  //     path: teacher ? "/attendance" : (student ? "/assignments" : "/"),
+  //     name: teacher ? "Attendance" : (student ? "Assignments" : "/"),
+  //     icon: teacher ? <TbCameraCheck /> : (student ? <AiOutlineBars /> : <LiaHomeSolid />)
+  //   },
+  // ];
+  
+  // const teacherItems = [
+  //   {
+  //     path: teacher ? "/grades" : (student ? "/attendance-rate" : "/"),
+  //     name: teacher ? "Grades" : (student ? "Attendance Rate" : "/"),
+  //     icon: <BiSolidContact />
+  //   },
+  //   {
+  //     path: "/reminder",
+  //     name: "Reminder",
+  //     icon: <LuCalendarMinus />
+  //   },
+  // ];
+  
+  // const studentItems = [
+  //   {
+  //     path: teacher ? "/grades" : (student ? "/attendance-rate" : "/"),
+  //     name: teacher ? "Grades" : (student ? "Attendance Rate" : "/"),
+  //     icon: <BiSolidContact />
+  //   },
+  // ];
+  
+  // const menuItem = [
+  //   ...commonItems,
+  //   ...(teacher ? teacherItems : studentItems),
+  //   // {
+  //   //   path: "/messages",
+  //   //   name: "Messages",
+  //   //   icon: <BiMessageRounded />
+  //   // },
+  //   {
+  //     path: "/settings",
+  //     name: "Settings",
+  //     icon: <LuSettings />
+  //   },
+  //   {
+  //     name: "Log out",
+  //     icon: <TbLogout2 />
+  //   },
+  // ];
 
   const menuItem = [
     {
@@ -32,9 +102,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       icon: <BsGrid />
     },
     {
-      path: "/assignments",
-      name: "Assignments",
-      icon: <AiOutlineBars />
+      path: teacher ? "/attendance" : (student ? "/assignments" : "/"),
+      name: teacher ? "Attendance" : (student ? "Assignments" : "/"),
+      icon: teacher ? <TbCameraCheck /> : (student ? <AiOutlineBars /> : <LiaHomeSolid />)
     },
     {
       path: "/reminder",
@@ -42,8 +112,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       icon: <LuCalendarMinus />
     },
     {
-      path: "/attendance",
-      name: "Attendance Rate",
+      path: teacher ? "/grades" : (student ? "/attendance-rate" : "/"),
+      name: teacher ? "Grades" : (student ? "Attendance Rate" : "/"),
       icon: <BiSolidContact />
     },
     // {

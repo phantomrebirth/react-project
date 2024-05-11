@@ -90,25 +90,49 @@ function Courses() {
   const [student, setStudent] = useState(false);
   console.log(role);
   useEffect(() => {
-      if (role === 'student') {
-        setStudent(true);
-      } else if (role === 'teacher') {
-        setTeacher(true);
-      }
+    if (role === 'student') {
+      setStudent(true);
+    } else if (role === 'teacher') {
+      setTeacher(true);
+    }
+  }, [role]);
+  const {
+    coursesLoading,
+    data: courses,
+    error
+  } = useSelector(selectCourses); 
+  // useEffect(() => {
+  //   if(!coursesLoading){
+  //       dispatch(fetchCourses());
+  //   }
+  // }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchCourses());
+  // }, [dispatch]);
+
+  useEffect(() => {
+    // Check if courses are not already loaded and not currently being fetched
+    if (courses.length === 0 && !coursesLoading) {
       dispatch(fetchCourses());
-  }, [role, dispatch]);
-  const { data: courses, loading, error } = useSelector(selectCourses);
+    }
+  }, [coursesLoading]);
+  if (coursesLoading) {
+    return (
+        <LoadingSpinner/>
+    );
+  };
 
-
-  console.log('Courses:', courses);
+  if (error) {
+      return <div>Error: {error}</div>;
+  };
 
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <LoadingSpinner/>
       ) : error ? (
         <p>Error: {error}</p>
-      ) : (
+      ) : ( */}
         <>
           {student && (
             <Container className='cards-container' style={{ padding: "0px" }} fluid>
@@ -167,7 +191,7 @@ function Courses() {
             </>
           )}
         </>
-      )}
+      {/* )} */}
     </>
   );
 }

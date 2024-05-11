@@ -7,6 +7,7 @@ import imageUrlReducer from './slices/profilePictureSlice';
 import flexWrapReducer from "./slices/flexWrapSlice";
 import logOutModalReducer from "./slices/logOutModalSlice";
 import coursesReducer from "./slices/coursesSlice";
+// import videosReducer from "./slices/videosSlice"
 
 const middleware = (getDefaultMiddleware) => {
   if (process.env.NODE_ENV === 'development') {
@@ -27,6 +28,7 @@ export const store = configureStore({
     flexWrap: flexWrapReducer,
     logOutModal: logOutModalReducer,
     courses: coursesReducer,
+    // videos: videosReducer,
   },
   middleware,
 });

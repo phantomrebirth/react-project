@@ -1,10 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchCourses = createAsyncThunk(
   'courses/fetchCourses',
-  async (_, { rejectWithValue, getState }) => {
+  async (_, { rejectWithValue, getState, dispatch }) => {
     try {
+      dispatch(setCoursesLoading(true)); // Dispatch the action to set courses loading to true
       const { auth, courses } = getState();
       const token = auth.token;
       const response = await axios.get('https://ezlearn.onrender.com/getCourse/all', {
@@ -12,6 +13,7 @@ export const fetchCourses = createAsyncThunk(
           Authorization: `Bearer ${token}`
         }
       });
+      dispatch(setCoursesLoading(false)); // Reset loading flag for cours
       const courseIdArray = response.data.map(course => course._id);
       const courseNameArray = response.data.map(course => course.name);
       const fileIdArray = response.data.map(course => course.files.map(file => file._id)).flat();
@@ -41,15 +43,30 @@ export const fetchCourses = createAsyncThunk(
                                       currentProjectId,
                     };
     } catch (error) {
+      dispatch(setCoursesLoading(false));
       return rejectWithValue(error.response.data);
     }
   }
 );
 
+export const setUploadAlert = createAction('courses/setUploadAlert');
+export const resetUploadAlert = createAction('courses/resetUploadAlert');
+export const setDeleteAlert = createAction('courses/setDeleteAlert');
+export const resetDeleteAlert = createAction('courses/resetDeleteAlert');
+export const setWaitAlert = createAction('courses/setWaitAlert');
+export const resetWaitAlert = createAction('courses/resetWaitAlert');
+
 const coursesSlice = createSlice({
   name: 'courses',
   initialState: {
-    loading: false,
+    coursesLoading: false,
+    filesLoading: false,
+    assignmentsLoading: false,
+    projectsLoading: false,
+    videosLoading: false,
+    deleteAlert: null,
+    uploadAlert: null,
+    waitAlert: null,
     data: [],
     courseIdArray: [],
     currentCourseId: null,
@@ -66,6 +83,21 @@ const coursesSlice = createSlice({
     error: null
   },
   reducers: {
+    setCoursesLoading: (state, action) => {
+      state.coursesLoading = action.payload;
+    },
+    setFilesLoading: (state, action) => {
+      state.filesLoading = action.payload;
+    },
+    setAssignmentsLoading: (state, action) => {
+      state.assignmentsLoading = action.payload;
+    },
+    setProjectsLoading: (state, action) => {
+      state.projectsLoading = action.payload;
+    },
+    setVideosLoading: (state, action) => {
+      state.videosLoading = action.payload;
+    },
     setCurrentCourseId: (state, action) => {
       state.currentCourseId = action.payload;
     },
@@ -84,15 +116,50 @@ const coursesSlice = createSlice({
     setCurrentVideoId: (state, action) => {
       state.currentVideoId = action.payload;
     },
+    setUploadAlert: (state, action) => {
+      state.uploadAlert = action.payload;
+      state.waitAlert = null;
+    },
+    resetUploadAlert: (state) => {
+      state.uploadAlert = null;
+    },
+    setDeleteAlert: (state, action) => {
+      state.deleteAlert = action.payload;
+      state.waitAlert = null;
+    },
+    resetDeleteAlert: (state) => {
+      state.deleteAlert = null;
+    },
+    setWaitAlert: (state, action) => {
+      state.waitAlert = action.payload;
+    },
+    resetWaitAlert: (state) => {
+      state.waitAlert = null;
+    },
+    addFile: (state, action) => {
+      const { courseId, file } = action.payload;
+      const course = state.data.find(course => course._id === courseId);
+      if (course) {
+        course.files.push(file);
+      }
+    },
+    deleteFile: (state, action) => {
+      const { courseId, fileId } = action.payload;
+      const course = state.data.find(course => course._id === courseId);
+      if (course) {
+        course.files = course.files.filter(file => file._id !== fileId);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCourses.pending, (state) => {
-        state.loading = true;
+        state.fetchingData = true;
         state.error = null;
       })
       .addCase(fetchCourses.fulfilled, (state, action) => {
-        state.loading = false;
+        state.fetchingData = false;
+        state.processingData = true;
         state.data = action.payload.courses;
         state.courseIdArray = action.payload.courseIdArray;
         state.currentCourseId = action.payload.currentCourseId;
@@ -105,15 +172,17 @@ const coursesSlice = createSlice({
         state.currentProjectId = action.payload.currentProjectId;
         state.videoIdArray = action.payload.videoIdArray;
         state.currentVideoId = action.payload.currentVideoId;
+        state.processingData = false;
       })
       .addCase(fetchCourses.rejected, (state, action) => {
-        state.loading = false;
+        state.fetchingData = false;
+        state.processingData = false;
         state.error = action.payload;
       });
   }
 });
 
 export const selectCourses = (state) => state.courses;
-export const { setCurrentCourseId, setCurrentCourseName, setCurrentFileId, setCurrentAssignmentId, setCurrentProjectId, setCurrentVideoId } = coursesSlice.actions;
+export const { setCoursesLoading, setFilesLoading, setAssignmentsLoading, setProjectsLoading, setVideosLoading, setCurrentCourseId, setCurrentCourseName, setCurrentFileId, setCurrentAssignmentId, setCurrentProjectId, setCurrentVideoId } = coursesSlice.actions;
 
 export default coursesSlice.reducer;

@@ -4,6 +4,7 @@ import { selectRole } from '../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses, selectCourses } from '../redux/slices/coursesSlice';
 import LoadingSpinner from '../redux/actions/LoadingSpinner';
+import AttendanceRate from '../components/courses/AttendanceRate';
 
 const AttendanceRates = () => {
     const dispatch = useDispatch();
@@ -71,9 +72,11 @@ const AttendanceRates = () => {
                     </Row>
                 </Container>
             )}
-            {teacher && (
-                <div>_</div>
-            )}
+            {/* {teacher && (
+                <div>
+                    <AttendanceRate/>
+                </div>
+            )} */}
         </>
     );
 };

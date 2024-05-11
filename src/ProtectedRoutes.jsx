@@ -17,6 +17,7 @@ import Course from './components/Course.jsx'
 // import Assignments from './components/courses/Assignments.jsx'
 import AllAssignments from './pages/AllAssignments.jsx'
 import AttendanceRates from './pages/AttendanceRates.jsx'
+import Grades from './pages/Grades.jsx'
 
 const ProtectedRoutes = () => {
 
@@ -35,7 +36,8 @@ const ProtectedRoutes = () => {
                 {/* <Route path="/messages" element={<Messages />} /> */}
                 <Route path="/reminder" element={<Reminder />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/attendance" element={<AttendanceRates />} />
+                <Route path="/attendance-rate" element={<AttendanceRates />} />
+                <Route path="/grades" element={<Grades />} />
             </Routes>
       </Layout>
     );

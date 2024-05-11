@@ -5,7 +5,7 @@ import { HiOutlinePhotograph } from "react-icons/hi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import CameraModal from '../CameraModel';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+import { selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const Chat = () => {
@@ -31,10 +31,7 @@ const Chat = () => {
       inputRef.current.focus();
     }
   }, []);
-  useEffect(() => {
-    dispatch(fetchCourses());
-  }, [dispatch]);
-  const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+  const { data: courses, currentCourseId } = useSelector(selectCourses);
   useEffect(() => {
     const interval = setInterval(() => {
       if (isRecording && recordingStartTime) {
@@ -206,9 +203,9 @@ const Chat = () => {
     setShowCamera(false);
   };
     
-  if (loading) {
-    return <LoadingSpinner/>;
-  }
+  // if (loading) {
+  //   return <LoadingSpinner/>;
+  // }
 
   return (
     <>

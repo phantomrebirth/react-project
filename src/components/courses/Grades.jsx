@@ -6,7 +6,7 @@ import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const Grades = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
@@ -16,8 +16,8 @@ const Grades = () => {
         } else if (role === 'teacher') {
           setTeacher(true);
         }
-        dispatch(fetchCourses());
-    }, [role, dispatch]);
+        // dispatch(fetchCourses());
+    }, [role]);
 
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
     // useEffect(() => {

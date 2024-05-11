@@ -353,9 +353,9 @@ input[type="password"] {
   /* box-shadow: 4px 0 0 rgba(121, 57, 255, 0.1); */
   box-shadow: 
   1px 0 0 rgba(121, 57, 255, 0.2),
-  2px 0 0 rgba(121, 57, 255, 0.2),
+  2px 0 0 rgba(120, 57, 255, 0.151),
   3px 0 0 rgba(121, 57, 255, 0.1),
-  4px 0 0 rgba(121, 57, 255, 0.1);
+  4px 0 0 rgba(120, 57, 255, 0.051);
   /* height: 100%;
   width: 100%; */
   border-right: 1px solid #7939ff;
@@ -513,12 +513,13 @@ input[type="password"] {
 }
 
 .sideIcon {
+  margin-bottom: 1%;
   margin-left: 3%;
   display: flex;
   /* padding: 6.4% 0px 0px 4%; */
   /* margin-top: 9px; */
   gap: 15px;
-  font-size: 112%;
+  font-size: 113%;
   text-decoration: none; 
   width: 3rem;
   height: 3.5rem;
@@ -1994,6 +1995,19 @@ input[type="file"]::placeholder {
   cursor: pointer;
 }
 
+.fileDownload-container {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.fileDownload-container:hover {
+  background-color: #eee;
+}
+
 .downloadFile-icon {
   color: #7939FF;
   background-color: transparent;
@@ -2001,6 +2015,10 @@ input[type="file"]::placeholder {
   border: none;
   font-size: 150%;
 }
+
+/* .downloadFile-icon:hover {
+  border-radius: 1rem;
+} */
 
 .files-hr {
   border: none;
@@ -2095,7 +2113,7 @@ input[type="file"]::placeholder {
 
 .ass-name {
   margin: 0px 0px 0px 0% !important;
-  font-size: 111%;
+  font-size: 104%;
 }
 
 .ass-btn {
@@ -2273,6 +2291,7 @@ input[type="file"]::placeholder {
 
 .project-name {
   margin: 0px 0px 0px 0% !important;
+  font-size: 104%;
 }
 
 .project-btn {
@@ -2847,7 +2866,7 @@ input[type="file"]::placeholder {
 }
 
 .deleteVideo-icon {
-  color: #dc3545;
+  color: #b92635;
   width: 2rem;
   height: 1.5rem;
   cursor: pointer;
@@ -2855,7 +2874,7 @@ input[type="file"]::placeholder {
 
 .deleteVideo-icon:hover {
   border-radius: 0.75rem;
-  background-color: #dc35462d;
+  /* background-color: #dc354627; */
   color: red;
 }
 
@@ -3815,7 +3834,7 @@ video:focus-within {
 .logOut-confirmBtn:hover {
   /* background-color: rgb(255, 0, 0);
   color: #fff; */
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .logOut-closeBtn {
@@ -4477,4 +4496,201 @@ video:focus-within {
 /* audio {
   width: 100%;
 } */
+
+@media screen and (max-width: 768px) {
+  .tUploaded-btn {
+    padding: 13% !important;
+  }
+  .tUploadedProject-btn {
+    padding: 13% !important;
+  }
+}
+
+.tUpload {
+  display: flex;
+  /* width: 40rem; */
+  height: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tUpload-btn {
+  margin: 0 6% 12% 6%;
+  border: 2px solid #7939FF;
+  border-radius: 2rem;
+  background-color: transparent;
+  width: 15rem;
+  height: 15rem;
+  color: #7939FF;
+  box-shadow: 
+  0 0 5px rgba(1, 1, 1, 0.159),
+  0 0 10px rgba(2, 2, 2, 0.138),
+  0 0 15px rgba(3, 3, 3, 0.116),
+  0 0 20px rgba(4, 4, 4, 0.082);
+}
+
+.tUpload-btn:hover {
+  border: none;
+  background-color: #7939FF;
+  color: #fff;
+}
+
+.tUpload-icon {
+  width: 8.25rem;
+  height: 8.25rem;
+}
+
+.tUploaded-btn {
+  margin: 0 6% 12% 6%;
+  padding: 4%;
+  border: 2px solid #7939FF;
+  border-radius: 2rem;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 200%;
+  white-space: wrap;
+  width: 15rem;
+  height: 15rem;
+  color: #7939FF;
+  box-shadow: 
+  0 0 5px rgba(1, 1, 1, 0.159),
+  0 0 10px rgba(2, 2, 2, 0.138),
+  0 0 15px rgba(3, 3, 3, 0.116),
+  0 0 20px rgba(4, 4, 4, 0.082);
+}
+
+.tUploaded-btn:hover {
+  border: none;
+  background-color: #7939FF;
+  color: #fff;
+}
+
+.tUploaded-btn:focus, .tUpload-btn:focus {
+  border: 2px solid #5f15ff;
+  outline: 1px solid #5f15ff;
+}
+
+.tUploaded-icon {
+  width: 5rem;
+  height: 4.25rem;
+}
+
+.delete-ass {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-ass:hover {
+  background-color: rgba(222, 246, 255, 0.596);
+}
+
+.deleteAss-icon {
+  color: #7839ff;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.deleteAss-icon:hover {
+  color: #f00;
+  padding: 0.375rem;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.delete-project {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-project:hover {
+  background-color: rgb(162, 255, 174);
+}
+
+.project-close {
+  border: 1px solid #7939ff;
+  background-color: transparent;
+  color: #7939FF;
+}
+
+.project-close:hover {
+  border: none !important;
+  background-color: #7939ff !important;
+  color: #fff !important;
+}
+
+.ass-submit:focus {
+  background-color: #612ece;
+}
+
+.tUploadProject-btn {
+  margin: 0 6% 12% 6%;
+  border: 2px solid #666;
+  border-radius: 2rem;
+  background-color: transparent;
+  width: 15rem;
+  height: 15rem;
+  color: #555;
+  box-shadow: 
+  0 0 5px rgba(1, 1, 1, 0.159),
+  0 0 10px rgba(2, 2, 2, 0.138),
+  0 0 15px rgba(3, 3, 3, 0.116),
+  0 0 20px rgba(4, 4, 4, 0.082);
+}
+
+.tUploadedProject-btn {
+  margin: 0 6% 12% 6%;
+  padding: 4%;
+  border: 2px solid #666;
+  border-radius: 2rem;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 200%;
+  white-space: wrap;
+  width: 15rem;
+  height: 15rem;
+  color: #555;
+  box-shadow: 
+  0 0 5px rgba(1, 1, 1, 0.159),
+  0 0 10px rgba(2, 2, 2, 0.138),
+  0 0 15px rgba(3, 3, 3, 0.116),
+  0 0 20px rgba(4, 4, 4, 0.082);
+}
+
+.tUploadedProject-btn:hover {
+  border: none;
+  background-color: #555;
+  color: #fff;
+}
+
+.tUploadedProject-btn:focus, .tUpload-btn:focus {
+  border: 2px solid #000;
+  outline: 1px solid #000;
+}
+
+.tUploadProject-btn:hover {
+  border: none;
+  background-color: #555;
+  color: #fff;
+}
+
+.projectUp-btn:hover {
+  border: none !important;
+  background-color: #66666636 !important;
+}
 

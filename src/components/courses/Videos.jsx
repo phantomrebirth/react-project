@@ -24,10 +24,14 @@ const Videos = () => {
         } else if (role === 'teacher') {
             setTeacher(true);
         }
-        dispatch(fetchCourses());
-    }, [role, dispatch]);
-    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+        // dispatch(fetchCourses());
+    }, [role]);
+    const fileInputRef = useRef(null);
+    const { coursesLoading, videosLoading, data: courses, currentCourseId } = useSelector(selectCourses);
     const course = courses.find(course => course._id === currentCourseId);
+    if (coursesLoading || videosLoading || !course) {
+        return <LoadingSpinner/>;
+    }
     const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseId}/${video._id}`);
     const videosPaths = course.videos.map(video => {
         const matchingPath = videoPath.find(path => path.includes(video._id));
@@ -36,7 +40,6 @@ const Videos = () => {
             path: matchingPath || ''
         };
     });
-    const fileInputRef = useRef(null);
 
     const handleVideoDownload = async (video) => {
       const { filename, path } = video;
@@ -69,7 +72,7 @@ const Videos = () => {
             if (response.status === 200 || response.status === 201) {
                 console.log('Video uploaded successfully!');
                 setUploadAlert({ variant: 'primary', message: 'Video uploaded successfully!' });
-                dispatch(fetchCourses());
+                dispatch(fetchCourses(currentCourseId));
             } else {
                 console.error('Failed to upload video:', response.statusText);
                 setUploadAlert({ variant: 'danger', message: `Failed to upload video: ${response.statusText}` });
@@ -92,7 +95,7 @@ const Videos = () => {
             if (response.status === 200 || response.status === 201) {
                 console.log('Video deleted successfully!');
                 setDeleteAlert({ variant: 'primary', message: 'Video deleted successfully!' });
-                dispatch(fetchCourses());
+                dispatch(fetchCourses(currentCourseId));
             } else {
                 console.error('Failed to delete video:', response.statusText);
                 setDeleteAlert({ variant: 'danger', message: `Failed to delete video: ${response.statusText}` });
@@ -131,10 +134,6 @@ const Videos = () => {
   //   const videoUrl = data && data.webContentLink;
   //   return videoUrl;
   // };
-
-  if (loading) {
-    return <LoadingSpinner/>;
-  }
 
   return (
     <>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 import { selectRole } from '../../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
@@ -7,7 +7,7 @@ import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 
 const AttendanceRate = () => {
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
@@ -17,8 +17,8 @@ const AttendanceRate = () => {
         } else if (role === 'teacher') {
           setTeacher(true);
         }
-        dispatch(fetchCourses());
-    }, [role, dispatch]);
+        // dispatch(fetchCourses());
+    }, [role]);
     const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
 
     const course = courses.find(course => course._id === currentCourseId);
@@ -71,7 +71,38 @@ const AttendanceRate = () => {
             </Container>
         )}
         {teacher && (
-            <div>_</div>
+            <div>
+                <Table responsive className='mt-1'>
+                    <thead>
+                        <tr style={{textAlign: "center"}}>
+                            <th>#</th>
+                            <th>Student Name</th>
+                            <th>Classes</th>
+                            <th>Absent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style={{textAlign: "center"}}>
+                            <td>1</td>
+                            <td>Ahmed</td>
+                            <td>8</td>
+                            <td>2</td>
+                        </tr>
+                        <tr style={{textAlign: "center"}}>
+                            <td>2</td>
+                            <td>Yassin</td>
+                            <td>8</td>
+                            <td>1</td>
+                        </tr>
+                        <tr style={{textAlign: "center"}}>
+                            <td>3</td>
+                            <td>Harpy</td>
+                            <td>9</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </div>
         )}
     </>
   );
