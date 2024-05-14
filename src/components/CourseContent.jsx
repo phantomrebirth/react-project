@@ -46,20 +46,20 @@ import Quizzes from './courses/Quizzes';
 import { selectCourses } from '../redux/slices/coursesSlice';
 import Submitted from './courses/Submitted';
 
-const CourseContent = ({ course, activeTab }) => {
+const CourseContent = ({ course, activeTab, refreshKey }) => {
     const {     coursesLoading    } = useSelector(selectCourses);
 
     return (
         <>
-            {activeTab === 'Chat' && <Chat courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Files' && <Files courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Videos' && <Videos courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Chat' && <Chat key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Files' && <Files key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Videos' && <Videos key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Assignments' && <Assignments courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Projects' && <Projects courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Grades' && <Grades courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Attendance Rate' && <AttendanceRate courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Quizzes' && <Quizzes courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Submitted' && <Submitted courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Projects' && <Projects key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Grades' && <Grades key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Attendance Rate' && <AttendanceRate key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Quizzes' && <Quizzes key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Submitted' && <Submitted key={refreshKey} courseId={course} loading={coursesLoading} />}
         </>
     );
 };

@@ -13,7 +13,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { Modal , Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { selectToken } from '../redux/slices/authSlice';
-import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
+import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture, setImageUrl } from "../redux/slices/profilePictureSlice";
 
 function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
   return centerCrop(
@@ -54,7 +54,7 @@ export default function ProfileHead() {
 
   // async function fetchImage() {
   //   try {
-  //     const response = await axios.get('https://ezlearn.onrender.com/admins/getPP',{
+  //     const response = await axios.get('https://ezlearn.onrender.com/users/getPP',{
   //       headers: {
   //         Authorization: `Bearer ${token}`
   //       },

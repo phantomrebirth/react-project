@@ -1525,7 +1525,7 @@ input[type="file"]::placeholder {
   .project-container {
     width: 100% !important;
     height: 100% !important;
-    margin-right: 2%;
+    /* margin-right: 2%; */
   }
   .project-name {
     font-size: 100% !important;
@@ -2235,7 +2235,7 @@ input[type="file"]::placeholder {
 .project-container {
   height: max-content;
   width: max-content;
-  margin-bottom: 6%;
+  margin-bottom: 3%;
 }
 
 .projectH-container {
@@ -4627,7 +4627,7 @@ video:focus-within {
 
 .project-close:hover {
   border: none !important;
-  background-color: #7939ff !important;
+  background-color: #555 !important;
   color: #fff !important;
 }
 

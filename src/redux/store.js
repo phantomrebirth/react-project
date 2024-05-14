@@ -7,7 +7,9 @@ import imageUrlReducer from './slices/profilePictureSlice';
 import flexWrapReducer from "./slices/flexWrapSlice";
 import logOutModalReducer from "./slices/logOutModalSlice";
 import coursesReducer from "./slices/coursesSlice";
-// import videosReducer from "./slices/videosSlice"
+import assignmentsReducer from "./slices/assignmentsSlice";
+import projectsReducer from "./slices/ProjectsSlice"
+// import fetchedProjectsReducer from "./slices/fetchProjects"
 
 const middleware = (getDefaultMiddleware) => {
   if (process.env.NODE_ENV === 'development') {
@@ -28,7 +30,9 @@ export const store = configureStore({
     flexWrap: flexWrapReducer,
     logOutModal: logOutModalReducer,
     courses: coursesReducer,
-    // videos: videosReducer,
+    assignments: assignmentsReducer,
+    projects: projectsReducer,
+    // fetchedProjects: fetchedProjectsReducer,
   },
   middleware,
 });
