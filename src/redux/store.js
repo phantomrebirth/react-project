@@ -1,34 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit";
-import profileReducer from "./slices/profileSlice";
-import assignmentReducer from "./slices/assignmentSlice";
-import croppedImageReducer from "./slices/croppedImageSlice";
-import authReducer from "./slices/authSlice";
-import imageUrlReducer from './slices/profilePictureSlice';
-import flexWrapReducer from "./slices/flexWrapSlice";
-import logOutModalReducer from "./slices/logOutModalSlice";
-import coursesReducer from "./slices/coursesSlice";
-// import videosReducer from "./slices/videosSlice"
+import {createStore, applyMiddleware} from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers'
 
-const middleware = (getDefaultMiddleware) => {
-  if (process.env.NODE_ENV === 'development') {
-    return getDefaultMiddleware({
-      serializableCheck: false,
-    });
-  }
-  return getDefaultMiddleware();
-};
 
-export const store = configureStore({
-  reducer: {
-    profile: profileReducer,
-    assignment: assignmentReducer,
-    croppedImage: croppedImageReducer,
-    auth: authReducer,
-    profilePicture: imageUrlReducer,
-    flexWrap: flexWrapReducer,
-    logOutModal: logOutModalReducer,
-    courses: coursesReducer,
-    // videos: videosReducer,
-  },
-  middleware,
-});
+
+const initialState ={};
+const middleware = [thunk];
+
+const store = createStore(
+  rootReducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
+);
+
+
+export default store;
