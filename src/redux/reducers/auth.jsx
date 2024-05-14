@@ -10,31 +10,31 @@ const initialState = {
   isLoading: false,
 };
 
-const authReducer = (state = initialState, action) => {
-  switch (action.type) {
+export default function(state = initialState, action) {
+  const { type, payload } = action;
+  switch (type) {
     case LOGIN_START:
       return {
         ...state,
         isLoading: true,
       };
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', action.payload.token);
-      localStorage.setItem('role', action.payload.role);
+      localStorage.setItem('token', payload.token);
+      localStorage.setItem('role', payload.role);
       return {
         ...state,
         isLoading: false,
-        token: action.payload.token,
-        role: action.payload.role,
+        token: payload.token,
+        role: payload.role,
       };
     case LOGIN_FAIL:
       return {
         ...state,
         isLoading: false,
-        error: action.payload,
+        error: payload,
       };
     default:
       return state;
   }
 };
 
-export default authReducer;
