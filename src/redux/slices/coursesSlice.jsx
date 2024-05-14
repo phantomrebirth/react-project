@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { setAssignmentsPaths, setSubmittedAssignments } from './assignmentsSlice';
-import { setProjectsPaths, setSubmittedProjects } from './ProjectsSlice';
 
 export const fetchCourses = createAsyncThunk(
   'courses/fetchCourses',
@@ -11,30 +9,24 @@ export const fetchCourses = createAsyncThunk(
       const { auth, courses } = getState();
       const token = auth.token;
       const response = await axios.get('https://ezlearn.onrender.com/getCourse/all', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    dispatch(setCoursesLoading(false)); // Reset loading flag for cours
-    const courseIdArray = response.data.map(course => course._id);
-    const courseNameArray = response.data.map(course => course.name);
-    const fileIdArray = response.data.map(course => course.files.map(file => file._id)).flat();
-    const assignmentIdArray = response.data.map(course => course.assignments.map(assignment => assignment._id)).flat();
-    const { assignmentsPaths, submittedAssignments } = response.data; // Assuming the API returns assignments data
-    const { projectsPaths, submittedProjects } = response.data; // Assuming the API returns assignments data
-    const projectIdArray = response.data.map(course => course.projects.map(project => project._id)).flat();
-    const videoIdArray = response.data.map(course => course.videos.map(video => video._id)).flat();
-    // Determine current course and file ID based on application state
-    let currentCourseId = courses.currentCourseId;
-    let currentCourseName = courses.currentCourseName;
-    let currentFileId = courses.currentFileId;
-    let currentAssignmentId = courses.currentAssignmentId;
-    let currentProjectId = courses.currentProjectId;
-    let currentVideoId = courses.currentVideoId;
-    dispatch(setAssignmentsPaths(assignmentsPaths)); // Update assignments paths
-    dispatch(setSubmittedAssignments(submittedAssignments)); // Update submitted assignments
-    dispatch(setProjectsPaths(projectsPaths));
-    dispatch(setSubmittedProjects(submittedProjects));
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      dispatch(setCoursesLoading(false)); // Reset loading flag for cours
+      const courseIdArray = response.data.map(course => course._id);
+      const courseNameArray = response.data.map(course => course.name);
+      const fileIdArray = response.data.map(course => course.files.map(file => file._id)).flat();
+      const assignmentIdArray = response.data.map(course => course.assignments.map(assignment => assignment._id)).flat();
+      const projectIdArray = response.data.map(course => course.projects.map(project => project._id)).flat();
+      const videoIdArray = response.data.map(course => course.videos.map(video => video._id)).flat();
+            // Determine current course and file ID based on application state
+            let currentCourseId = courses.currentCourseId;
+            let currentCourseName = courses.currentCourseName;
+            let currentFileId = courses.currentFileId;
+            let currentAssignmentId = courses.currentAssignmentId;
+            let currentProjectId = courses.currentProjectId;
+            let currentVideoId = courses.currentVideoId;
             // console.log(currentCourseId,currentFileId);
             return { courses: response.data,
                                       courseIdArray,

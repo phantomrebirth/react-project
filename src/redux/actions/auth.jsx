@@ -25,7 +25,7 @@ export const login = (email, password) => async (dispatch) => {
   dispatch({ type: LOGIN_START });
   try {
     const res = await axios.post(`${apiUrl}users/login`, body, config);
-    if (res.data.success) {
+    if (res.data) {
       dispatch({
         type: LOGIN_SUCCESS,
       });
