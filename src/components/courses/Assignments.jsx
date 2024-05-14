@@ -13,9 +13,9 @@ import { IoAdd } from 'react-icons/io5';
 import { VscFiles } from 'react-icons/vsc';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import axios from 'axios';
+import { selectAssignmentsPaths, selectSubmittedAssignments, setAssignmentsPaths, setSubmittedAssignments, updateAssignmentsPaths } from '../../redux/slices/assignmentsSlice';
 
 const Assignments = () => {
-  
   const dispatch = useDispatch();
   const role = useSelector(selectRole);
   const token = useSelector(selectToken);
@@ -23,13 +23,14 @@ const Assignments = () => {
   const [student, setStudent] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
-  const [assignmentsPaths, setAssignmentsPaths] = useState([]);
+  const assignmentsPaths = useSelector(selectAssignmentsPaths);
+  const submittedAssignments = useSelector(selectSubmittedAssignments);
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
-  const [submittedAssignments, setSubmittedAssignments] = useState([]);
   const [assignmentName, setAssignmentName] = useState('');
   const [tUploaded, setTUploaded] = useState();
   const [tUpload, setTUpload] = useState();
-  const [up, setUp] = useState(false)
+  const [up, setUp] = useState(false);
+  const [tUp, setTUp] = useState();
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
@@ -53,23 +54,40 @@ const Assignments = () => {
     return () => clearTimeout(timeout);
   }, [uploadAlert, deleteAlert, waitAlert, dispatch]);
   const course = courses.find(course => course._id === currentCourseId);
+  console.log(currentCourseId)
   if (coursesLoading || assignmentsLoading || !course) {
     return <LoadingSpinner />;
   }
   useEffect(() => {
-  const assignmentPath = course.assignments.map(assignment => `https://ezlearn.onrender.com/course/getAssignments/${currentCourseId}/${assignment._id}`);
-  const assignmentsPaths = course.assignments.map(assignment => {
-    const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
-    return {
-      ...assignment,
-      path: matchingPath || ''
-    };
-  });
-  setAssignmentsPaths(assignmentsPaths || []);
-  }, [currentCourseId]);
+    const assignmentPath = courses.find(course => course._id === currentCourseId)?.assignments.map(assignment => `https://ezlearn.onrender.com/course/getAssignments/${currentCourseId}/${assignment._id}`);
+    const assignments = courses.find(course => course._id === currentCourseId)?.assignments.map(assignment => {
+      const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
+      return {
+        ...assignment,
+        path: matchingPath || ''
+      };
+    });
+    dispatch(updateAssignmentsPaths(assignments));
+    // if (submittedAssignments === undefined) {
+    // if (tUp !== true) {
+      dispatch(setSubmittedAssignments(assignments));
+    // }
+      dispatch(setAssignmentsPaths(assignments));
+    // }
+    console.log(assignments)
+    console.log(assignmentsPaths)
+    console.log(submittedAssignments)
+  }, [currentCourseId, courses]);
   useEffect(() => {
-    setSubmittedAssignments(assignmentsPaths);
-  }, [course, assignmentsPaths]);
+    const submittedAssignments = courses.find(course => course._id === currentCourseId)?.submittedAssignments;
+    dispatch(setSubmittedAssignments(submittedAssignments));
+  }, [assignmentsPaths]);
+  // useEffect(() => {
+  //   // if (submittedAssignments === undefined) {
+  //   dispatch(setSubmittedAssignments(assignmentsPaths));
+  //   dispatch(setAssignmentsPaths(assignmentsPaths));
+  //   // }
+  // }, [dispatch]);
   
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -134,11 +152,13 @@ const Assignments = () => {
   };
   
   const handleInProgressClick = (assignmentId) => {
-    // Update the submitted assignment ID with the clicked assignment's ID
-    setSubmittedAssignmentId(assignmentId);
-    console.log('Submitted assignment ID:', assignmentId);
     setUp(true);
+    setSubmittedAssignmentId(assignmentId);
     dispatch(navigateToAssignment());
+    // dispatch(setAssignmentsPaths(assignmentsPaths));
+    if (student && (submittedAssignments === undefined)) {
+      dispatch(setSubmittedAssignments(assignmentsPaths));
+    }
   };
   
   const handleFileSelect = (event) => {
@@ -195,6 +215,12 @@ const Assignments = () => {
   const handleTUploaded = (assignmentId) => {
     setTUploaded(true);
     setSubmittedAssignmentId(assignmentId);
+    if (submittedAssignments === undefined) {
+      dispatch(setAssignmentsPaths(assignmentsPaths));
+      dispatch(setSubmittedAssignments(assignmentsPaths));
+    };
+    console.log(submittedAssignments)
+    console.log(assignmentsPaths)
   };
 
   const handleAssignmentNameClick = (assignment) => {
@@ -206,11 +232,11 @@ const Assignments = () => {
   const handleAssignmentUpload = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     const formData = new FormData();
-    // Append selected files to the FormData object
+    // append selected files to the FormData object
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append('assignments', selectedFiles[i]);
     }
-    formData.append('name', assignmentName); // Append assignment name to FormData
+    formData.append('name', assignmentName);
     if (!uploadAlert && !deleteAlert) {
       dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
     }
@@ -223,15 +249,25 @@ const Assignments = () => {
       });
       if (response.status === 200 || response.status === 201) {
         console.log('test')
+        dispatch(setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' }));
         const { assignmentId } = response.data;
+        console.log(assignmentId)
         console.log(assignmentId);
         const uploadedAssignment = {
           _id: assignmentId,
           filename: selectedFiles[0].name,
         };
-        const updatedAssignments = [...submittedAssignments, uploadedAssignment];
-        setSubmittedAssignments(updatedAssignments);
-        dispatch(setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' }));
+        console.log(uploadedAssignment)
+        const updatedAssignments = [...assignmentsPaths, uploadedAssignment];
+        const updatedSubmittedAssignments = [...assignmentsPaths, uploadedAssignment];
+        dispatch(updateAssignmentsPaths(updatedAssignments));
+        dispatch(setAssignmentsPaths(updatedAssignments));
+        console.log(assignmentsPaths)
+        console.log(submittedAssignments)
+        dispatch(setSubmittedAssignments(updatedSubmittedAssignments));
+        setTUp(true);
+        setSelectedFiles([]);
+        setAssignmentName('');
       } else {
         dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` }));
       }
@@ -254,8 +290,13 @@ const Assignments = () => {
       });
       if (response.status === 200 || response.status === 201) {
         dispatch(setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' }));
-        const updatedAssignments = submittedAssignments.filter(item => item._id !== assignment._id);
-        setSubmittedAssignments(updatedAssignments);
+        const updatedAssignments = assignmentsPaths.filter(item => item._id !== assignment._id);
+        // const updatedSubmittedAssignments = submittedAssignments.filter(item => item._id !== assignment._id);
+        dispatch(setAssignmentsPaths(updatedAssignments));
+        dispatch(setSubmittedAssignments(updatedAssignments));
+        dispatch(updateAssignmentsPaths(updatedAssignments));
+        console.log(submittedAssignments)
+        console.log(assignmentsPaths)
       } else {
         dispatch(setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` }));
       }
@@ -285,7 +326,7 @@ const Assignments = () => {
       {student && (
         <>
           <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
-            {!up && submittedAssignments.map((assignment, index) => (
+            {!up && submittedAssignments && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
                 {(assignment._id !== submittedAssignmentId) && !assignment.submitted && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol2'>
@@ -345,7 +386,7 @@ const Assignments = () => {
                             <li>{course.name}</li>
                         </ul>
                       </div>
-                      {submittedAssignments.map((assignment, index) => (
+                      {submittedAssignments && submittedAssignments.map((assignment, index) => (
                         <React.Fragment key={index}>
                           {(assignment._id === submittedAssignmentId) && (
                             <div className='assignment' key={index}
@@ -416,7 +457,6 @@ const Assignments = () => {
         <>
           {!tUpload && !tUploaded && (
             <>
-              {/* {submittedAssignments.map((assignment, index) => ( */}
                 <Container className='mt-5' style={{display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap"}}>
                   <div style={{width: "100%"}}>
                     <div className='tUpload'>
@@ -430,7 +470,6 @@ const Assignments = () => {
                     </div>
                   </div>
                 </Container>
-              {/* ))} */}
             </>
           )}
           {tUpload && !waitAlert &&(
@@ -455,12 +494,7 @@ const Assignments = () => {
                         <Form.Control className='pfEmail' 
                                       type="text"
                                       placeholder="00/00"
-                                      name="name"
-                                      // value={userData.name} 
-                                      // onChange={(e) => setUserData(prevState => ({
-                                      //                  ...prevState,
-                                      //                  name: e.target.value
-                                      // }))}
+                                      // name="name"
                         />
                       </Form.Group>
                       </div>
@@ -511,14 +545,14 @@ const Assignments = () => {
           {tUploaded && !waitAlert && (
             <div className='mt-4'>
               <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
-                {submittedAssignments.map((assignment, index) => (
+                {submittedAssignments && submittedAssignments.map((assignment, index) => (
                   <React.Fragment key={index}>
                     <Col key={index} style={{ margin: "0", padding: "1% 0"}} className='asscol2'>
                       <div className='assignment'
                            key={index}
                            onClick={() => handleAssignmentNameClick(assignment)}
-                           style={{cursor: "pointer"}}
-                           title={`Open ${assignment.filename}`}
+                           style={{cursor: assignment.path ? "pointer" : "default"}}
+                           title={assignment.path ? `Open ${assignment.filename}` : `Refresh to open new files`}
                       >
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>

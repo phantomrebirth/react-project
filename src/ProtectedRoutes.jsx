@@ -27,7 +27,7 @@ const ProtectedRoutes = () => {
                 <Route exact path="/" element={<HomePage />}/>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/:path" element={<Course />} />
+                <Route path="/courses/:path/*" element={<Course />} />
                 {/* <Route path="/courses/programming" element={<Programming />} /> */}
                 {/* <Route path="/courses/artificial-intelligence" element={<AI />} /> */}
                 {/* <Route path="/courses/network" element={<Network />} /> */}
