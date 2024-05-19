@@ -5,18 +5,20 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { FaChevronRight } from "react-icons/fa6";
 import { HiArrowLongRight } from "react-icons/hi2";
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectRole } from '../redux/slices/authSlice';
+import { login } from '../redux/actions/auth';
+import { connect } from 'react-redux';
+// import { selectRole } from '../redux/slices/authSlice';
 
 const courses = [
   { title: 'Network', progress: 0.9, path: '/courses/network' },
   { title: 'Computer Vision', path: '/courses/computer-vision', progress: 0.75 },
 ];
 
-const HomePage = () => {
+const HomePage = ({ role }) => {
   
-  const role = useSelector(selectRole);
+//   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
   console.log(role);
@@ -192,4 +194,8 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+const mapStateToProps = state => ({
+  role: state.auth.role
+})
+
+export default connect(mapStateToProps, { login})(HomePage);

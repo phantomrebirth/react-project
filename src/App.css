@@ -50,14 +50,14 @@
 }
 @font-face {
   font-family: 'Rubik';
-  src: url('/home/phantom/Documents/react-project/src/assets/fonts/Rubik/static/Rubik-Regular.ttf') format('truetype');
+  src: url('/home/phantom/react-project/src/assets/fonts/Rubik/static/Rubik-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Rubik';
-  src: url('/home/phantom/Documents/react-project/src/assets/fonts/Rubik/static/Rubik-Bold.ttf') format('truetype');
+  src: url('/home/phantom/react-project/src/assets/fonts/Rubik/static/Rubik-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
