@@ -1,190 +1,190 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import axios from 'axios';
-import ProfileHead from '../components/ProfileHead';
-import { useSelector } from 'react-redux';
-import { selectToken } from '../redux/slices/authSlice';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Alert from 'react-bootstrap/Alert';
+// import React, { useState, useEffect } from 'react';
+// import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+// import axios from 'axios';
+// import ProfileHead from '../components/ProfileHead';
+// import { useSelector } from 'react-redux';
+// import { selectToken } from '../redux/slices/authSlice';
+// import { FaEye, FaEyeSlash } from 'react-icons/fa';
+// import Alert from 'react-bootstrap/Alert';
 
-const Profile = () => {
-  const token = useSelector(selectToken);
-  const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    password: ""
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false); // State to control success message
-  const [showError, setShowError] = useState(false); // State to control error message
+// const Profile = () => {
+//   const token = useSelector(selectToken);
+//   const [userData, setUserData] = useState({
+//     name: '',
+//     email: '',
+//     password: ""
+//   });
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [showSuccess, setShowSuccess] = useState(false); // State to control success message
+//   const [showError, setShowError] = useState(false); // State to control error message
   
-  useEffect(() => {
-    fetchProfileData();
-  }, []);
+//   useEffect(() => {
+//     fetchProfileData();
+//   }, []);
 
-  const fetchProfileData = async () => {
-    try {
-      const response = await axios.get('https://ezlearn.onrender.com/users/me', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      console.log(response.data); // Log the response data to check if password is included
-      const { name, email, password } = response.data;
-      setUserData(prevState => ({
-        ...prevState,
-        name,
-        email,
-        password,
-      }));
-    } catch (error) {
-      console.error('Error fetching profile data:', error);
-    }
-  };
+//   const fetchProfileData = async () => {
+//     try {
+//       const response = await axios.get('https://ezlearn.onrender.com/users/me', {
+//         headers: {
+//           Authorization: `Bearer ${token}`
+//         }
+//       });
+//       console.log(response.data); // Log the response data to check if password is included
+//       const { name, email, password } = response.data;
+//       setUserData(prevState => ({
+//         ...prevState,
+//         name,
+//         email,
+//         password,
+//       }));
+//     } catch (error) {
+//       console.error('Error fetching profile data:', error);
+//     }
+//   };
 
-  const handleSaveChanges = async () => {
-    try {
-      const body = {
-        // name: userData.name,
-        email: userData.email,
-        password: userData.password
-      };      console.log(body);
-      const response = await axios.patch('https://ezlearn.onrender.com/users/update',
-      body, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      fetchProfileData();
-      setShowSuccess(true); // Show success message
-      setShowError(false); // Hide error message
-      console.log('Profile updated successfully:', response.data);
-    } catch (error) {
-      setShowError(true); // Show error message
-      setShowSuccess(false); // Hide success message
-      console.error('Error updating profile:', error);
-    }
-          // Update state with new data
-    // const { name, email } = response.data;
-    //   setUserData(prevState => ({
-    //       ...prevState,
-    //       name,
-    //       email,
-    //   }));
-    // } catch (error) {
-    //   console.error('Error updating profile:', error);
-    // }
-  };
+//   const handleSaveChanges = async () => {
+//     try {
+//       const body = {
+//         // name: userData.name,
+//         email: userData.email,
+//         password: userData.password
+//       };      console.log(body);
+//       const response = await axios.patch('https://ezlearn.onrender.com/users/update',
+//       body, {
+//         headers: {
+//           Authorization: `Bearer ${token}`
+//         }
+//       });
+//       fetchProfileData();
+//       setShowSuccess(true); // Show success message
+//       setShowError(false); // Hide error message
+//       console.log('Profile updated successfully:', response.data);
+//     } catch (error) {
+//       setShowError(true); // Show error message
+//       setShowSuccess(false); // Hide success message
+//       console.error('Error updating profile:', error);
+//     }
+//           // Update state with new data
+//     // const { name, email } = response.data;
+//     //   setUserData(prevState => ({
+//     //       ...prevState,
+//     //       name,
+//     //       email,
+//     //   }));
+//     // } catch (error) {
+//     //   console.error('Error updating profile:', error);
+//     // }
+//   };
 
-  // const handleChange = (e) => {
-  //   const { name, nameValue } = e.target;
-  //   const { email, emailValue } = e.target;
-  //   confirm,
-  //   setUserData(prevState => ({
-  //     ...prevState,
-  //     [name]: nameValue,
-  //     [email]: emailValue,
-  //   }));
-  // };
+//   // const handleChange = (e) => {
+//   //   const { name, nameValue } = e.target;
+//   //   const { email, emailValue } = e.target;
+//   //   confirm,
+//   //   setUserData(prevState => ({
+//   //     ...prevState,
+//   //     [name]: nameValue,
+//   //     [email]: emailValue,
+//   //   }));
+//   // };
 
-  return (
-    <Container fluid className='pfContainer'>
-      {showSuccess && (
-        <Alert variant="primary" onClose={() => setShowSuccess(false)} dismissible>
-            Profile updated successfully!
-        </Alert>
-      )}
-      {showError && (
-        <Alert variant="danger" onClose={() => setShowError(false)} dismissible>
-            Error updating profile. Please try again.
-        </Alert>
-      )}
-      <Row className="mt-4" id='pfContainer'>
-        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-          <h2 className='pfHeader'>Personal Information</h2>
-          <Col xs={12} sm={12} md={12} lg={12} xl={12} className="text-center mb-3">
-            <div className='headContainer'>
-              <ProfileHead/>
-            </div>
-          </Col>
-          <Form className='pfForm'>
-            <Form.Group controlId="formName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control className='pfName' 
-                            type="text" 
-                            placeholder="Enter your name" 
-                            name="name" 
-                            value={userData.name} 
-                            onChange={(e) => setUserData(prevState => ({
-                                             ...prevState,
-                                             name: e.target.value
-                            }))}
-                            readOnly
-              />
-            </Form.Group>
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control className='pfEmail' 
-                            type="email" 
-                            placeholder="Enter email" 
-                            name="email" 
-                            value={userData.email} 
-                            onChange={(e) => setUserData(prevState => ({
-                              ...prevState,
-                              email: e.target.value
-                            }))}
-              />
-            </Form.Group>
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              {/* <Form.Control className='pfPass' 
-                            type="password" 
-                            placeholder="New Password" 
-                            name="password" 
-                            value={userData.password}
-                            onChange={(e) => setUserData(prevState => ({
-                              ...prevState,
-                              password: e.target.value
-                            }))}
-              /> */}
-              <div className="pfPass-input">
-                <Form.Control className='pfPass'
-                  type={showPassword ? "text" : "password"}
-                  placeholder="New Password"
-                  name="password"
-                  value={userData.password}
-                  onChange={(e) => setUserData(prevState => ({
-                    ...prevState,
-                    password: e.target.value
-                  }))}
-                />
-                <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
-              </div>
-            </Form.Group>
-            {/* <Form.Group controlId="formNewPassword">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control className='pfNewPass' 
-                            type="password" 
-                            placeholder="New Password" 
-                            name="newPassword" 
-              />
-            </Form.Group> */}
-            <Button className='pfBtn' 
-                    variant="primary" 
-                    onClick={handleSaveChanges}
-                    >
-                      Save Changes
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
-  );
-};
+//   return (
+//     <Container fluid className='pfContainer'>
+//       {showSuccess && (
+//         <Alert variant="primary" onClose={() => setShowSuccess(false)} dismissible>
+//             Profile updated successfully!
+//         </Alert>
+//       )}
+//       {showError && (
+//         <Alert variant="danger" onClose={() => setShowError(false)} dismissible>
+//             Error updating profile. Please try again.
+//         </Alert>
+//       )}
+//       <Row className="mt-4" id='pfContainer'>
+//         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+//           <h2 className='pfHeader'>Personal Information</h2>
+//           <Col xs={12} sm={12} md={12} lg={12} xl={12} className="text-center mb-3">
+//             <div className='headContainer'>
+//               <ProfileHead/>
+//             </div>
+//           </Col>
+//           <Form className='pfForm'>
+//             <Form.Group controlId="formName">
+//               <Form.Label>Name</Form.Label>
+//               <Form.Control className='pfName' 
+//                             type="text" 
+//                             placeholder="Enter your name" 
+//                             name="name" 
+//                             value={userData.name} 
+//                             onChange={(e) => setUserData(prevState => ({
+//                                              ...prevState,
+//                                              name: e.target.value
+//                             }))}
+//                             readOnly
+//               />
+//             </Form.Group>
+//             <Form.Group controlId="formEmail">
+//               <Form.Label>Email address</Form.Label>
+//               <Form.Control className='pfEmail' 
+//                             type="email" 
+//                             placeholder="Enter email" 
+//                             name="email" 
+//                             value={userData.email} 
+//                             onChange={(e) => setUserData(prevState => ({
+//                               ...prevState,
+//                               email: e.target.value
+//                             }))}
+//               />
+//             </Form.Group>
+//             <Form.Group controlId="formPassword">
+//               <Form.Label>Password</Form.Label>
+//               {/* <Form.Control className='pfPass' 
+//                             type="password" 
+//                             placeholder="New Password" 
+//                             name="password" 
+//                             value={userData.password}
+//                             onChange={(e) => setUserData(prevState => ({
+//                               ...prevState,
+//                               password: e.target.value
+//                             }))}
+//               /> */}
+//               <div className="pfPass-input">
+//                 <Form.Control className='pfPass'
+//                   type={showPassword ? "text" : "password"}
+//                   placeholder="New Password"
+//                   name="password"
+//                   value={userData.password}
+//                   onChange={(e) => setUserData(prevState => ({
+//                     ...prevState,
+//                     password: e.target.value
+//                   }))}
+//                 />
+//                 <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+//                   {showPassword ? <FaEyeSlash /> : <FaEye />}
+//                 </span>
+//               </div>
+//             </Form.Group>
+//             {/* <Form.Group controlId="formNewPassword">
+//               <Form.Label>New Password</Form.Label>
+//               <Form.Control className='pfNewPass' 
+//                             type="password" 
+//                             placeholder="New Password" 
+//                             name="newPassword" 
+//               />
+//             </Form.Group> */}
+//             <Button className='pfBtn' 
+//                     variant="primary" 
+//                     onClick={handleSaveChanges}
+//                     >
+//                       Save Changes
+//             </Button>
+//           </Form>
+//         </Col>
+//       </Row>
+//     </Container>
+//   );
+// };
 
-export default Profile;
+// export default Profile;
 
 // import React, { useState, useEffect } from 'react';
 // import { Container, Row, Col, Form, Button } from 'react-bootstrap';

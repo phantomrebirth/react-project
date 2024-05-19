@@ -11,16 +11,18 @@ import { BsGrid } from "react-icons/bs";
 import { Col, Row } from "react-bootstrap";
 import { IoHomeOutline } from "react-icons/io5";
 import { LiaHomeSolid } from "react-icons/lia";
-import LogOutModal from "../redux/actions/LogOutModal";
-import { useSelector, useDispatch } from 'react-redux'
-import { openLogOutModal } from "../redux/slices/logOutModalSlice";
+// import LogOutModal from "../redux/actions/LogOutModal";
+// import { useSelector, useDispatch } from 'react-redux'
+// import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { TbCameraCheck } from "react-icons/tb";
-import { selectRole } from "../redux/slices/authSlice";
+// import { selectRole } from "../redux/slices/authSlice";
+import { login } from "../redux/actions/auth";
+import { connect } from "react-redux";
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar, role }) => {
 
-  const dispatch = useDispatch();
-  const role = useSelector(selectRole);
+//   const dispatch = useDispatch();
+//   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
   useEffect(() => {
@@ -30,7 +32,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       setTeacher(true);
     }
   }, [role]);
-  const logOut = useSelector(state => state.logOutModal.isOpen);
+//   const logOut = useSelector(state => state.logOutModal.isOpen);
 
   // const commonItems = [
   //   {
@@ -132,9 +134,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     },
   ];
 
-  const handleLogoutClick = () => {
-    dispatch(openLogOutModal());
-  };
+//   const handleLogoutClick = () => {
+//     dispatch(openLogOutModal());
+//   };
 
   const handleLinkClick = () => {
     toggleSidebar();
@@ -174,7 +176,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   ) : (
                     <>
                     <hr className="sideLogout-hr"/>
-                    <div className='sideLinks' onClick={handleLogoutClick} style={{cursor: "pointer"}}>
+                    <div className='sideLinks' 
+                    // onClick={handleLogoutClick} 
+                    style={{cursor: "pointer"}}>
                       <div className='sideIcon-logout' id='active'>{item.icon}</div>
                       <div className='sideLink-logout' id='active'>{item.name}</div>
                     </div>
@@ -185,7 +189,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </div>
           )}
       </Col>
-      {logOut && <LogOutModal />}
+      {/* {logOut && <LogOutModal />} */}
       {/* <Col xs={isOpen ? 6 : 12} sm={isOpen ? 7 : 12} md={isOpen ? 8 : 12} lg={isOpen ? 9 : 12} xl={isOpen ? 10 : 12}>
 
       </Col> */}
@@ -193,4 +197,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   );
 };
 
-export default Sidebar;
+const mapStateToProps = state => ({
+  role: state.auth.role
+})
+
+export default connect(mapStateToProps, { login})(Sidebar);

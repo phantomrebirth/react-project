@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   COURSES_START,
   COURSES_SUCCESS,
@@ -22,6 +23,7 @@ export const getCourses = () => async (dispatch) => {
     if (res.data) {
       dispatch({
         type: COURSES_SUCCESS,
+        payload: res.data
       });
     } else {
       dispatch({

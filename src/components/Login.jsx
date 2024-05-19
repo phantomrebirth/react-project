@@ -2,14 +2,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setToken, setRole, clearToken } from '../redux/slices/authSlice';
-import { loginUser } from '../redux/slices/authSlice';
-import LoadingSpinner from '../redux/actions/LoadingSpinner';
+import { connect, useDispatch } from 'react-redux';
+// import { setToken, setRole, clearToken } from '../redux/slices/authSlice';
+// import { loginUser } from '../redux/slices/authSlice';
+// import LoadingSpinner from '../redux/actions/LoadingSpinner';
 import { CircularProgress } from '@material-ui/core';
-
-const Login = () => {
-
+import { login } from '../redux/actions/auth';
+const Login = ({login, token, role, isLoading}) => {
+    console.log('t', token)
+    console.log('r', role)
     const emailInput = document.getElementById("emailInput");
     const passwordInput = document.getElementById("passwordInput");
     const email_error = document.getElementById('email_error');
@@ -24,7 +25,7 @@ const Login = () => {
     const closedEye = "/src/assets/images/eye-closed.png";
     const [isEyeClosed, setIsEyeClosed] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(isLoading);
 
     const validated = useCallback(() => {
         if (email && email.length < 8 && email.length !== 0) {
@@ -83,18 +84,19 @@ const Login = () => {
         if (validated()) {
             setLoading(true); // Set loading to true when the form is submitted
             try {
-                const actionResult = await dispatch(loginUser({ email, password }));
-                const { token, role } = actionResult.payload;
-                dispatch(setToken(token));
-                dispatch(setRole(role));
-                if (token) {
+                console.log(email, password)
+                login(email, password);
+                console.log('aha')
+                // dispatch(setToken(token));
+                // dispatch(setRole(role));
+                if (token && role) {
                     // Navigation only occurs if a token is received
                     navigate('/');
                 } else {
                     // If no token is received, display an error message
                     setErrorMessage("Email or password is incorrect, try again.");
-                    dispatch(clearToken());
-                    clearToken();
+                    // dispatch(clearToken());
+                    // clearToken();
                 }
             } catch (error) {
                 // Handle any errors during the login process
@@ -204,4 +206,10 @@ const Login = () => {
     );
 };
 
-export default Login;
+
+const mapStateToProps = state => ({
+    token: state.auth.token,
+    role: state.auth.role
+})
+
+export default connect(mapStateToProps, { login})(Login);

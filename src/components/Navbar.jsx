@@ -3,48 +3,48 @@ import { FaUser, FaChevronDown } from "react-icons/fa";
 import { HiBars3 } from "react-icons/hi2";
 import { NavLink } from "react-router-dom";
 import { TbLogout2 } from "react-icons/tb";
-import { useSelector, useDispatch } from 'react-redux'
-import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
-import { selectRole, selectToken } from '../redux/slices/authSlice';
-import LogOutModal from "../redux/actions/LogOutModal";
-import { openLogOutModal } from "../redux/slices/logOutModalSlice";
+// import { useSelector, useDispatch } from 'react-redux'
+// import { selectImageUrl, selectIsLoading, selectError, fetchProfilePicture } from "../redux/slices/profilePictureSlice";
+// import { selectRole, selectToken } from '../redux/slices/authSlice';
+// import LogOutModal from "../redux/actions/LogOutModal";
+// import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { CiSearch } from "react-icons/ci";
 import { FaRegBell } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
-import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
-import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
-import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
-import NetworkAnnouncements from "./courses/network/NetworkAnnouncements";
-import SWAnnouncements from "./courses/software-engineering/SWAnnouncements";
-import DeadlineNotification from "./DeadlineNotification";
+// import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
+// import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
+// import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
+// import NetworkAnnouncements from "./courses/network/NetworkAnnouncements";
+// import SWAnnouncements from "./courses/software-engineering/SWAnnouncements";
+// import DeadlineNotification from "./DeadlineNotification";
 
 const Navbar = ({ toggleSidebar }) => {
 
-  const imageUrl = useSelector(selectImageUrl);
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
+//   const imageUrl = useSelector(selectImageUrl);
+//   const isLoading = useSelector(selectIsLoading);
+//   const error = useSelector(selectError);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const userIconRef = useRef(null);
-  const token = useSelector(selectToken);
-  const dispatch = useDispatch();
-  const isOpen = useSelector(state => state.logOutModal.isOpen);
+//   const token = useSelector(selectToken);
+//   const dispatch = useDispatch();
+//   const isOpen = useSelector(state => state.logOutModal.isOpen);
   const [bellClicked, setBellClicked] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const notificationRef = useRef(null);
-  const role = useSelector(selectRole);
-  const [teacher, setTeacher] = useState(false);
-  const [student, setStudent] = useState(false);
-  useEffect(() => {
-    dispatch(fetchProfilePicture(token));
-  }, [dispatch, token]);
-  useEffect(() => {
-    if (role === 'student') {
-      setStudent(true);
-    } else if (role === 'teacher') {
-      setTeacher(true);
-    }
-  }, [role]);
+//   const role = useSelector(selectRole);
+//   const [teacher, setTeacher] = useState(false);
+//   const [student, setStudent] = useState(false);
+//   useEffect(() => {
+//     dispatch(fetchProfilePicture(token));
+//   }, [dispatch, token]);
+//   useEffect(() => {
+//     if (role === 'student') {
+//       setStudent(true);
+//     } else if (role === 'teacher') {
+//       setTeacher(true);
+//     }
+//   }, [role]);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
@@ -81,9 +81,9 @@ const Navbar = ({ toggleSidebar }) => {
     setNotificationDropdownOpen(false);
   };
 
-  const handleLogout = () => {
-    dispatch(openLogOutModal());
-  };
+//   const handleLogout = () => {
+//     dispatch(openLogOutModal());
+//   };
 
   const handleBellClick = () => {
     setNotificationDropdownOpen(!notificationDropdownOpen);
@@ -124,9 +124,9 @@ const Navbar = ({ toggleSidebar }) => {
                 <p className="notifications-header">Notifications</p>
               </div>
               <div className="notification-items">
-                {student && (
+                {/* {student && ( */}
                   <>
-                    <div className='notification-dropdown-item' title="Open">
+                    {/* <div className='notification-dropdown-item' title="Open">
                       <DeadlineNotification/>
                     </div>
                     <div className='notification-dropdown-item' title="Open">
@@ -153,27 +153,27 @@ const Navbar = ({ toggleSidebar }) => {
                       <NavLink to='/courses/computer-vision' style={{textDecoration: "none"}}>
                         <CVAnnouncements/>
                       </NavLink>
-                    </div>
+                    </div> */}
                   </>
-                )}
+                {/* )} */}
               </div>
             </div>
           )}
         </div>
       </div>
       <div className="userIconContainer" ref={userIconRef} onClick={handleClickUserIcon}>
-        {isLoading ? (
+        {/* {isLoading ? ( */}
           <div>
             <FaUser className="userIcon"/>
           </div>
-        ) : error ? (
-          <div>
+        {/* ) : error ? ( */}
+          {/* <div> */}
             {/* Error: {error} */}
-            <FaUser className="userIcon"/>
-          </div>
-        ) : (
-          <img src={imageUrl} alt="" className="nav-pfPicture"/>
-        )}
+            {/* <FaUser className="userIcon"/>
+          </div> */}
+        {/* ) : ( */}
+          {/* <img src={imageUrl} alt="" className="nav-pfPicture"/> */}
+        {/* )} */}
         {/* <FaChevronDown className="userChevron"/> */}
       </div>
       {dropdownOpen && (
@@ -187,7 +187,7 @@ const Navbar = ({ toggleSidebar }) => {
           </button>
         </div>
       )}
-      {isOpen && <LogOutModal />}
+      {/* {isOpen && <LogOutModal />} */}
     </div>
   );
 };

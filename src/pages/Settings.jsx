@@ -1,12 +1,12 @@
-import React from 'react'
-import Profile from './Profile'
+// import React from 'react'
+// import Profile from './Profile'
 
-const Settings = () => {
-  return (
-    <div>
-      <Profile/>
-    </div>
-  )
-}
+// const Settings = () => {
+//   return (
+//     <div>
+//       <Profile/>
+//     </div>
+//   )
+// }
 
-export default Settings
+// export default Settings
