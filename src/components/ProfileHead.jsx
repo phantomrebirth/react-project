@@ -54,7 +54,7 @@
 
 //   // async function fetchImage() {
 //   //   try {
-//   //     const response = await axios.get('https://ezlearn.onrender.com/users/getPP',{
+//   //     const response = await axios.get('https://ezlearn.onrender.com/users/getpp',{
 //   //       headers: {
 //   //         Authorization: `Bearer ${token}`
 //   //       },

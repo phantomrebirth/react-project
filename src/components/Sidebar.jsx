@@ -16,10 +16,10 @@ import { LiaHomeSolid } from "react-icons/lia";
 // import { openLogOutModal } from "../redux/slices/logOutModalSlice";
 import { TbCameraCheck } from "react-icons/tb";
 // import { selectRole } from "../redux/slices/authSlice";
-import { login } from "../redux/actions/auth";
+import { login, logout } from "../redux/actions/auth";
 import { connect } from "react-redux";
 
-const Sidebar = ({ isOpen, toggleSidebar, role }) => {
+const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
 
 //   const dispatch = useDispatch();
 //   const role = useSelector(selectRole);
@@ -134,9 +134,9 @@ const Sidebar = ({ isOpen, toggleSidebar, role }) => {
     },
   ];
 
-//   const handleLogoutClick = () => {
-//     dispatch(openLogOutModal());
-//   };
+  const handleLogoutClick = () => {
+    logout();
+  };
 
   const handleLinkClick = () => {
     toggleSidebar();
@@ -177,7 +177,7 @@ const Sidebar = ({ isOpen, toggleSidebar, role }) => {
                     <>
                     <hr className="sideLogout-hr"/>
                     <div className='sideLinks' 
-                    // onClick={handleLogoutClick} 
+                    onClick={handleLogoutClick}
                     style={{cursor: "pointer"}}>
                       <div className='sideIcon-logout' id='active'>{item.icon}</div>
                       <div className='sideLink-logout' id='active'>{item.name}</div>
@@ -201,4 +201,4 @@ const mapStateToProps = state => ({
   role: state.auth.role
 })
 
-export default connect(mapStateToProps, { login})(Sidebar);
+export default connect(mapStateToProps, { login, logout })(Sidebar);

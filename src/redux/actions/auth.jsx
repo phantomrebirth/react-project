@@ -3,23 +3,18 @@ import {
   LOGIN_START,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  // LOGOUT_START,
-  // LOGOUT_SUCCESS,
-  // LOGOUT_FAIL,
-  // CHECK_AUTH_SUCCESS,
-  // CHECK_AUTH_FAIL,
+  LOGOUT_START,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
 } from "./type";
-// import Cookies from "js-cookie";
 
-const apiUrl = "https://ezlearn.onrender.com/"
+const apiUrl = "https://ezlearn.onrender.com/";
 
 export const login = (email, password) => async (dispatch) => {
-
   const config = {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      // "X-CSRFToken": Cookies.get("csrftoken"),
     },
   };
   const body = JSON.stringify({ email, password });
@@ -27,7 +22,7 @@ export const login = (email, password) => async (dispatch) => {
 
   try {
     const res = await axios.post(`${apiUrl}users/login`, body, config);
-    console.log('API response:', res.data); // Debug: Log the API response
+    console.log("API response:", res.data); // Debug: Log the API response
     if (res.data) {
       dispatch({
         type: LOGIN_SUCCESS,
@@ -45,5 +40,18 @@ export const login = (email, password) => async (dispatch) => {
       type: LOGIN_FAIL,
     });
     throw error; // Re-throw the error to be caught in handleSubmit
+  }
+};
+
+export const logout = () => async (dispatch) => {
+  dispatch({ type: LOGOUT_START });
+  try {
+    dispatch({
+      type: LOGOUT_SUCCESS,
+    });
+  } catch {
+    dispatch({
+      type: LOGOUT_FAIL,
+    });
   }
 };
