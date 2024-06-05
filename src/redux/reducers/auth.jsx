@@ -2,17 +2,22 @@ import {
   LOGIN_START,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  LOGOUT_START,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
 } from '../actions/type'
 
 const initialState = {
   token: localStorage.getItem('token') || null,
   role: localStorage.getItem('role') || null,
   isLoading: false,
+  error: null,
 };
 
 export default function(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
+    case LOGOUT_START:
     case LOGIN_START:
       return {
         ...state,
@@ -27,6 +32,16 @@ export default function(state = initialState, action) {
         token: payload.token,
         role: payload.role,
       };
+    case LOGOUT_SUCCESS:
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      return {
+        ...state,
+        isLoading: false,
+        token: null,
+        role: null
+      }
+    case LOGOUT_FAIL:
     case LOGIN_FAIL:
       return {
         ...state,
