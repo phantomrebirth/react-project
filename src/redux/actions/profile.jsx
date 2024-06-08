@@ -18,10 +18,10 @@ import {
 } from "./type";
 import { useSelector } from "react-redux";
 
-const token = useSelector((state) => state.auth.token);
 const apiUrl = "https://ezlearn.onrender.com/users";
 
 export const profile = () => async (dispatch) => {
+  const token = useSelector((state) => state.auth.token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -50,6 +50,7 @@ export const profile = () => async (dispatch) => {
 };
 
 export const deleteProfile = (data) => async (dispatch) => {
+  const token = useSelector((state) => state.auth.token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -78,6 +79,7 @@ export const deleteProfile = (data) => async (dispatch) => {
 };
 
 export const profileUpdate = (form_data) => async (dispatch) => {
+  const token = useSelector((state) => state.auth.token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -108,6 +110,7 @@ export const profileUpdate = (form_data) => async (dispatch) => {
 };
 
 export const userData = () => async (dispatch) => {
+  const token = useSelector((state) => state.auth.token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -134,6 +137,7 @@ export const userData = () => async (dispatch) => {
 };
 
 export const userUpdate = (username, email) => async (dispatch) => {
+  const token = useSelector((state) => state.auth.token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

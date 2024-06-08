@@ -17,11 +17,13 @@ import { LiaHomeSolid } from "react-icons/lia";
 import { TbCameraCheck } from "react-icons/tb";
 // import { selectRole } from "../redux/slices/authSlice";
 import { login, logout } from "../redux/actions/auth";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
+import LogOutModal from "../redux/actions/LogOutModal";
+import { openLogOutModal } from "../redux/actions/logOutModalAction";
 
-const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
+const Sidebar = ({ isOpen, toggleSidebar, role, openLogOutModal }) => {
 
-//   const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 //   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
@@ -32,6 +34,8 @@ const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
       setTeacher(true);
     }
   }, [role]);
+  // const [logOut, setLogOut] = useState(false);
+  const logOut = useSelector((state) => state.logOutModalReducer.isLogOutOpen);
 //   const logOut = useSelector(state => state.logOutModal.isOpen);
 
   // const commonItems = [
@@ -134,8 +138,8 @@ const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
     },
   ];
 
-  const handleLogoutClick = () => {
-    logout();
+  const handleOpenModal = () => {
+    openLogOutModal();
   };
 
   const handleLinkClick = () => {
@@ -177,7 +181,7 @@ const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
                     <>
                     <hr className="sideLogout-hr"/>
                     <div className='sideLinks' 
-                    onClick={handleLogoutClick}
+                    onClick={handleOpenModal}
                     style={{cursor: "pointer"}}>
                       <div className='sideIcon-logout' id='active'>{item.icon}</div>
                       <div className='sideLink-logout' id='active'>{item.name}</div>
@@ -187,9 +191,9 @@ const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
                 </div>
             ))}
           </div>
-          )}
+        )}
       </Col>
-      {/* {logOut && <LogOutModal />} */}
+        {logOut && <LogOutModal />}
       {/* <Col xs={isOpen ? 6 : 12} sm={isOpen ? 7 : 12} md={isOpen ? 8 : 12} lg={isOpen ? 9 : 12} xl={isOpen ? 10 : 12}>
 
       </Col> */}
@@ -198,7 +202,8 @@ const Sidebar = ({ logout, isOpen, toggleSidebar, role }) => {
 };
 
 const mapStateToProps = state => ({
-  role: state.auth.role
+  role: state.auth.role,
+  isLogOutOpen: state.logOutModalReducer.isLogOutOpen
 })
 
-export default connect(mapStateToProps, { login, logout })(Sidebar);
+export default connect(mapStateToProps, { login, logout, openLogOutModal })(Sidebar);

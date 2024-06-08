@@ -1,13 +1,17 @@
-import { useDispatch } from "react-redux";
-import { closeLogOutModal } from "../slices/logOutModalSlice";
-import { clearToken } from "../slices/authSlice";
+import { connect, useDispatch } from "react-redux";
+// import { closeLogOutModal } from "../slices/logOutModalSlice";
+// import { clearToken } from "../slices/authSlice";
 import { IoLogOut } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import { login, logout } from "./auth";
+import { closeLogOutModal } from "./logOutModalAction";
 
-const LogOutModal = () => {
+const LogOutModal = ({ logout, closeLogOutModal }) => {
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const handleConfirmLogout = () => {
+        logout();
+        closeLogOutModal();
+    }
 
     return (
         <aside className="logOutModal-container">
@@ -26,9 +30,10 @@ const LogOutModal = () => {
                         <div>
                             <button type='button' className='logOut-confirmBtn'
                                     onClick={() => {
-                                        dispatch(clearToken());
-                                        dispatch(closeLogOutModal());
-                                        navigate('/login');
+                                        handleConfirmLogout
+                                        // dispatch(clearToken());
+                                        // dispatch(closeLogOutModal());
+                                        // navigate('/login');
                                     }}
                             >
                                 Log out
@@ -37,7 +42,8 @@ const LogOutModal = () => {
                         <div>
                             <button type='button' className='logOut-closeBtn'
                                     onClick={() => {
-                                        dispatch(closeLogOutModal());
+                                        // dispatch(closeLogOutModal());
+                                        closeLogOutModal();
                                     }}
                             >
                                 cancel
@@ -50,4 +56,8 @@ const LogOutModal = () => {
     );
 };
 
-export default LogOutModal;
+const mapStateToProps = state => ({
+    role: state.auth.role,
+  })
+
+export default connect(mapStateToProps, { login, logout, closeLogOutModal })(LogOutModal);

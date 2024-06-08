@@ -22,7 +22,9 @@ export const login = (email, password) => async (dispatch) => {
 
   try {
     const res = await axios.post(`${apiUrl}users/login`, body, config);
+    console.log("asd")
     console.log("API response:", res.data); // Debug: Log the API response
+
     if (res.data) {
       dispatch({
         type: LOGIN_SUCCESS,
@@ -39,7 +41,6 @@ export const login = (email, password) => async (dispatch) => {
     dispatch({
       type: LOGIN_FAIL,
     });
-    throw error; // Re-throw the error to be caught in handleSubmit
   }
 };
 

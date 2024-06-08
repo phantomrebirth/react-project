@@ -11,6 +11,10 @@ import { TbLogout2 } from "react-icons/tb";
 import { CiSearch } from "react-icons/ci";
 import { FaRegBell } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
+import { connect, useSelector } from "react-redux";
+import { login, logout } from "../redux/actions/auth";
+import { openLogOutModal } from "../redux/actions/logOutModalAction";
+import LogOutModal from "../redux/actions/LogOutModal";
 // import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
 // import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
 // import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
@@ -18,7 +22,7 @@ import { FaBell } from "react-icons/fa6";
 // import SWAnnouncements from "./courses/software-engineering/SWAnnouncements";
 // import DeadlineNotification from "./DeadlineNotification";
 
-const Navbar = ({ toggleSidebar }) => {
+const Navbar = ({ toggleSidebar, role, openLogOutModal }) => {
 
 //   const imageUrl = useSelector(selectImageUrl);
 //   const isLoading = useSelector(selectIsLoading);
@@ -32,6 +36,7 @@ const Navbar = ({ toggleSidebar }) => {
   const [bellClicked, setBellClicked] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const notificationRef = useRef(null);
+  const logOut = useSelector((state) => state.logOutModalReducer.isLogOutOpen);
 //   const role = useSelector(selectRole);
 //   const [teacher, setTeacher] = useState(false);
 //   const [student, setStudent] = useState(false);
@@ -81,9 +86,9 @@ const Navbar = ({ toggleSidebar }) => {
     setNotificationDropdownOpen(false);
   };
 
-//   const handleLogout = () => {
-//     dispatch(openLogOutModal());
-//   };
+  const handleOpenModal = () => {
+    openLogOutModal();
+  };
 
   const handleBellClick = () => {
     setNotificationDropdownOpen(!notificationDropdownOpen);
@@ -182,14 +187,19 @@ const Navbar = ({ toggleSidebar }) => {
             Profile
           </NavLink>
           <hr className="hrPfMenu"/>
-          <button onClick={handleLogout} className="pfMenu" id="pfMenu">
+          <button onClick={handleOpenModal} className="pfMenu" id="pfMenu">
             <TbLogout2 className="logout-dropdown"/> Log out
           </button>
         </div>
       )}
-      {/* {isOpen && <LogOutModal />} */}
+      {logOut && <LogOutModal />}
     </div>
   );
 };
 
-export default Navbar;
+const mapStateToProps = state => ({
+  role: state.auth.role,
+  isLogOutOpen: state.logOutModalReducer.isLogOutOpen
+})
+
+export default connect(mapStateToProps, { login, logout, openLogOutModal })(Navbar);

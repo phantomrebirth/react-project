@@ -4,7 +4,7 @@ import HomePage from './components/HomePage.jsx'
 // // import Messages from './pages/Messages.jsx'
 import Reminder from './pages/Reminder.jsx'
 // import Settings from './pages/Settings.jsx'
-// import Profile from './pages/Profile.jsx'
+import Profile from './pages/Profile.jsx'
 import Layout from './Layout.jsx'
 // // import ComputerVision from './pages/courses/ComputerVision.jsx'
 // // import Programming from './pages/courses/Programming.jsx'
@@ -25,7 +25,7 @@ const ProtectedRoutes = () => {
       <Layout>
             <Routes>
                 <Route exact path="/" element={<HomePage />}/>
-                {/* <Route path="/profile" element={<Profile />} /> */}
+                <Route path="/profile" element={<Profile />} />
                 {/* <Route path="/courses" element={<Courses />} /> */}
                 {/* <Route path="/courses/:path/*" element={<Course />} /> */}
                 {/* <Route path="/courses/programming" element={<Programming />} /> */}
