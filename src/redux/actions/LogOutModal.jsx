@@ -30,7 +30,7 @@ const LogOutModal = ({ logout, closeLogOutModal }) => {
                         <div>
                             <button type='button' className='logOut-confirmBtn'
                                     onClick={() => {
-                                        handleConfirmLogout
+                                        handleConfirmLogout();
                                         // dispatch(clearToken());
                                         // dispatch(closeLogOutModal());
                                         // navigate('/login');

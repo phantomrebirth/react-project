@@ -11,26 +11,26 @@ import LoadingSpinner from './redux/actions/LoadingSpinner.jsx'
 import { login } from './redux/actions/auth.jsx'
 
 const App = ({token}) => {
-  // const navigate = useNavigate()
-  // // // const token = useSelector(selectToken);
-  // useEffect(() => {
-  //   if (window.location.pathname === '/' && (token === null | token === undefined)) {
-  //     // clearToken();
-  //     navigate("/login");
-  //   }
-  //   //  else if (token) {
-  //   //   navigate('/');
-  //   // }
-  // }, [token, 
-  //   // clearToken, 
-  //   navigate]);
+  const navigate = useNavigate()
+  // // const token = useSelector(selectToken);
+  useEffect(() => {
+    if (window.location.pathname === '/' && (token === null | token === undefined)) {
+      // clearToken();
+      navigate("/login");
+    }
+    //  else if (token) {
+    //   navigate('/');
+    // }
+  }, [token, 
+    // clearToken, 
+    navigate]);
   
   return (
     <Routes>
-      {/* <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
-      <Route path="*" element={token ? <ProtectedRoutes/> : <Navigate to="/login" />} /> */}
-       <Route path="/login" element={<Login />} />
-      <Route path="*" element={<ProtectedRoutes/>} />
+      <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
+      <Route path="*" element={token ? <ProtectedRoutes/> : <Navigate to="/login" />} />
+       {/* <Route path="/login" element={<Login />} />
+      <Route path="*" element={<ProtectedRoutes/>} /> */}
     </Routes>
   );
 };

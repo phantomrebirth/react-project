@@ -9,19 +9,19 @@ import {
   PROFILE_DELETE_START,
   PROFILE_DELETE_SUCCESS,
   PROFILE_DELETE_FAIL,
-  USER_UPDATE_START,
-  USER_UPDATE_SUCCESS,
-  USER_UPDATE_FAIL,
-  USER_DATA_START,
-  USER_DATA_SUCCESS,
-  USER_DATA_FAIL,
+  // USER_UPDATE_START,
+  // USER_UPDATE_SUCCESS,
+  // USER_UPDATE_FAIL,
+  // USER_DATA_START,
+  // USER_DATA_SUCCESS,
+  // USER_DATA_FAIL,
 } from "./type";
 import { useSelector } from "react-redux";
 
 const apiUrl = "https://ezlearn.onrender.com/users";
 
-export const profile = () => async (dispatch) => {
-  const token = useSelector((state) => state.auth.token);
+export const profile = () => async (dispatch, getState) => {
+  const token = getState().auth.token;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -33,13 +33,14 @@ export const profile = () => async (dispatch) => {
   try {
     const res = await axios.get(`${apiUrl}/getpp/`, config)
     if (res.data) {
+      const imageUrl = URL.createObjectURL(res.data);
       dispatch({
-        type: PROFILE_FAIL,
+        type: PROFILE_SUCCESS,
+        payload: imageUrl,
       });
     } else {
       dispatch({
-        type: PROFILE_SUCCESS,
-        payload: res.data,
+        type: PROFILE_FAIL,
       });
     }
   } catch (err) {
@@ -49,18 +50,19 @@ export const profile = () => async (dispatch) => {
   }
 };
 
-export const deleteProfile = (data) => async (dispatch) => {
-  const token = useSelector((state) => state.auth.token);
+export const deleteProfile = () => async (dispatch, getState) => {
+  const token = getState().auth.token;
+  console.log(token)
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
 
-  const body = data
+  // const body = data
   dispatch({ type: PROFILE_DELETE_START });
   try {
-    const res = await axios.delete(`${apiUrl}/deletePP`, body, config);
+    const res = await axios.delete(`${apiUrl}/deletePP`, config);
     if (res.data) {
       dispatch({
         type: PROFILE_DELETE_FAIL,
@@ -78,24 +80,25 @@ export const deleteProfile = (data) => async (dispatch) => {
   }
 };
 
-export const profileUpdate = (form_data) => async (dispatch) => {
-  const token = useSelector((state) => state.auth.token);
+export const profileUpdate = (formData) => async (dispatch, getState) => {
+  const token = getState().auth.token;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "image/jpeg",
+      "Content-Type": "multipart/form-data", // Correct content type for file upload
     },
   };
 
-  const body = form_data;
+  const body = formData;
   dispatch({ type: PROFILE_UPDATE_START });
   try {
     const res = await axios.post(`${apiUrl}/profilePicture`, body, config);
+    console.log(res.data)
 
-    if (res.data) {
+    if (res.status === 200 || res.status === 201) {
       dispatch({
         type: PROFILE_UPDATE_SUCCESS,
-        payload: res.data,
+        // payload: res.data,
       });
     } else {
       dispatch({
@@ -109,59 +112,60 @@ export const profileUpdate = (form_data) => async (dispatch) => {
   }
 };
 
-export const userData = () => async (dispatch) => {
-  const token = useSelector((state) => state.auth.token);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  dispatch({ type: USER_DATA_START });
-  try {
-    const res = await axios.get(`${apiUrl}/me`, config);
-    if (res.data) {
-      dispatch({
-        type: USER_DATA_FAIL,
-      });
-    } else {
-      dispatch({
-        type: USER_DATA_SUCCESS,
-        payload: res.data,
-      });
-    }
-  } catch (err) {
-    dispatch({
-      type: USER_DATA_FAIL,
-    });
-  }
-};
+// export const userData = () => async (dispatch, getState) => {
+//   const token = getState().auth.token;
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+//   dispatch({ type: USER_DATA_START });
+//   try {
+//     const res = await axios.get(`${apiUrl}/me`, config);
+//     console.log(res.data)
+//     if (res.data){
+//       dispatch({
+//         type: USER_DATA_SUCCESS,
+//         payload: res.data,
+//       });
+//     } else {
+//       dispatch({
+//         type: USER_DATA_FAIL,
+//       });
+//     }
+//   } catch (err) {
+//     dispatch({
+//       type: USER_DATA_FAIL,
+//     });
+//   }
+// };
 
-export const userUpdate = (username, email) => async (dispatch) => {
-  const token = useSelector((state) => state.auth.token);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+// export const userUpdate = (username, email) => async (dispatch, getState) => {
+//   const token = getState().auth.token;
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
 
-  const body = JSON.stringify({ username, email });
-  dispatch({ type: USER_UPDATE_START });
-  try {
-    dispatch({ type: FETCH_DATA_START });
-    const res = await axios.patch(`${apiUrl}/update`, body, config);
-    if (res.data) {
-      dispatch({
-        type: USER_UPDATE_SUCCESS,
-        payload: res.data,
-      });
-    } else {
-      dispatch({
-        type: USER_UPDATE_FAIL,
-      });
-    }
-  } catch (err) {
-    dispatch({
-      type: USER_UPDATE_FAIL,
-    });
-  }
-};
+//   const body = JSON.stringify({ username, email });
+//   dispatch({ type: USER_UPDATE_START });
+//   try {
+//     dispatch({ type: FETCH_DATA_START });
+//     const res = await axios.patch(`${apiUrl}/update`, body, config);
+//     if (res.data) {
+//       dispatch({
+//         type: USER_UPDATE_SUCCESS,
+//         payload: res.data,
+//       });
+//     } else {
+//       dispatch({
+//         type: USER_UPDATE_FAIL,
+//       });
+//     }
+//   } catch (err) {
+//     dispatch({
+//       type: USER_UPDATE_FAIL,
+//     });
+//   }
+// };

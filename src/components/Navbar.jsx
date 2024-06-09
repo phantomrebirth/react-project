@@ -15,6 +15,7 @@ import { connect, useSelector } from "react-redux";
 import { login, logout } from "../redux/actions/auth";
 import { openLogOutModal } from "../redux/actions/logOutModalAction";
 import LogOutModal from "../redux/actions/LogOutModal";
+import { profile } from "../redux/actions/profile";
 // import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
 // import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
 // import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
@@ -22,9 +23,13 @@ import LogOutModal from "../redux/actions/LogOutModal";
 // import SWAnnouncements from "./courses/software-engineering/SWAnnouncements";
 // import DeadlineNotification from "./DeadlineNotification";
 
-const Navbar = ({ toggleSidebar, role, openLogOutModal }) => {
+const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
 
 //   const imageUrl = useSelector(selectImageUrl);
+  const imageUrl = useSelector((state) => state.profile.image);
+  console.log(imageUrl)
+  const isLoading = useSelector((state) => state.profile.isLoading);
+  const error = useSelector((state) => state.profile.error);
 //   const isLoading = useSelector(selectIsLoading);
 //   const error = useSelector(selectError);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -51,6 +56,7 @@ const Navbar = ({ toggleSidebar, role, openLogOutModal }) => {
 //     }
 //   }, [role]);
   useEffect(() => {
+    profile(token);
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
           userIconRef.current && !userIconRef.current.contains(event.target)) {
@@ -79,7 +85,7 @@ const Navbar = ({ toggleSidebar, role, openLogOutModal }) => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.addEventListener("mousedown", handleNotificationClickOutside);
     };
-  }, []);
+  }, [profile, token]);
 
   const handleClickUserIcon = () => {
     setDropdownOpen(!dropdownOpen);
@@ -167,18 +173,18 @@ const Navbar = ({ toggleSidebar, role, openLogOutModal }) => {
         </div>
       </div>
       <div className="userIconContainer" ref={userIconRef} onClick={handleClickUserIcon}>
-        {/* {isLoading ? ( */}
+        {isLoading ? (
           <div>
             <FaUser className="userIcon"/>
           </div>
-        {/* ) : error ? ( */}
-          {/* <div> */}
-            {/* Error: {error} */}
-            {/* <FaUser className="userIcon"/>
-          </div> */}
-        {/* ) : ( */}
-          {/* <img src={imageUrl} alt="" className="nav-pfPicture"/> */}
-        {/* )} */}
+        ) : error ? (
+          <div>
+            Error: {error}
+            <FaUser className="userIcon"/>
+          </div>
+        ) : (
+          <img src={imageUrl} alt="" className="nav-pfPicture"/>
+        )}
         {/* <FaChevronDown className="userChevron"/> */}
       </div>
       {dropdownOpen && (
@@ -198,8 +204,12 @@ const Navbar = ({ toggleSidebar, role, openLogOutModal }) => {
 };
 
 const mapStateToProps = state => ({
+  token: state.auth.token,
   role: state.auth.role,
-  isLogOutOpen: state.logOutModalReducer.isLogOutOpen
+  isLogOutOpen: state.logOutModalReducer.isLogOutOpen,
+  image: state.profile.image,
+  isLoading: state.profile.isLoading,
+  error: state.profile.error,
 })
 
-export default connect(mapStateToProps, { login, logout, openLogOutModal })(Navbar);
+export default connect(mapStateToProps, { login, logout, openLogOutModal, profile })(Navbar);

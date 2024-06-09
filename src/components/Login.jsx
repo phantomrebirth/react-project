@@ -2,13 +2,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 // import { setToken, setRole, clearToken } from '../redux/slices/authSlice';
 // import { loginUser } from '../redux/slices/authSlice';
 // import LoadingSpinner from '../redux/actions/LoadingSpinner';
 import { CircularProgress } from '@material-ui/core';
 import { login } from '../redux/actions/auth';
-const Login = ({login, token, role, isLoading}) => {
+const Login = ({login, token, role}) => {
     console.log('t', token)
     console.log('r', role)
     const emailInput = document.getElementById("emailInput");
@@ -16,7 +16,7 @@ const Login = ({login, token, role, isLoading}) => {
     const email_error = document.getElementById('email_error');
     const password_error = document.getElementById('password_error');
     const login_error = document.getElementById('login_error');
-
+    const isLoading = useSelector((state) => state.auth.isLoading);
     const dispatch = useDispatch();
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -92,9 +92,9 @@ const Login = ({login, token, role, isLoading}) => {
                 if (token && role) {
                     // Navigation only occurs if a token is received
                     navigate('/');
-                } else {
+                // } else {
                     // If no token is received, display an error message
-                    setErrorMessage("Email or password is incorrect, try again.");
+                    // setErrorMessage("Email or password is incorrect, try again.");
                     // dispatch(clearToken());
                     // clearToken();
                 }
@@ -103,7 +103,7 @@ const Login = ({login, token, role, isLoading}) => {
                 if (error.payload && error.payload.error) {
                     setErrorMessage(error.payload.error);
                 } else {
-                    setErrorMessage("An error occurred during login.");
+                    setErrorMessage("An error occurred during login, try again.");
                 }
             }
             setLoading(false); // Set loading to false after the login process completes
@@ -182,7 +182,7 @@ const Login = ({login, token, role, isLoading}) => {
                             </div>
                             <input type="hidden" name="_csrf" value="your_csrf_token" />
                             <div id="sub-btn">
-                                {loading ? (
+                                {isLoading ? (
                                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '13vh' }}
                                     >
                                     <CircularProgress color="inherit"
@@ -209,7 +209,9 @@ const Login = ({login, token, role, isLoading}) => {
 
 const mapStateToProps = state => ({
     token: state.auth.token,
-    role: state.auth.role
+    role: state.auth.role,
+    isLoading:state.auth.isLoading,
+    error: state.auth.error
 })
 
 export default connect(mapStateToProps, { login})(Login);

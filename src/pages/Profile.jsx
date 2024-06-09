@@ -6,10 +6,10 @@ import { connect, useSelector } from 'react-redux';
 // import { selectToken } from '../redux/slices/authSlice';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Alert from 'react-bootstrap/Alert';
-import { userData, userUpdate } from '../redux/actions/profile';
+// import { userData, userUpdate } from '../redux/actions/profile';
 import { login } from '../redux/actions/auth';
 
-const Profile = ({ token, userData, userUpdate }) => {
+const Profile = ({ token }) => {
 //   const token = useSelector(selectToken);
   const [usersData, setUsersData] = useState({
     name: '',
@@ -26,12 +26,13 @@ const Profile = ({ token, userData, userUpdate }) => {
 
   const fetchProfileData = async () => {
     try {
-        const response = userData(token);
-    //   const response = await axios.get('https://ezlearn.onrender.com/users/me', {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   });
+        // userData(token);
+        // console.log(userData);
+      const response = await axios.get('https://ezlearn.onrender.com/users/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log(response.data); // Log the response data to check if password is included
       const { name, email, password } = response.data;
       setUsersData(prevState => ({
@@ -52,13 +53,13 @@ const Profile = ({ token, userData, userUpdate }) => {
         email: usersData.email,
         password: usersData.password
       };      console.log(body);
-      const response = userUpdate(body);
-    //   const response = await axios.patch('https://ezlearn.onrender.com/users/update',
-    //   body, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   });
+      // const response = userUpdate(body);
+      const response = await axios.patch('https://ezlearn.onrender.com/users/update',
+      body, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       fetchProfileData();
       setShowSuccess(true); // Show success message
       setShowError(false); // Hide error message
@@ -190,9 +191,12 @@ const Profile = ({ token, userData, userUpdate }) => {
 
 const mapStateToProps = state => ({
     token: state.auth.token,
+    name: state.profile.name,
+    email: state.profile.email,
+    password: state.profile.password,
 });
 
-export default connect(mapStateToProps, { login, userData, userUpdate})(Profile);
+export default connect(mapStateToProps, { login })(Profile);
 
 // import React, { useState, useEffect } from 'react';
 // import { Container, Row, Col, Form, Button } from 'react-bootstrap';
