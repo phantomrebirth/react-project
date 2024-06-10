@@ -423,10 +423,11 @@ function ProfileHead({ token, profile, profileUpdate, deleteProfile, setCroppedI
   const [showDelete, setShowDelete] = useState(false);
   
   useEffect(() => {
+    console.log("test")
     if (token) {
       profile(token);
     }
-  }, [profile]);
+  }, []);
 
   useEffect(() => {
     if (imageUrl) {

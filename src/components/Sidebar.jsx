@@ -204,6 +204,6 @@ const Sidebar = ({ isOpen, toggleSidebar, role, openLogOutModal }) => {
 const mapStateToProps = state => ({
   role: state.auth.role,
   isLogOutOpen: state.logOutModalReducer.isLogOutOpen
-})
+});
 
 export default connect(mapStateToProps, { login, logout, openLogOutModal })(Sidebar);

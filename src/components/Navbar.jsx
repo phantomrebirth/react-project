@@ -27,7 +27,6 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
 
 //   const imageUrl = useSelector(selectImageUrl);
   const imageUrl = useSelector((state) => state.profile.image);
-  console.log(imageUrl)
   const isLoading = useSelector((state) => state.profile.isLoading);
   const error = useSelector((state) => state.profile.error);
 //   const isLoading = useSelector(selectIsLoading);
@@ -56,7 +55,9 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
 //     }
 //   }, [role]);
   useEffect(() => {
-    profile(token);
+    if (!imageUrl) {
+      profile(token);
+    }
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
           userIconRef.current && !userIconRef.current.contains(event.target)) {
@@ -85,7 +86,7 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.addEventListener("mousedown", handleNotificationClickOutside);
     };
-  }, [profile, token]);
+  }, []);
 
   const handleClickUserIcon = () => {
     setDropdownOpen(!dropdownOpen);

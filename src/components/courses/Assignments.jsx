@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { navigateToAssignment } from '../../redux/slices/assignmentSlice';
+import { connect, useDispatch, useSelector } from 'react-redux';
+// import { navigateToAssignment } from '../../redux/slices/assignmentSlice';
 import { TbFileUpload } from "react-icons/tb";
 import { Alert, Button, Container, Form } from 'react-bootstrap';
 import { Col, Row } from 'react-bootstrap';
-import { selectRole, selectToken } from '../../redux/slices/authSlice';
-import { resetDeleteAlert, resetUploadAlert, selectCourses, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/slices/coursesSlice';
+// import { selectRole, selectToken } from '../../redux/slices/authSlice';
+// import { resetDeleteAlert, resetUploadAlert, selectCourses, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { PDFDocument } from 'pdf-lib';
@@ -13,18 +13,35 @@ import { IoAdd } from 'react-icons/io5';
 import { VscFiles } from 'react-icons/vsc';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import axios from 'axios';
-import { selectAssignmentsPaths, selectSubmittedAssignments, setAssignmentsPaths, setSubmittedAssignments, updateAssignmentsPaths } from '../../redux/slices/assignmentsSlice';
+// import { selectAssignmentsPaths, selectSubmittedAssignments, setAssignmentsPaths, setSubmittedAssignments, updateAssignmentsPaths } from '../../redux/slices/assignmentsSlice';
+import { login } from '../../redux/actions/auth';
+import { getCourseAssignment, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
+import { useParams } from 'react-router-dom';
 
-const Assignments = () => {
+const Assignments = 
+ ({ 
+  role, 
+  token, 
+  isLoading, 
+  assignmentIsLoading, 
+  courseAssignmentData,
+  courses, 
+  waitAlert,
+  uploadAlert,
+  deleteAlert,
+  currentCourseID,
+ }) => {
   const dispatch = useDispatch();
-  const role = useSelector(selectRole);
-  const token = useSelector(selectToken);
+  // const { path } = useParams();
+  // const role = useSelector(selectRole);
+  // const token = useSelector(selectToken);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
-  const assignmentsPaths = useSelector(selectAssignmentsPaths);
-  const submittedAssignments = useSelector(selectSubmittedAssignments);
+  // const assignmentsPaths = useSelector(selectAssignmentsPaths);
+  // const submittedAssignments = useSelector((state) => state.courses.courseAssignmentData || []);
+  const [submittedAssignments, setSubmittedAssignments] = useState([])
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
   const [assignmentName, setAssignmentName] = useState('');
   const [tUploaded, setTUploaded] = useState();
@@ -38,50 +55,59 @@ const Assignments = () => {
       setTeacher(true);
     }
   }, [role]);
-  const { coursesLoading, assignmentsLoading, data: courses, currentCourseId } = useSelector(selectCourses);
-  const uploadAlert = useSelector(state => state.courses.uploadAlert);
-  const deleteAlert = useSelector(state => state.courses.deleteAlert);
-  const waitAlert = useSelector(state => state.courses.waitAlert);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (uploadAlert) {
-        dispatch(resetUploadAlert());
-      }
-      if (deleteAlert) {
-        dispatch(resetDeleteAlert());
-      }
-    }, 4000);
-    return () => clearTimeout(timeout);
-  }, [uploadAlert, deleteAlert, waitAlert, dispatch]);
-  const course = courses.find(course => course._id === currentCourseId);
-  console.log(currentCourseId)
-  if (coursesLoading || assignmentsLoading || !course) {
+  // const currentCourse = courses.find(course => course.path === path);
+  // const currentCourseID = currentCourse ? currentCourse._id : null;
+  // const { coursesLoading, assignmentsLoading, data: courses, currentCourseId } = useSelector(selectCourses);
+  // const uploadAlert = useSelector(state => state.courses.uploadAlert);
+  // const deleteAlert = useSelector(state => state.courses.deleteAlert);
+  // const waitAlert = useSelector(state => state.courses.waitAlert);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     if (uploadAlert) {
+  //       dispatch(resetUploadAlert());
+  //     }
+  //     if (deleteAlert) {
+  //       dispatch(resetDeleteAlert());
+  //     }
+  //   }, 4000);
+  //   return () => clearTimeout(timeout);
+  // }, [uploadAlert, deleteAlert, waitAlert, dispatch]);
+  console.log('Current Course ID:', currentCourseID);
+  const course = courses.find(course => course._id === currentCourseID);
+  console.log('Course:', course);
+  if (isLoading || assignmentIsLoading || !course) {
     return <LoadingSpinner />;
   }
   useEffect(() => {
-    const assignmentPath = courses.find(course => course._id === currentCourseId)?.assignments.map(assignment => `https://ezlearn.onrender.com/course/getAssignments/${currentCourseId}/${assignment._id}`);
-    const assignments = courses.find(course => course._id === currentCourseId)?.assignments.map(assignment => {
+    // const assignmentPath = course.assignments.map(assignment => getCourseAssignment(currentCourseID, assignment._id));
+    const assignmentPath = courseAssignmentData;
+    console.log('Assignment Paths:', assignmentPath); // Log assignment paths
+
+    const assignments = course.assignments.map(assignment => {
       const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
+      const basePath = `https://ezlearn.onrender.com/course/getAssignments/${currentCourseID}/`;
       return {
         ...assignment,
-        path: matchingPath || ''
+        path: matchingPath ? `${basePath}${assignment._id}` : ''
       };
     });
-    dispatch(updateAssignmentsPaths(assignments));
+    setSubmittedAssignments(assignments);
+    // dispatch(updateAssignmentsPaths(assignments));
     // if (submittedAssignments === undefined) {
     // if (tUp !== true) {
-      dispatch(setSubmittedAssignments(assignments));
+      // dispatch(setSubmittedAssignments(assignments));
     // }
-      dispatch(setAssignmentsPaths(assignments));
+      // dispatch(setAssignmentsPaths(assignments));
     // }
-    console.log(assignments)
-    console.log(assignmentsPaths)
-    console.log(submittedAssignments)
-  }, [currentCourseId, courses]);
+    console.log('Assignments:', assignments);
+  }, [currentCourseID, courses, courseAssignmentData]);
   useEffect(() => {
-    const submittedAssignments = courses.find(course => course._id === currentCourseId)?.submittedAssignments;
-    dispatch(setSubmittedAssignments(submittedAssignments));
-  }, [assignmentsPaths]);
+    console.log('Submitted Assignments:', submittedAssignments);
+  }, [submittedAssignments]);
+  // useEffect(() => {
+  //   const submittedAssignments = courses.find(course => course._id === currentCourseId)?.submittedAssignments;
+  //   dispatch(setSubmittedAssignments(submittedAssignments));
+  // }, [assignmentsPaths]);
   // useEffect(() => {
   //   // if (submittedAssignments === undefined) {
   //   dispatch(setSubmittedAssignments(assignmentsPaths));
@@ -115,7 +141,8 @@ const Assignments = () => {
       };
       
       // Update the state with the modified submittedAssignments array
-      setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
+      // setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
+      getCourseAssignment({currentCourseID, submittedAssignmentId})
       // setSubmittedAssignmentId(null); // Reset the submitted assignment ID
       console.log('Submitted assignment:', updatedAssignmentsPaths[submittedIndex]);
     } else {
@@ -154,11 +181,11 @@ const Assignments = () => {
   const handleInProgressClick = (assignmentId) => {
     setUp(true);
     setSubmittedAssignmentId(assignmentId);
-    dispatch(navigateToAssignment());
+    // dispatch(navigateToAssignment());
     // dispatch(setAssignmentsPaths(assignmentsPaths));
-    if (student && (submittedAssignments === undefined)) {
-      dispatch(setSubmittedAssignments(assignmentsPaths));
-    }
+    // if (student && (submittedAssignments === undefined)) {
+    //   dispatch(setSubmittedAssignments(assignmentsPaths));
+    // }
   };
   
   const handleFileSelect = (event) => {
@@ -168,6 +195,9 @@ const Assignments = () => {
   
   const handleAssignmentDownload = async (assignment) => {
     const { filename, path } = assignment;
+    console.log(filename);
+    console.log(path);
+    console.log(assignment);
     try {
       const response = await fetch(path);
       const fileData = await response.arrayBuffer();
@@ -215,12 +245,12 @@ const Assignments = () => {
   const handleTUploaded = (assignmentId) => {
     setTUploaded(true);
     setSubmittedAssignmentId(assignmentId);
-    if (submittedAssignments === undefined) {
-      dispatch(setAssignmentsPaths(assignmentsPaths));
-      dispatch(setSubmittedAssignments(assignmentsPaths));
-    };
+    // if (submittedAssignments === undefined) {
+    //   dispatch(setAssignmentsPaths(assignmentsPaths));
+    //   dispatch(setSubmittedAssignments(assignmentsPaths));
+    // };
     console.log(submittedAssignments)
-    console.log(assignmentsPaths)
+    // console.log(assignmentsPaths)
   };
 
   const handleAssignmentNameClick = (assignment) => {
@@ -237,11 +267,11 @@ const Assignments = () => {
       formData.append('assignments', selectedFiles[i]);
     }
     formData.append('name', assignmentName);
-    if (!uploadAlert && !deleteAlert) {
-      dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
-    }
+    // if (!uploadAlert && !deleteAlert) {
+    //   dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
+    // }
     try {
-      const response = await axios.post(`https://ezlearn.onrender.com/course/assignments/${currentCourseId}`, formData, {
+      const response = await axios.post(`https://ezlearn.onrender.com/course/assignments/${currentCourseID}`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -249,59 +279,64 @@ const Assignments = () => {
       });
       if (response.status === 200 || response.status === 201) {
         console.log('test')
-        dispatch(setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' }));
+        // dispatch(setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' }));
         const { assignmentId } = response.data;
-        console.log(assignmentId)
         console.log(assignmentId);
-        const uploadedAssignment = {
-          _id: assignmentId,
-          filename: selectedFiles[0].name,
-        };
-        console.log(uploadedAssignment)
-        const updatedAssignments = [...assignmentsPaths, uploadedAssignment];
-        const updatedSubmittedAssignments = [...assignmentsPaths, uploadedAssignment];
-        dispatch(updateAssignmentsPaths(updatedAssignments));
-        dispatch(setAssignmentsPaths(updatedAssignments));
-        console.log(assignmentsPaths)
-        console.log(submittedAssignments)
-        dispatch(setSubmittedAssignments(updatedSubmittedAssignments));
+        // const uploadedAssignment = {
+        //   _id: assignmentId,
+        //   filename: selectedFiles[0].name,
+        // };
+        // console.log(uploadedAssignment)
+        const assignmentID = assignmentId;
+        getCourseAssignment({currentCourseID, assignmentID});
+        // const updatedAssignments = [.uploadedAssignment];
+        // const updatedSubmittedAssignments = [...assignmentsPaths, uploadedAssignment];
+        // dispatch(updateAssignmentsPaths(updatedAssignments));
+        // dispatch(setAssignmentsPaths(updatedAssignments));
+        // console.log(assignmentsPaths)
+        console.log(submittedAssignments);
+        // dispatch(setSubmittedAssignments(updatedSubmittedAssignments));
         setTUp(true);
         setSelectedFiles([]);
         setAssignmentName('');
       } else {
-        dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` }));
+        // dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` }));
       }
     } catch (error) {
-      dispatch(setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` }));
+      // dispatch(setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` }));
     }
   };
 
   const handleAssignmentDelete = async (assignment) => {
     if (!uploadAlert && !deleteAlert) {
-      dispatch(setWaitAlert({ variant: 'info', message: 'Deleting... please wait' }));
+      // dispatch(setWaitAlert({ variant: 'info', message: 'Deleting... please wait' }));
+      setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
     }
 
     try {
-      const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteAssignments/${currentCourseId}/${assignment._id}`, {
+      const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
       if (response.status === 200 || response.status === 201) {
-        dispatch(setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' }));
-        const updatedAssignments = assignmentsPaths.filter(item => item._id !== assignment._id);
+        // dispatch(setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' }));
+        setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' })
+        const assignmentID = assignment._id;
+        // const updatedAssignments = assignmentsPaths.filter(item => item._id !== assignment._id);
         // const updatedSubmittedAssignments = submittedAssignments.filter(item => item._id !== assignment._id);
-        dispatch(setAssignmentsPaths(updatedAssignments));
-        dispatch(setSubmittedAssignments(updatedAssignments));
-        dispatch(updateAssignmentsPaths(updatedAssignments));
-        console.log(submittedAssignments)
-        console.log(assignmentsPaths)
+        getCourseAssignment({currentCourseID, assignmentID});
+        // dispatch(setAssignmentsPaths(updatedAssignments));
+        // dispatch(setSubmittedAssignments(updatedAssignments));
+        // dispatch(updateAssignmentsPaths(updatedAssignments));
+        // console.log(submittedAssignments)
+        // console.log(assignmentsPaths)
       } else {
-        dispatch(setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` }));
+        // dispatch(setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` }));
       }
     } catch (error) {
-      dispatch(setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` }));
+      // dispatch(setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` }));
     }
   };
   
@@ -309,12 +344,12 @@ const Assignments = () => {
   return (
     <>
       {uploadAlert && (
-        <Alert variant={uploadAlert.variant} onClose={() => dispatch(setUploadAlert(null))} dismissible>
+        <Alert variant={uploadAlert.variant} onClose={() => resetUploadAlert()} dismissible>
           {uploadAlert.message}
         </Alert>
       )}
       {deleteAlert && (
-        <Alert variant={deleteAlert.variant} onClose={() => dispatch(setDeleteAlert(null))} dismissible>
+        <Alert variant={deleteAlert.variant} onClose={() => resetDeleteAlert()} dismissible>
           {deleteAlert.message}
         </Alert>
       )}
@@ -326,7 +361,7 @@ const Assignments = () => {
       {student && (
         <>
           <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
-            {!up && submittedAssignments && submittedAssignments.map((assignment, index) => (
+          {!up && submittedAssignments && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
                 {(assignment._id !== submittedAssignmentId) && !assignment.submitted && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol2'>
@@ -581,4 +616,29 @@ const Assignments = () => {
   );
 };
 
-export default Assignments;
+const mapStateToProps = state => ({
+  role: state.auth.role,
+  token: state.auth.token,
+  courses: state.courses.coursesData,
+  currentCourseID: state.courses.currentCourseID,
+  isLoading: state.courses.isLoading,
+  courseAssignmentData: state.courses.courseAssignmentData,
+  assignmentIsLoading: state.courses.assignmentIsLoading,
+  deleteAlert: state.courses.deleteAlert,
+  uploadAlert: state.courses.uploadAlert,
+  waitAlert: state.courses.waitAlert,
+  error: state.courses.error,
+});
+
+export default connect(mapStateToProps,
+  {
+    login,
+    getCourseAssignment,
+    setUploadAlert,
+    setWaitAlert,
+    setDeleteAlert,
+    resetUploadAlert,
+    resetDeleteAlert,
+    resetWaitAlert
+  })
+(Assignments);

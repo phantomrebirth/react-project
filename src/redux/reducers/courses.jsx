@@ -14,6 +14,13 @@ import {
   COURSE_PROJECT_START,
   COURSE_PROJECT_SUCCESS,
   COURSE_PROJECT_FAIL,
+  SET_UPLOAD_ALERT,
+  RESET_UPLOAD_ALERT,
+  SET_DELETE_ALERT,
+  RESET_DELETE_ALERT,
+  SET_WAIT_ALERT,
+  RESET_WAIT_ALERT,
+  SET_CURRENT_COURSE_ID,
 } from '../actions/type'
 
 const initialState = {
@@ -22,16 +29,26 @@ const initialState = {
   courseFileData: [],
   courseAssignmentData: [],
   courseProjectData: [],
+  submittedAssignments: [], // Initialize submittedAssignments as an empty array
+  currentCourseID: null,
   isLoading: false,
   fileIsLoading: false,
   videoIsLoading: false,
   assignmentIsLoading: false,
   projectIsLoading: false,
+  uploadAlert: null,
+  deleteAlert: null,
+  waitAlert: null,
 };
 
 export default function(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
+    case SET_CURRENT_COURSE_ID:
+      return {
+        ...state,
+        currentCourseID: action.payload,
+      };
     case COURSE_PROJECT_START:
       return {
         ...state,
@@ -60,31 +77,31 @@ export default function(state = initialState, action) {
     case COURSE_FILE_SUCCESS:
       return {
         ...state,
-        coursesFileData: payload,
-        isLoading: false,
+        courseFileData: payload,
+        fileIsLoading: false,
       };
     case COURSE_PROJECT_SUCCESS:
       return {
         ...state,
-        coursesProjectData: payload,
-        isLoading: false,
+        courseProjectData: payload,
+        projectIsLoading: false,
       };
     case COURSE_ASSIGNMENT_SUCCESS:
       return {
         ...state,
-        coursesAssignmentData: payload,
-        isLoading: false,
+        courseAssignmentData: [payload],
+        assignmentIsLoading: false,
       };
     case COURSE_VIDEO_SUCCESS:
       return {
         ...state,
         courseVideoData: payload,
-        isLoading: false,
+        videoIsLoading: false,
       };
     case COURSES_SUCCESS:
       return {
         ...state,
-        courseData: payload,
+        coursesData: payload,
         isLoading: false,
       };
     case COURSE_VIDEO_FAIL:
@@ -94,8 +111,44 @@ export default function(state = initialState, action) {
     case COURSES_FAIL:
       return {
         ...state,
+        projectIsLoading: false,
+        assignmentIsLoading: false,
+        fileIsLoading: false,
+        videoIsLoading: false,
         isLoading: false,
         error: payload,
+      };
+        case SET_UPLOAD_ALERT:
+      return {
+        ...state,
+        uploadAlert: payload,
+        waitAlert: null,
+      };
+    case RESET_UPLOAD_ALERT:
+      return {
+        ...state,
+        uploadAlert: null,
+      };
+    case SET_DELETE_ALERT:
+      return {
+        ...state,
+        deleteAlert: payload,
+        waitAlert: null,
+      };
+    case RESET_DELETE_ALERT:
+      return {
+        ...state,
+        deleteAlert: null,
+      };
+    case SET_WAIT_ALERT:
+      return {
+        ...state,
+        waitAlert: payload,
+      };
+    case RESET_WAIT_ALERT:
+      return {
+        ...state,
+        waitAlert: null,
       };
     default:
       return state;

@@ -15,6 +15,13 @@ import {
   COURSE_PROJECT_START,
   COURSE_PROJECT_SUCCESS,
   COURSE_PROJECT_FAIL,
+  SET_UPLOAD_ALERT,
+  RESET_UPLOAD_ALERT,
+  SET_DELETE_ALERT,
+  RESET_DELETE_ALERT,
+  SET_WAIT_ALERT,
+  RESET_WAIT_ALERT,
+  SET_CURRENT_COURSE_ID,
 } from './type'
 
 
@@ -39,14 +46,21 @@ export const getCourses = () => async (dispatch) => {
     } else {
       dispatch({
         type: COURSES_FAIL,
+        payload: 'Failed to load courses'
       });
     }
-  } catch {
+  } catch (error) {
     dispatch({
       type: COURSES_FAIL,
+      payload: error.message || 'Failed to load courses'
     });
   }
 };
+
+export const setCurrentCourseID = (courseID) => ({
+  type: SET_CURRENT_COURSE_ID,
+  payload: courseID,
+});
 
 export const getCourseProject = ({currentCourseID, projectID}) => async (dispatch) => {
   const config = {
@@ -85,22 +99,37 @@ export const getCourseAssignment = ({currentCourseID, assignmentID}) => async (d
     },
   };
 
+//   dispatch({ type: COURSE_ASSIGNMENT_START });
+//   try {
+//     const res = await axios.get(`${apiUrl}course/getAssignments/${currentCourseID}/${assignmentID}`, config);
+//     if (res.data) {
+//       dispatch({
+//         type: COURSE_ASSIGNMENT_SUCCESS,
+//         payload: res.data
+//       });
+//     } else {
+//       dispatch({
+//         type: COURSE_ASSIGNMENT_FAIL,
+//       });
+//     }
+//   } catch {
+//     dispatch({
+//       type: COURSE_ASSIGNMENT_FAIL,
+//     });
+//   }
+// };
   dispatch({ type: COURSE_ASSIGNMENT_START });
   try {
-    const res = await axios.get(`${apiUrl}course/getAssignments/${currentCourseID}/${assignmentID}`, config);
-    if (res.data) {
-      dispatch({
-        type: COURSE_ASSIGNMENT_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: COURSE_ASSIGNMENT_FAIL,
-      });
-    }
-  } catch {
+    // Construct the path based on the currentCourseID and assignmentID
+    const path = `${apiUrl}course/getAssignments/${currentCourseID}/${assignmentID}`;
+    dispatch({
+      type: COURSE_ASSIGNMENT_SUCCESS,
+      payload: path
+    });
+  } catch (error) {
     dispatch({
       type: COURSE_ASSIGNMENT_FAIL,
+      payload: error.message,
     });
   }
 };
@@ -160,3 +189,30 @@ export const getCourseVideo = ({currentCourseID, videoID}) => async (dispatch) =
     });
   }
 };
+
+export const setUploadAlert = (alert) => ({
+  type: SET_UPLOAD_ALERT,
+  payload: alert,
+});
+
+export const resetUploadAlert = () => ({
+  type: RESET_UPLOAD_ALERT,
+});
+
+export const setDeleteAlert = (alert) => ({
+  type: SET_DELETE_ALERT,
+  payload: alert,
+});
+
+export const resetDeleteAlert = () => ({
+  type: RESET_DELETE_ALERT,
+});
+
+export const setWaitAlert = (alert) => ({
+  type: SET_WAIT_ALERT,
+  payload: alert,
+});
+
+export const resetWaitAlert = () => ({
+  type: RESET_WAIT_ALERT,
+});
