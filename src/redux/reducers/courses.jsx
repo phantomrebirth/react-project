@@ -77,13 +77,13 @@ export default function(state = initialState, action) {
     case COURSE_FILE_SUCCESS:
       return {
         ...state,
-        courseFileData: payload,
+        courseFileData: [payload],
         fileIsLoading: false,
       };
     case COURSE_PROJECT_SUCCESS:
       return {
         ...state,
-        courseProjectData: payload,
+        courseProjectData: [payload],
         projectIsLoading: false,
       };
     case COURSE_ASSIGNMENT_SUCCESS:
@@ -95,7 +95,7 @@ export default function(state = initialState, action) {
     case COURSE_VIDEO_SUCCESS:
       return {
         ...state,
-        courseVideoData: payload,
+        courseVideoData: [payload],
         videoIsLoading: false,
       };
     case COURSES_SUCCESS:

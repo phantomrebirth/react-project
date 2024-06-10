@@ -4,12 +4,19 @@ import { IoMicOutline } from "react-icons/io5";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import CameraModal from '../CameraModel';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectCourses } from '../../redux/slices/coursesSlice';
+import { connect, useDispatch, useSelector } from 'react-redux';
+// import { selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
+import { login } from '../../redux/actions/auth';
 
-const Chat = () => {
-  const dispatch = useDispatch();
+const Chat = 
+({
+  role,
+  token,
+  courses,
+  currentCourseID,
+  isLoading
+}) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -31,7 +38,6 @@ const Chat = () => {
       inputRef.current.focus();
     }
   }, []);
-  const { data: courses, currentCourseId } = useSelector(selectCourses);
   useEffect(() => {
     const interval = setInterval(() => {
       if (isRecording && recordingStartTime) {
@@ -41,7 +47,12 @@ const Chat = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
-  const course = courses.find(course => course._id === currentCourseId);
+  // const { data: courses, currentCourseId } = useSelector(selectCourses);
+  // const course = courses.find(course => course._id === currentCourseId);
+  const course = courses.find(course => course._id === currentCourseID);
+  if (isLoading || !course) {
+    return <LoadingSpinner />;
+  }
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const newMessages = [...messages, { text: newMessage, sender: 'user', timestamp: new Date().toLocaleTimeString() }];
@@ -327,4 +338,16 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+const mapStateToProps = state => ({
+  role: state.auth.role,
+  token: state.auth.token,
+  courses: state.courses.coursesData,
+  currentCourseID: state.courses.currentCourseID,
+  isLoading: state.courses.isLoading,
+});
+
+export default connect(mapStateToProps,
+  {
+    login,
+  }) 
+(Chat);

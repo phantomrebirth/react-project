@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import Quiz from '../Quiz';
 import { Col, Row } from 'react-bootstrap';
-import { selectRole } from '../../redux/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+// import { selectRole } from '../../redux/slices/authSlice';
+import { connect, useDispatch, useSelector } from 'react-redux';
+// import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
+import { login } from '../../redux/actions/auth';
 
-const Quizzes = () => {
+const Quizzes = 
+({
+    role,
+    token,
+    courses,
+    currentCourseID,
+    isLoading
+}) => {
 
     // const dispatch = useDispatch();
-    const role = useSelector(selectRole);
+    // const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
     const [showFinishedQuiz, setShowFinishedQuiz] = useState(true);
@@ -22,10 +30,12 @@ const Quizzes = () => {
         }
         // dispatch(fetchCourses());
     }, [role]);
-    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
-    
-    const course = courses.find(course => course._id === currentCourseId);
-    
+    // const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+    const course = courses.find(course => course._id === currentCourseID);
+    if (isLoading || !course) {
+      return <LoadingSpinner />;
+    }
+
     const handleAttemptQuizClick = () => {
         setShowFinishedQuiz(false);
     };
@@ -33,10 +43,6 @@ const Quizzes = () => {
     const handleStartQuizClick = () => {
         setShowQuiz(true);  
     };
-      
-    if (loading) {
-      return <LoadingSpinner />;
-    }
 
   return (
     <div>
@@ -134,4 +140,16 @@ const Quizzes = () => {
   );
 };
 
-export default Quizzes;
+const mapStateToProps = state => ({
+    role: state.auth.role,
+    token: state.auth.token,
+    courses: state.courses.coursesData,
+    currentCourseID: state.courses.currentCourseID,
+    isLoading: state.courses.isLoading,
+});
+
+export default connect(mapStateToProps,
+    {
+      login,
+    })
+(Quizzes);

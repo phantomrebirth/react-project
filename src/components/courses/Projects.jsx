@@ -553,9 +553,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ImUpload } from "react-icons/im";
 import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
-import { selectRole, selectToken } from '../../redux/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { resetDeleteAlert, resetUploadAlert, selectCourses, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/slices/coursesSlice';
+// import { selectRole, selectToken } from '../../redux/slices/authSlice';
+import { connect, useDispatch, useSelector } from 'react-redux';
+// import { resetDeleteAlert, resetUploadAlert, selectCourses, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { PDFDocument } from 'pdf-lib';
 import { HiOutlineDownload } from 'react-icons/hi';
@@ -563,26 +563,40 @@ import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { VscFiles } from 'react-icons/vsc';
 import { IoAdd } from 'react-icons/io5';
 import axios from 'axios';
-import { selectProjectsPaths, selectSubmittedProjects, setProjectsPaths, setSubmittedProjects, updateProjectsPaths } from '../../redux/slices/ProjectsSlice';
+// import { selectProjectsPaths, selectSubmittedProjects, setProjectsPaths, setSubmittedProjects, updateProjectsPaths } from '../../redux/slices/ProjectsSlice';
+import { getCourseProject, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
+import { login } from '../../redux/actions/auth';
 
-const Projects = () => {
-  const dispatch = useDispatch();
-  const role = useSelector(selectRole);
-  const token = useSelector(selectToken);
+const Projects = 
+({
+  role,
+  token,
+  isLoading, 
+  projectIsLoading, 
+  courseProjectData,
+  courses, 
+  waitAlert,
+  uploadAlert,
+  deleteAlert,
+  currentCourseID,
+}) => {
+  // const dispatch = useDispatch();
+  // const role = useSelector(selectRole);
+  // const token = useSelector(selectToken);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [description, setDescription] = useState('');
-  const projectsPaths = useSelector(selectProjectsPaths);
-  const submittedProjects = useSelector(selectSubmittedProjects) ?? [];
+  // const projectsPaths = useSelector(selectProjectsPaths);
+  // const submittedProjects = useSelector(selectSubmittedProjects) ?? [];
+  const [submittedProjects, setSubmittedProjects] = useState([]);
   const [submittedProjectId, setSubmittedProjectId] = useState(null);
   const [projectName, setProjectName] = useState('');
   const [tUploaded, setTUploaded] = useState();
   const [tUpload, setTUpload] = useState();
   const [up, setUp] = useState(false);
-  const [hasFetchedProjects, setHasFetchedProjects] = useState(false);
+  // const [hasFetchedProjects, setHasFetchedProjects] = useState(false);
   const fileInputRef = useRef(null);
-  
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
@@ -590,25 +604,44 @@ const Projects = () => {
       setTeacher(true);
     }
   }, [role]);
-  const { coursesLoading, projectsLoading, data: courses, currentCourseId } = useSelector(selectCourses);
-  const uploadAlert = useSelector(state => state.courses.uploadAlert);
-  const deleteAlert = useSelector(state => state.courses.deleteAlert);
-  const waitAlert = useSelector(state => state.courses.waitAlert);
+  // const { coursesLoading, projectsLoading, data: courses, currentCourseId } = useSelector(selectCourses);
+  // const uploadAlert = useSelector(state => state.courses.uploadAlert);
+  // const deleteAlert = useSelector(state => state.courses.deleteAlert);
+  // const waitAlert = useSelector(state => state.courses.waitAlert);
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (uploadAlert) {
-        dispatch(resetUploadAlert());
+        resetUploadAlert();
       }
       if (deleteAlert) {
-        dispatch(resetDeleteAlert());
+        resetDeleteAlert();
       }
     }, 4000);
     return () => clearTimeout(timeout);
   }, [uploadAlert, deleteAlert, waitAlert]);
-  const course = courses.find(course => course._id === currentCourseId);
-  if (coursesLoading || projectsLoading || !course) {
+  console.log('Current Course ID:', currentCourseID);
+  const course = courses.find(course => course._id === currentCourseID);
+  console.log('Course:', course);
+  if (isLoading || projectIsLoading || !course) {
     return <LoadingSpinner />;
   }
+  useEffect(() => {
+    const projectPath = courseProjectData;
+    console.log('Project Paths:', projectPath);
+    const projects = course.projects.map(project => {
+      const matchingPath = projectPath.find(path => path.includes(project._id));
+      const basePath = `https://ezlearn.onrender.com/course/getProjects/${currentCourseID}/`;
+      return {
+        ...project,
+        path: matchingPath ? `${basePath}${project._id}` : ''
+      };
+    });
+    setSubmittedProjects(projects);
+    console.log('Projects:', projects);
+  }, [currentCourseID, courses, courseProjectData]);
+  useEffect(() => {
+    console.log('Submitted Projects:', submittedProjects);
+  }, [submittedProjects]);
   // useEffect(() => {
   //   if (currentCourseId){
   //     dispatch(setSubmittedProjects(submittedProjects));
@@ -651,7 +684,7 @@ const Projects = () => {
 
     // }, [currentCourseId, courses]);
   console.log(submittedProjects);
-  console.log(projectsPaths);
+  // console.log(projectsPaths);
   // useEffect(() => {
   //   if (submittedProjects && currentCourseId) {
       // dispatch(setSubmittedProjects(submittedProjects));
@@ -695,10 +728,10 @@ const Projects = () => {
   const handleInProgressClick = (projectId) => {
     setUp(true);
     setSubmittedProjectId(projectId);
-    dispatch(setProjectsPaths(projectsPaths));
-    if (student && (submittedProjects === undefined)) {
-      dispatch(setSubmittedProjects(projectsPaths));
-    }
+    // dispatch(setProjectsPaths(projectsPaths));
+    // if (student && (submittedProjects === undefined)) {
+    //   dispatch(setSubmittedProjects(projectsPaths));
+    // }
   };
   
   const handleFileSelect = (event) => {
@@ -773,7 +806,7 @@ const Projects = () => {
     // if (submittedProjects === undefined) {
     //   dispatch(setSubmittedProjects(projectsPaths));
     // };
-    console.log(projectsPaths)
+    // console.log(projectsPaths)
     console.log(submittedProjects)
   };
 
@@ -793,63 +826,67 @@ const Projects = () => {
     }
     formData.append('name', projectName);
     if (!uploadAlert && !deleteAlert) {
-        dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
+        setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
     }
     try {
-        const response = await axios.post(`https://ezlearn.onrender.com/course/projects/${currentCourseId}`, formData, {
+        const response = await axios.post(`https://ezlearn.onrender.com/course/projects/${currentCourseID}`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
         });
-        if (response.status === 200 || response.status === 201 && currentCourseId) {
-            dispatch(setUploadAlert({ variant: 'primary', message: 'Project uploaded successfully!' }));
+        if (response.status === 200 || response.status === 201 && currentCourseID) {
+            setUploadAlert({ variant: 'primary', message: 'Project uploaded successfully!' });
             const { project } = response.data;
             console.log(project)
-            const uploadedProject = {
-                _id: project,
-                filename: selectedFiles[0].name,
-                // path: project.path // Assuming the server response contains the path
-            };
-            console.log(uploadedProject)
-            const updatedSubmittedProjects = [...submittedProjects, uploadedProject];
-            if (currentCourseId) {
-              dispatch(setSubmittedProjects({ courseId: currentCourseId, projects: updatedSubmittedProjects }));
-          }
+          //   const uploadedProject = {
+          //       _id: project,
+          //       filename: selectedFiles[0].name,
+          //       // path: project.path // Assuming the server response contains the path
+          //   };
+          //   console.log(uploadedProject)
+          //   const updatedSubmittedProjects = [...submittedProjects, uploadedProject];
+          //   if (currentCourseId) {
+          //     dispatch(setSubmittedProjects({ courseId: currentCourseId, projects: updatedSubmittedProjects }));
+          // }
+          const projectID = project;
+          getCourseProject({currentCourseID, projectID});
             setSelectedFiles([]);
             setProjectName('');
             console.log(submittedProjects)
             // fetchProjects();
         } else {
-            dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload project: ${response.statusText}` }));
+            setUploadAlert({ variant: 'danger', message: `Failed to upload project: ${response.statusText}` });
         }
     } catch (error) {
-        dispatch(setUploadAlert({ variant: 'danger', message: `Error uploading project: ${error.message}` }));
+        setUploadAlert({ variant: 'danger', message: `Error uploading project: ${error.message}` });
     }
 };
 
   const handleProjectDelete = async (project) => {
     if (!uploadAlert && !deleteAlert) {
-        dispatch(setWaitAlert({ variant: 'info', message: 'Deleting... please wait' }));
+        setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
     }
 
     try {
-        const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteProjects/${currentCourseId}/${project._id}`, {
+        const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteProjects/${currentCourseID}/${project._id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
         });
         if (response.status === 200 || response.status === 201 && currentCourseId) {
-            dispatch(setDeleteAlert({ variant: 'success', message: 'Project deleted successfully!' }));
-            const updatedSubmittedProjects = submittedProjects.filter(item => item._id !== project._id);
-            dispatch(setSubmittedProjects(updatedSubmittedProjects));
+            setDeleteAlert({ variant: 'success', message: 'Project deleted successfully!' });
+            // const updatedSubmittedProjects = submittedProjects.filter(item => item._id !== project._id);
+            // dispatch(setSubmittedProjects(updatedSubmittedProjects));
+            const projectID = project._id;
+            getCourseProject({currentCourseID, projectID});
             // fetchProjects();
         } else {
-            dispatch(setDeleteAlert({ variant: 'danger', message: `Failed to delete project: ${response.statusText}` }));
+            setDeleteAlert({ variant: 'danger', message: `Failed to delete project: ${response.statusText}` });
         }
     } catch (error) {
-        dispatch(setDeleteAlert({ variant: 'danger', message: `Error deleting project: ${error.message}` }));
+        setDeleteAlert({ variant: 'danger', message: `Error deleting project: ${error.message}` });
     }
 };
 
@@ -860,12 +897,12 @@ const Projects = () => {
   return (
     <>
       {uploadAlert && (
-        <Alert variant={uploadAlert.variant} onClose={() => dispatch(setUploadAlert(null))} dismissible>
+        <Alert variant={uploadAlert.variant} onClose={() => resetUploadAlert()} dismissible>
           {uploadAlert.message}
         </Alert>
       )}
       {deleteAlert && (
-        <Alert variant={deleteAlert.variant} onClose={() => dispatch(setDeleteAlert(null))} dismissible>
+        <Alert variant={deleteAlert.variant} onClose={() => resetDeleteAlert()} dismissible>
           {deleteAlert.message}
         </Alert>
       )}
@@ -1152,4 +1189,29 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+const mapStateToProps = state => ({
+  role: state.auth.role,
+  token: state.auth.token,
+  courses: state.courses.coursesData,
+  currentCourseID: state.courses.currentCourseID,
+  isLoading: state.courses.isLoading,
+  courseProjectData: state.courses.courseProjectData,
+  projectIsLoading: state.courses.projectIsLoading,
+  deleteAlert: state.courses.deleteAlert,
+  uploadAlert: state.courses.uploadAlert,
+  waitAlert: state.courses.waitAlert,
+  error: state.courses.error,
+});
+
+export default connect(mapStateToProps,
+  {
+    login,
+    getCourseProject,
+    setUploadAlert,
+    setWaitAlert,
+    setDeleteAlert,
+    resetUploadAlert,
+    resetDeleteAlert,
+    resetWaitAlert
+  })
+(Projects);

@@ -41,7 +41,7 @@ const Assignments =
   const [description, setDescription] = useState('');
   // const assignmentsPaths = useSelector(selectAssignmentsPaths);
   // const submittedAssignments = useSelector((state) => state.courses.courseAssignmentData || []);
-  const [submittedAssignments, setSubmittedAssignments] = useState([])
+  const [submittedAssignments, setSubmittedAssignments] = useState([]);
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
   const [assignmentName, setAssignmentName] = useState('');
   const [tUploaded, setTUploaded] = useState();
@@ -61,17 +61,17 @@ const Assignments =
   // const uploadAlert = useSelector(state => state.courses.uploadAlert);
   // const deleteAlert = useSelector(state => state.courses.deleteAlert);
   // const waitAlert = useSelector(state => state.courses.waitAlert);
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     if (uploadAlert) {
-  //       dispatch(resetUploadAlert());
-  //     }
-  //     if (deleteAlert) {
-  //       dispatch(resetDeleteAlert());
-  //     }
-  //   }, 4000);
-  //   return () => clearTimeout(timeout);
-  // }, [uploadAlert, deleteAlert, waitAlert, dispatch]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (uploadAlert) {
+        resetUploadAlert();
+      }
+      if (deleteAlert) {
+        resetDeleteAlert();
+      }
+    }, 4000);
+    return () => clearTimeout(timeout);
+  }, [uploadAlert, deleteAlert, waitAlert]);
   console.log('Current Course ID:', currentCourseID);
   const course = courses.find(course => course._id === currentCourseID);
   console.log('Course:', course);
@@ -301,9 +301,11 @@ const Assignments =
         setAssignmentName('');
       } else {
         // dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` }));
+        setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` })
       }
     } catch (error) {
       // dispatch(setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` }));
+      setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` })
     }
   };
 
@@ -334,9 +336,11 @@ const Assignments =
         // console.log(assignmentsPaths)
       } else {
         // dispatch(setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` }));
+        setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` })
       }
     } catch (error) {
       // dispatch(setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` }));
+      setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` })
     }
   };
   

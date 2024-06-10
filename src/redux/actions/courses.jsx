@@ -70,22 +70,36 @@ export const getCourseProject = ({currentCourseID, projectID}) => async (dispatc
     },
   };
 
+  // dispatch({ type: COURSE_PROJECT_START });
+  // try {
+  //   const res = await axios.get(`${apiUrl}course/getProjects/${currentCourseID}/${projectID}`, config);
+  //   if (res.data) {
+  //     dispatch({
+  //       type: COURSE_PROJECT_SUCCESS,
+  //       payload: res.data
+  //     });
+  //   } else {
+  //     dispatch({
+  //       type: COURSE_PROJECT_FAIL,
+  //     });
+  //   }
+  // } catch {
+  //   dispatch({
+  //     type: COURSE_PROJECT_FAIL,
+  //   });
+  // }
+// };
   dispatch({ type: COURSE_PROJECT_START });
   try {
-    const res = await axios.get(`${apiUrl}course/getProjects/${currentCourseID}/${projectID}`, config);
-    if (res.data) {
-      dispatch({
-        type: COURSE_PROJECT_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: COURSE_PROJECT_FAIL,
-      });
-    }
-  } catch {
+    const path = `${apiUrl}course/getProjects/${currentCourseID}/${projectID}`;
+    dispatch({
+      type: COURSE_PROJECT_SUCCESS,
+      payload: path
+    });
+  } catch (error) {
     dispatch({
       type: COURSE_PROJECT_FAIL,
+      payload: error.message,
     });
   }
 };
@@ -144,23 +158,38 @@ export const getCourseFile = ({currentCourseID, fileID}) => async (dispatch) => 
 
   dispatch({ type: COURSE_FILE_START });
   try {
-    const res = await axios.get(`${apiUrl}course/getFiles/${currentCourseID}/${fileID}`, config);
-    if (res.data) {
-      dispatch({
-        type: COURSE_FILE_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: COURSE_FILE_FAIL,
-      });
-    }
-  } catch {
+    const path = `${apiUrl}course/getFiles/${currentCourseID}/${fileID}`;
+    dispatch({
+      type: COURSE_FILE_SUCCESS,
+      payload: path
+    });
+  } catch (error) {
     dispatch({
       type: COURSE_FILE_FAIL,
+      payload: error.message,
     });
   }
 };
+
+//   dispatch({ type: COURSE_FILE_START });
+//   try {
+//     const res = await axios.get(`${apiUrl}course/getFiles/${currentCourseID}/${fileID}`, config);
+//     if (res.data) {
+//       dispatch({
+//         type: COURSE_FILE_SUCCESS,
+//         payload: res.data
+//       });
+//     } else {
+//       dispatch({
+//         type: COURSE_FILE_FAIL,
+//       });
+//     }
+//   } catch {
+//     dispatch({
+//       type: COURSE_FILE_FAIL,
+//     });
+//   }
+// };
 
 export const getCourseVideo = ({currentCourseID, videoID}) => async (dispatch) => {
   const config = {
@@ -172,23 +201,38 @@ export const getCourseVideo = ({currentCourseID, videoID}) => async (dispatch) =
 
   dispatch({ type: COURSE_VIDEO_START });
   try {
-    const res = await axios.get(`${apiUrl}course/getVideos/${currentCourseID}/${videoID}`, config);
-    if (res.data) {
-      dispatch({
-        type: COURSE_VIDEO_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: COURSE_VIDEO_FAIL,
-      });
-    }
-  } catch {
+    const path = `${apiUrl}course/getVideos/${currentCourseID}/${videoID}`;
+    dispatch({
+      type: COURSE_VIDEO_SUCCESS,
+      payload: path
+    });
+  } catch (error) {
     dispatch({
       type: COURSE_VIDEO_FAIL,
+      payload: error.message,
     });
   }
 };
+
+//   dispatch({ type: COURSE_VIDEO_START });
+//   try {
+//     const res = await axios.get(`${apiUrl}course/getVideos/${currentCourseID}/${videoID}`, config);
+//     if (res.data) {
+//       dispatch({
+//         type: COURSE_VIDEO_SUCCESS,
+//         payload: res.data
+//       });
+//     } else {
+//       dispatch({
+//         type: COURSE_VIDEO_FAIL,
+//       });
+//     }
+//   } catch {
+//     dispatch({
+//       type: COURSE_VIDEO_FAIL,
+//     });
+//   }
+// };
 
 export const setUploadAlert = (alert) => ({
   type: SET_UPLOAD_ALERT,

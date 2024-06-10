@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Row, Table } from 'react-bootstrap';
-import { selectRole } from '../../redux/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+// import { selectRole } from '../../redux/slices/authSlice';
+import { connect, useDispatch, useSelector } from 'react-redux';
+// import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
+import { login } from '../../redux/actions/auth';
 
-const AttendanceRate = () => {
+const AttendanceRate = 
+({
+    role,
+    token,
+    courses,
+    currentCourseID,
+    isLoading
+}) => {
 
     // const dispatch = useDispatch();
-    const role = useSelector(selectRole);
+    // const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
     useEffect(() => {
@@ -19,11 +27,10 @@ const AttendanceRate = () => {
         }
         // dispatch(fetchCourses());
     }, [role]);
-    const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
+    // const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
 
-    const course = courses.find(course => course._id === currentCourseId);
-  
-    if (loading) {
+    const course = courses.find(course => course._id === currentCourseID);
+    if (isLoading || !course) {
       return <LoadingSpinner />;
     }
 
@@ -108,4 +115,16 @@ const AttendanceRate = () => {
   );
 };
 
-export default AttendanceRate;
+const mapStateToProps = state => ({
+    role: state.auth.role,
+    token: state.auth.token,
+    courses: state.courses.coursesData,
+    currentCourseID: state.courses.currentCourseID,
+    isLoading: state.courses.isLoading,
+});
+
+export default connect(mapStateToProps,
+    {
+      login,
+    })
+(AttendanceRate);

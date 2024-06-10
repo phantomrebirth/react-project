@@ -1,23 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 import ReactPlayer from 'react-player';
-import { selectRole, selectToken } from '../../redux/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
+// import { selectRole, selectToken } from '../../redux/slices/authSlice';
+import { connect, useDispatch, useSelector } from 'react-redux';
+// import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { HiOutlineDownload } from "react-icons/hi";
 import axios from 'axios';
 import { IoAdd } from 'react-icons/io5';
 import { MdOutlineDeleteOutline } from "react-icons/md";
+import { login } from '../../redux/actions/auth';
+import { getCourseVideo, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
 
-const Videos = () => {
-    const dispatch = useDispatch();
-    const role = useSelector(selectRole);
-    const token = useSelector(selectToken);
+const Videos = 
+({
+    role,
+    token,
+    videoIsLoading,
+    courses,
+    isLoading,
+    courseVideoData,
+    waitAlert,
+    uploadAlert,
+    deleteAlert,
+    currentCourseID,
+    error
+}) => {
+    // const dispatch = useDispatch();
+    // const role = useSelector(selectRole);
+    // const token = useSelector(selectToken);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
-    const [uploadAlert, setUploadAlert] = useState(null);
-    const [deleteAlert, setDeleteAlert] = useState(null);
+    const [videosPaths, setVideosPaths] = useState([]);
+    // const [uploadAlert, setUploadAlert] = useState(null);
+    // const [deleteAlert, setDeleteAlert] = useState(null);
     useEffect(() => {
         if (role === 'student') {
             setStudent(true);
@@ -27,19 +43,37 @@ const Videos = () => {
         // dispatch(fetchCourses());
     }, [role]);
     const fileInputRef = useRef(null);
-    const { coursesLoading, videosLoading, data: courses, currentCourseId } = useSelector(selectCourses);
-    const course = courses.find(course => course._id === currentCourseId);
-    if (coursesLoading || videosLoading || !course) {
+    console.log('Current Course ID:', currentCourseID);
+    const course = courses.find(course => course._id === currentCourseID);
+    console.log('Course:', course);
+    if (isLoading || videoIsLoading || !course) {
         return <LoadingSpinner/>;
     }
-    const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseId}/${video._id}`);
-    const videosPaths = course.videos.map(video => {
-        const matchingPath = videoPath.find(path => path.includes(video._id));
-        return {
+    useEffect(() => {
+        const videoPath = courseVideoData;
+        console.log('Video Paths:', videoPath);
+        const videos = course.videos.map(video => {
+          const matchingPath = videoPath.find(path => path.includes(video._id));
+          const basePath = `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/`;
+          return {
             ...video,
-            path: matchingPath || ''
-        };
-    });
+            path: matchingPath ? `${basePath}${video._id}` : ''
+          };
+        });
+        setVideosPaths(videos);
+        console.log('Videos:', videos);
+      }, [currentCourseID, courses, courseVideoData]);
+      useEffect(() => {
+        console.log('Videos Paths:', videosPaths);
+      }, [videosPaths]);
+    // const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/${video._id}`);
+    // const videosPaths = course.videos.map(video => {
+    //     const matchingPath = videoPath.find(path => path.includes(video._id));
+    //     return {
+    //         ...video,
+    //         path: matchingPath || ''
+    //     };
+    // });
 
     const handleVideoDownload = async (video) => {
       const { filename, path } = video;
@@ -63,7 +97,7 @@ const Videos = () => {
         formData.append('videos', file);
     
         try {
-            const response = await axios.post(`https://ezlearn.onrender.com/course/videos/${currentCourseId}`, formData, {
+            const response = await axios.post(`https://ezlearn.onrender.com/course/videos/${currentCourseID}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -71,8 +105,9 @@ const Videos = () => {
             });
             if (response.status === 200 || response.status === 201) {
                 console.log('Video uploaded successfully!');
+                const videoID = response._id;
                 setUploadAlert({ variant: 'primary', message: 'Video uploaded successfully!' });
-                dispatch(fetchCourses(currentCourseId));
+                getCourseVideo({currentCourseID, videoID});
             } else {
                 console.error('Failed to upload video:', response.statusText);
                 setUploadAlert({ variant: 'danger', message: `Failed to upload video: ${response.statusText}` });
@@ -86,7 +121,7 @@ const Videos = () => {
     const handleVideoDelete = async (video) => {
     
         try {
-            const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteVideos/${currentCourseId}/${video._id}`, {
+            const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteVideos/${currentCourseID}/${video._id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -94,8 +129,9 @@ const Videos = () => {
             });
             if (response.status === 200 || response.status === 201) {
                 console.log('Video deleted successfully!');
+                const videoID = video._id;
                 setDeleteAlert({ variant: 'primary', message: 'Video deleted successfully!' });
-                dispatch(fetchCourses(currentCourseId));
+                getCourseVideo({currentCourseID,videoID});
             } else {
                 console.error('Failed to delete video:', response.statusText);
                 setDeleteAlert({ variant: 'danger', message: `Failed to delete video: ${response.statusText}` });
@@ -137,8 +173,8 @@ const Videos = () => {
 
   return (
     <>
-        {uploadAlert && <Alert variant={uploadAlert.variant} onClose={() => setUploadAlert(false)} dismissible>{uploadAlert.message}</Alert>}
-        {deleteAlert && <Alert variant={deleteAlert.variant} onClose={() => setDeleteAlert(false)} dismissible>{deleteAlert.message}</Alert>}
+        {uploadAlert && <Alert variant={uploadAlert.variant} onClose={() => resetUploadAlert()} dismissible>{uploadAlert.message}</Alert>}
+        {deleteAlert && <Alert variant={deleteAlert.variant} onClose={() => resetDeleteAlert()} dismissible>{deleteAlert.message}</Alert>}
         {student && (
             <Container className='videos-container' style={{ padding: "0", margin: "1rem 0 0 0", flexWrap: "wrap", maxWidth: "none" }}>
                 {videosPaths.slice().reverse().map((video, index) => {
@@ -232,4 +268,29 @@ const Videos = () => {
   );
 };
 
-export default Videos;
+const mapStateToProps = state => ({
+    role: state.auth.role,
+    token: state.auth.token,
+    courses: state.courses.coursesData,
+    currentCourseID: state.courses.currentCourseID,
+    isLoading: state.courses.isLoading,
+    courseVideoData: state.courses.courseVideoData,
+    videoIsLoading: state.courses.videoIsLoading,
+    deleteAlert: state.courses.deleteAlert,
+    uploadAlert: state.courses.uploadAlert,
+    waitAlert: state.courses.waitAlert,
+    error: state.courses.error,
+});
+
+export default connect(mapStateToProps,
+    {
+      login,
+      getCourseVideo,
+      setUploadAlert,
+      setWaitAlert,
+      setDeleteAlert,
+      resetUploadAlert,
+      resetDeleteAlert,
+      resetWaitAlert
+    })
+(Videos);
