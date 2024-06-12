@@ -9,8 +9,6 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
 import { login } from '../redux/actions/auth';
 const Login = ({login, token, role}) => {
-    console.log('t', token)
-    console.log('r', role)
     const emailInput = document.getElementById("emailInput");
     const passwordInput = document.getElementById("passwordInput");
     const email_error = document.getElementById('email_error');
@@ -93,8 +91,8 @@ const Login = ({login, token, role}) => {
                     // Navigation only occurs if a token is received
                     navigate('/');
                 // } else {
-                    // If no token is received, display an error message
-                    // setErrorMessage("Email or password is incorrect, try again.");
+                //     // If no token is received, display an error message
+                //     setErrorMessage("Email or password is incorrect, try again.");
                     // dispatch(clearToken());
                     // clearToken();
                 }

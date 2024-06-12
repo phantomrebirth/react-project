@@ -10,7 +10,7 @@ import axios from 'axios';
 import { IoAdd } from 'react-icons/io5';
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { login } from '../../redux/actions/auth';
-import { getCourseVideo, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
+import { finishFileOperation, getCourseVideo, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 
 const Videos = 
 ({
@@ -19,11 +19,19 @@ const Videos =
     videoIsLoading,
     courses,
     isLoading,
+    getCourseVideo,
     courseVideoData,
     waitAlert,
     uploadAlert,
     deleteAlert,
     currentCourseID,
+    resetDeleteAlert,
+    resetUploadAlert,
+    resetWaitAlert,
+    getCourses,
+    isFileOperationInProgress,
+    startFileOperation,
+    finishFileOperation,
     error
 }) => {
     // const dispatch = useDispatch();
@@ -42,13 +50,22 @@ const Videos =
         }
         // dispatch(fetchCourses());
     }, [role]);
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+          if (uploadAlert) {
+            resetUploadAlert();
+          }
+          if (deleteAlert) {
+            resetDeleteAlert();
+          }
+          // if (waitAlert) {
+          //   resetWaitAlert();
+          // }
+        }, 4000);
+        return () => clearTimeout(timeout);
+    }, [uploadAlert, deleteAlert, waitAlert]);
     const fileInputRef = useRef(null);
-    console.log('Current Course ID:', currentCourseID);
     const course = courses.find(course => course._id === currentCourseID);
-    console.log('Course:', course);
-    if (isLoading || videoIsLoading || !course) {
-        return <LoadingSpinner/>;
-    }
     useEffect(() => {
         const videoPath = courseVideoData;
         console.log('Video Paths:', videoPath);
@@ -62,10 +79,13 @@ const Videos =
         });
         setVideosPaths(videos);
         console.log('Videos:', videos);
-      }, [currentCourseID, courses, courseVideoData]);
-      useEffect(() => {
+    }, [currentCourseID, courses, courseVideoData]);
+    useEffect(() => {
         console.log('Videos Paths:', videosPaths);
-      }, [videosPaths]);
+    }, [videosPaths]);
+    if ((isLoading || videoIsLoading || !course) && isFileOperationInProgress) {
+        return <LoadingSpinner/>;
+    };
     // const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/${video._id}`);
     // const videosPaths = course.videos.map(video => {
     //     const matchingPath = videoPath.find(path => path.includes(video._id));
@@ -103,11 +123,23 @@ const Videos =
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            startFileOperation(); // Set file operation in progress
             if (response.status === 200 || response.status === 201) {
                 console.log('Video uploaded successfully!');
-                const videoID = response._id;
+                const { videoId, filename } = response.data;
+                const newVideo = {
+                  _id: videoId,
+                  filename: file.name,
+                  path: `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/${videoId}`,
+                };
+                console.log(newVideo);
+                console.log(newVideo._id)
+                // await getCourseVideo({ currentCourseID, videoID: videoId })
+                setVideosPaths(prevVideos => [...prevVideos, newVideo]);
+                getCourses();
+                // const videoID = response._id;
+                // getCourseVideo({currentCourseID, videoID});
                 setUploadAlert({ variant: 'primary', message: 'Video uploaded successfully!' });
-                getCourseVideo({currentCourseID, videoID});
             } else {
                 console.error('Failed to upload video:', response.statusText);
                 setUploadAlert({ variant: 'danger', message: `Failed to upload video: ${response.statusText}` });
@@ -115,6 +147,8 @@ const Videos =
         } catch (error) {
             console.error('Error uploading video:', error);
             setUploadAlert({ variant: 'danger', message: `Error uploading video: ${error.message}` });
+        } finally {
+            finishFileOperation(); // Reset file operation status
         }
     };
 
@@ -127,11 +161,14 @@ const Videos =
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            startFileOperation(); // Set file operation in progress
             if (response.status === 200 || response.status === 201) {
                 console.log('Video deleted successfully!');
-                const videoID = video._id;
+                setVideosPaths(prevVideos => prevVideos.filter(item => item._id !== video._id));
+                getCourses();
+                // const videoID = video._id;
+                // getCourseVideo({currentCourseID,videoID});
                 setDeleteAlert({ variant: 'primary', message: 'Video deleted successfully!' });
-                getCourseVideo({currentCourseID,videoID});
             } else {
                 console.error('Failed to delete video:', response.statusText);
                 setDeleteAlert({ variant: 'danger', message: `Failed to delete video: ${response.statusText}` });
@@ -139,6 +176,8 @@ const Videos =
         } catch (error) {
             console.error('Error deleting video:', error);
             setDeleteAlert({ variant: 'danger', message: `Error deleting video: ${error.message}` });
+        } finally {
+            finishFileOperation(); // Reset file operation status
         }
     };
 
@@ -280,17 +319,21 @@ const mapStateToProps = state => ({
     uploadAlert: state.courses.uploadAlert,
     waitAlert: state.courses.waitAlert,
     error: state.courses.error,
+    isFileOperationInProgress: state.courses.isFileOperationInProgress,
 });
 
 export default connect(mapStateToProps,
     {
       login,
+      getCourses,
       getCourseVideo,
       setUploadAlert,
       setWaitAlert,
       setDeleteAlert,
       resetUploadAlert,
       resetDeleteAlert,
-      resetWaitAlert
+      resetWaitAlert,
+      startFileOperation,
+      finishFileOperation,
     })
 (Videos);

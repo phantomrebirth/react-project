@@ -15,7 +15,7 @@ import { MdOutlineDeleteOutline } from 'react-icons/md';
 import axios from 'axios';
 // import { selectAssignmentsPaths, selectSubmittedAssignments, setAssignmentsPaths, setSubmittedAssignments, updateAssignmentsPaths } from '../../redux/slices/assignmentsSlice';
 import { login } from '../../redux/actions/auth';
-import { getCourseAssignment, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
+import { finishFileOperation, getCourseAssignment, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { useParams } from 'react-router-dom';
 
 const Assignments = 
@@ -26,10 +26,15 @@ const Assignments =
   assignmentIsLoading, 
   courseAssignmentData,
   courses, 
+  getCourses,
+  getCourseAssignment,
   waitAlert,
   uploadAlert,
   deleteAlert,
   currentCourseID,
+  isFileOperationInProgress,
+  startFileOperation,
+  finishFileOperation,
  }) => {
   const dispatch = useDispatch();
   // const { path } = useParams();
@@ -72,12 +77,7 @@ const Assignments =
     }, 4000);
     return () => clearTimeout(timeout);
   }, [uploadAlert, deleteAlert, waitAlert]);
-  console.log('Current Course ID:', currentCourseID);
   const course = courses.find(course => course._id === currentCourseID);
-  console.log('Course:', course);
-  if (isLoading || assignmentIsLoading || !course) {
-    return <LoadingSpinner />;
-  }
   useEffect(() => {
     // const assignmentPath = course.assignments.map(assignment => getCourseAssignment(currentCourseID, assignment._id));
     const assignmentPath = courseAssignmentData;
@@ -104,6 +104,9 @@ const Assignments =
   useEffect(() => {
     console.log('Submitted Assignments:', submittedAssignments);
   }, [submittedAssignments]);
+  if ((isLoading || assignmentIsLoading || !course) && isFileOperationInProgress) {
+    return <LoadingSpinner />;
+  }
   // useEffect(() => {
   //   const submittedAssignments = courses.find(course => course._id === currentCourseId)?.submittedAssignments;
   //   dispatch(setSubmittedAssignments(submittedAssignments));
@@ -142,7 +145,7 @@ const Assignments =
       
       // Update the state with the modified submittedAssignments array
       // setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
-      getCourseAssignment({currentCourseID, submittedAssignmentId})
+      // getCourseAssignment({currentCourseID, submittedAssignmentId})
       // setSubmittedAssignmentId(null); // Reset the submitted assignment ID
       console.log('Submitted assignment:', updatedAssignmentsPaths[submittedIndex]);
     } else {
@@ -269,6 +272,7 @@ const Assignments =
     formData.append('name', assignmentName);
     // if (!uploadAlert && !deleteAlert) {
     //   dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
+    setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
     // }
     try {
       const response = await axios.post(`https://ezlearn.onrender.com/course/assignments/${currentCourseID}`, formData, {
@@ -277,28 +281,33 @@ const Assignments =
           'Content-Type': 'multipart/form-data',
         },
       });
+      startFileOperation(); // Set file operation in progress
       if (response.status === 200 || response.status === 201) {
         console.log('test')
         // dispatch(setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' }));
         const { assignmentId } = response.data;
         console.log(assignmentId);
-        // const uploadedAssignment = {
-        //   _id: assignmentId,
-        //   filename: selectedFiles[0].name,
-        // };
+        const uploadedAssignment = {
+          _id: assignmentId,
+          filename: selectedFiles[0].name,
+          path: `https://ezlearn.onrender.com/course/getAssignments/${currentCourseID}/${assignmentId}`
+        };
         // console.log(uploadedAssignment)
-        const assignmentID = assignmentId;
-        getCourseAssignment({currentCourseID, assignmentID});
+        setSubmittedAssignments(prevAssignments => [...prevAssignments, uploadedAssignment]);
+        // const assignmentID = assignmentId;
+        // getCourseAssignment({currentCourseID, assignmentID});
         // const updatedAssignments = [.uploadedAssignment];
         // const updatedSubmittedAssignments = [...assignmentsPaths, uploadedAssignment];
         // dispatch(updateAssignmentsPaths(updatedAssignments));
         // dispatch(setAssignmentsPaths(updatedAssignments));
         // console.log(assignmentsPaths)
-        console.log(submittedAssignments);
+        // console.log(submittedAssignments);
+        getCourses();
         // dispatch(setSubmittedAssignments(updatedSubmittedAssignments));
         setTUp(true);
         setSelectedFiles([]);
         setAssignmentName('');
+        setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' })
       } else {
         // dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` }));
         setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` })
@@ -306,6 +315,8 @@ const Assignments =
     } catch (error) {
       // dispatch(setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` }));
       setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` })
+    } finally {
+      finishFileOperation(); // Reset file operation status
     }
   };
 
@@ -322,13 +333,16 @@ const Assignments =
           'Content-Type': 'multipart/form-data',
         },
       });
+      startFileOperation(); // Set file operation in progress
       if (response.status === 200 || response.status === 201) {
         // dispatch(setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' }));
-        setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' })
-        const assignmentID = assignment._id;
+        setSubmittedAssignments(prevAssignments => prevAssignments.filter(item => item._id !== assignment._id));
         // const updatedAssignments = assignmentsPaths.filter(item => item._id !== assignment._id);
         // const updatedSubmittedAssignments = submittedAssignments.filter(item => item._id !== assignment._id);
-        getCourseAssignment({currentCourseID, assignmentID});
+        // const assignmentID = assignment._id;
+        // getCourseAssignment({currentCourseID, assignmentID});
+        getCourses();
+        setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' })
         // dispatch(setAssignmentsPaths(updatedAssignments));
         // dispatch(setSubmittedAssignments(updatedAssignments));
         // dispatch(updateAssignmentsPaths(updatedAssignments));
@@ -341,6 +355,8 @@ const Assignments =
     } catch (error) {
       // dispatch(setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` }));
       setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` })
+    } finally {
+      finishFileOperation(); // Reset file operation status
     }
   };
   
@@ -632,6 +648,7 @@ const mapStateToProps = state => ({
   uploadAlert: state.courses.uploadAlert,
   waitAlert: state.courses.waitAlert,
   error: state.courses.error,
+  isFileOperationInProgress: state.courses.isFileOperationInProgress,
 });
 
 export default connect(mapStateToProps,
@@ -643,6 +660,9 @@ export default connect(mapStateToProps,
     setDeleteAlert,
     resetUploadAlert,
     resetDeleteAlert,
-    resetWaitAlert
+    resetWaitAlert,
+    startFileOperation,
+    finishFileOperation,
+    getCourses
   })
 (Assignments);

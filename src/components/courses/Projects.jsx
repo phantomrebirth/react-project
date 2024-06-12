@@ -564,7 +564,7 @@ import { VscFiles } from 'react-icons/vsc';
 import { IoAdd } from 'react-icons/io5';
 import axios from 'axios';
 // import { selectProjectsPaths, selectSubmittedProjects, setProjectsPaths, setSubmittedProjects, updateProjectsPaths } from '../../redux/slices/ProjectsSlice';
-import { getCourseProject, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
+import { finishFileOperation, getCourseProject, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { login } from '../../redux/actions/auth';
 
 const Projects = 
@@ -574,11 +574,16 @@ const Projects =
   isLoading, 
   projectIsLoading, 
   courseProjectData,
-  courses, 
+  courses,
+  getCourses,
+  getCourseProject,
   waitAlert,
   uploadAlert,
   deleteAlert,
   currentCourseID,
+  isFileOperationInProgress,
+  startFileOperation,
+  finishFileOperation,
 }) => {
   // const dispatch = useDispatch();
   // const role = useSelector(selectRole);
@@ -595,7 +600,6 @@ const Projects =
   const [tUploaded, setTUploaded] = useState();
   const [tUpload, setTUpload] = useState();
   const [up, setUp] = useState(false);
-  // const [hasFetchedProjects, setHasFetchedProjects] = useState(false);
   const fileInputRef = useRef(null);
   useEffect(() => {
     if (role === 'student') {
@@ -604,10 +608,6 @@ const Projects =
       setTeacher(true);
     }
   }, [role]);
-  // const { coursesLoading, projectsLoading, data: courses, currentCourseId } = useSelector(selectCourses);
-  // const uploadAlert = useSelector(state => state.courses.uploadAlert);
-  // const deleteAlert = useSelector(state => state.courses.deleteAlert);
-  // const waitAlert = useSelector(state => state.courses.waitAlert);
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (uploadAlert) {
@@ -619,12 +619,7 @@ const Projects =
     }, 4000);
     return () => clearTimeout(timeout);
   }, [uploadAlert, deleteAlert, waitAlert]);
-  console.log('Current Course ID:', currentCourseID);
   const course = courses.find(course => course._id === currentCourseID);
-  console.log('Course:', course);
-  if (isLoading || projectIsLoading || !course) {
-    return <LoadingSpinner />;
-  }
   useEffect(() => {
     const projectPath = courseProjectData;
     console.log('Project Paths:', projectPath);
@@ -642,6 +637,9 @@ const Projects =
   useEffect(() => {
     console.log('Submitted Projects:', submittedProjects);
   }, [submittedProjects]);
+  if ((isLoading || projectIsLoading || !course) && isFileOperationInProgress) {
+    return <LoadingSpinner />;
+  }
   // useEffect(() => {
   //   if (currentCourseId){
   //     dispatch(setSubmittedProjects(submittedProjects));
@@ -835,31 +833,36 @@ const Projects =
                 'Content-Type': 'multipart/form-data',
             },
         });
+        startFileOperation(); // Set file operation in progress
         if (response.status === 200 || response.status === 201 && currentCourseID) {
-            setUploadAlert({ variant: 'primary', message: 'Project uploaded successfully!' });
-            const { project } = response.data;
-            console.log(project)
-          //   const uploadedProject = {
-          //       _id: project,
-          //       filename: selectedFiles[0].name,
-          //       // path: project.path // Assuming the server response contains the path
-          //   };
-          //   console.log(uploadedProject)
-          //   const updatedSubmittedProjects = [...submittedProjects, uploadedProject];
-          //   if (currentCourseId) {
+          const { project } = response.data;
+          console.log(project)
+          const uploadedProject = {
+            _id: project,
+            filename: selectedFiles[0].name,
+            path: `https://ezlearn.onrender.com/course/getProjects/${currentCourseID}/${project}`,
+          };
+          setSubmittedProjects(prevProjects => [...prevProjects, uploadedProject]);
+            //   console.log(uploadedProject)
+            //   const updatedSubmittedProjects = [...submittedProjects, uploadedProject];
+            //   if (currentCourseId) {
           //     dispatch(setSubmittedProjects({ courseId: currentCourseId, projects: updatedSubmittedProjects }));
           // }
-          const projectID = project;
-          getCourseProject({currentCourseID, projectID});
+          // const projectID = project;
+          // getCourseProject({currentCourseID, projectID});
+          getCourses();
             setSelectedFiles([]);
             setProjectName('');
             console.log(submittedProjects)
+            setUploadAlert({ variant: 'primary', message: 'Project uploaded successfully!' });
             // fetchProjects();
         } else {
             setUploadAlert({ variant: 'danger', message: `Failed to upload project: ${response.statusText}` });
         }
     } catch (error) {
         setUploadAlert({ variant: 'danger', message: `Error uploading project: ${error.message}` });
+    } finally {
+      finishFileOperation(); // Reset file operation status
     }
 };
 
@@ -875,20 +878,25 @@ const Projects =
                 'Content-Type': 'multipart/form-data',
             },
         });
-        if (response.status === 200 || response.status === 201 && currentCourseId) {
-            setDeleteAlert({ variant: 'success', message: 'Project deleted successfully!' });
-            // const updatedSubmittedProjects = submittedProjects.filter(item => item._id !== project._id);
-            // dispatch(setSubmittedProjects(updatedSubmittedProjects));
-            const projectID = project._id;
-            getCourseProject({currentCourseID, projectID});
-            // fetchProjects();
+        startFileOperation(); // Set file operation in progress
+        if (response.status === 200 || response.status === 201 && currentCourseID) {
+          setSubmittedProjects(prevProjects => prevProjects.filter(item => item._id !== project._id));
+          // const updatedSubmittedProjects = submittedProjects.filter(item => item._id !== project._id);
+          // dispatch(setSubmittedProjects(updatedSubmittedProjects));
+          // const projectID = project._id;
+          // getCourseProject({currentCourseID, projectID});
+          // fetchProjects();
+          getCourses();
+          setDeleteAlert({ variant: 'success', message: 'Project deleted successfully!' });
         } else {
             setDeleteAlert({ variant: 'danger', message: `Failed to delete project: ${response.statusText}` });
         }
     } catch (error) {
         setDeleteAlert({ variant: 'danger', message: `Error deleting project: ${error.message}` });
+    } finally {
+      finishFileOperation(); // Reset file operation status
     }
-};
+  };
 
   // useEffect(() => {
   //   fetchProjects();
@@ -1201,17 +1209,21 @@ const mapStateToProps = state => ({
   uploadAlert: state.courses.uploadAlert,
   waitAlert: state.courses.waitAlert,
   error: state.courses.error,
+  isFileOperationInProgress: state.courses.isFileOperationInProgress,
 });
 
 export default connect(mapStateToProps,
   {
     login,
     getCourseProject,
+    getCourses,
     setUploadAlert,
     setWaitAlert,
     setDeleteAlert,
     resetUploadAlert,
     resetDeleteAlert,
-    resetWaitAlert
+    resetWaitAlert,
+    startFileOperation,
+    finishFileOperation,
   })
 (Projects);

@@ -9,27 +9,50 @@ import { HiArrowLongRight } from "react-icons/hi2";
 import { Link } from 'react-router-dom';
 import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
+import { getCourses } from '../redux/actions/courses';
+import LoadingSpinner from '../redux/actions/LoadingSpinner';
 // import { selectRole } from '../redux/slices/authSlice';
 
-const courses = [
+const homeCourses = [
   { title: 'Network', progress: 0.9, path: '/courses/network' },
   { title: 'Computer Vision', path: '/courses/computer-vision', progress: 0.75 },
 ];
 
-const HomePage = ({ role }) => {
+const HomePage = 
+({ 
+  role,
+  courses,
+  isLoading,
+  getCourses,
+  token
+}) => {
   
-//   const role = useSelector(selectRole);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
-  console.log(role);
-  
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
     } else if (role === 'teacher') {
       setTeacher(true);
     }
-  }, [role]);
+    if (courses.length === 0 && !isLoading) {
+      getCourses();
+    }
+  }, [role, isLoading]);
+  
+  // useEffect(() => {
+  //   if (courses.length === 0 && !isLoading) {
+  //     getCourses();
+  //   }
+  // }, [isLoading]);
+
+  if (isLoading) {
+    return (
+        <LoadingSpinner/>
+    );
+  };
+
+  console.log(role);
 
   return (
     <>
@@ -67,7 +90,7 @@ const HomePage = ({ role }) => {
                                                                maxWidth:"100%"}}
                                        id='cardsRow'
             >
-              {courses.map((course, idx) => (
+              {homeCourses.map((course, idx) => (
               // margin: "1rem 3% 1rem 4px",
                 <Col key={idx} className='cards' style={{margin: "1rem 5% 1rem 5px", padding: "0 4px 0 0", maxWidth: "34rem"}}>
                   <Link to={course.path} className='cards-link'>
@@ -195,7 +218,10 @@ const HomePage = ({ role }) => {
 };
 
 const mapStateToProps = state => ({
-  role: state.auth.role
-})
+  role: state.auth.role,
+  courses: state.courses.coursesData,
+  isLoading: state.courses.isLoading,
+  token: state.auth.token,
+});
 
-export default connect(mapStateToProps, { login})(HomePage);
+export default connect(mapStateToProps, { login, getCourses })(HomePage);

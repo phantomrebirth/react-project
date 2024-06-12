@@ -29,7 +29,7 @@ const Chat =
   const [capturedPhotoPending, setCapturedPhotoPending] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
-  const audioInputRef = useRef(null);
+  // const audioInputRef = useRef(null);
   const photoInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
@@ -47,8 +47,17 @@ const Chat =
     }, 1000);
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
-  // const { data: courses, currentCourseId } = useSelector(selectCourses);
-  // const course = courses.find(course => course._id === currentCourseId);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  useEffect(() => {
+    if (capturedPhotoPending) {
+      inputRef.current.focus();
+    }
+  }, [capturedPhotoPending]);
   const course = courses.find(course => course._id === currentCourseID);
   if (isLoading || !course) {
     return <LoadingSpinner />;
@@ -83,7 +92,7 @@ const Chat =
       console.log("Unable to send recorded blob");
     }
   };
-  
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       if (intentToSend === 'message') {
@@ -92,14 +101,6 @@ const Chat =
         handleSendRecordedBlob();
       }
     }
-  };
-  
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-  
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   
   const handleMicClick = () => {
@@ -194,12 +195,6 @@ const Chat =
       scrollToBottom();
     }
   };
-  
-  useEffect(() => {
-    if (capturedPhotoPending) {
-      inputRef.current.focus();
-    }
-  }, [capturedPhotoPending]);
   
   const handleDeleteCapturedPhoto = () => {
     setCapturedPhoto(null);

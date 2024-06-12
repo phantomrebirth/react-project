@@ -24,11 +24,15 @@ export const login = (email, password) => async (dispatch) => {
     const res = await axios.post(`${apiUrl}users/login`, body, config);
     console.log("asd")
     console.log("API response:", res.data); // Debug: Log the API response
-
+    const userID = res.data.user._id
     if (res.data) {
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: { token: res.data.token, role: res.data.role }, // Ensure payload contains token and role
+        payload: {
+          token: res.data.token,
+          role: res.data.role,
+          userID: userID
+        }, // Ensure payload contains token and role
       });
     } else {
       // notify();

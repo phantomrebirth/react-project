@@ -10,7 +10,7 @@ import { Alert, Col, Container, Row } from 'react-bootstrap';
 import { TbFileUpload } from 'react-icons/tb';
 import axios from 'axios';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
-import { getCourseFile, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert } from '../../redux/actions/courses';
+import { finishFileOperation, getCourseFile, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setFilesWithPaths, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { login } from '../../redux/actions/auth';
 
 const Files = 
@@ -21,19 +21,33 @@ const Files =
   courses,
   isLoading,
   courseFileData,
+  getCourseFile,
+  getCourses,
+  // setFilesWithPaths,
+  // filesWithPaths,
   waitAlert,
   uploadAlert,
   deleteAlert,
   currentCourseID,
+  setWaitAlert,
+  setDeleteAlert,
+  setUploadAlert,
+  resetDeleteAlert,
+  resetUploadAlert,
+  resetWaitAlert,
+  isFileOperationInProgress,
+  startFileOperation,
+  finishFileOperation,
   error
 }) => {
-
   // const dispatch = useDispatch();
   // const role = useSelector(selectRole);
   // const token = useSelector(selectToken);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
   const [filesWithPaths, setFilesWithPaths] = useState([]);
+  // const [fileIDs, setFileIDs] = useState(course ? course.files.map(file => file._id) : []);
+  // const [fileOperationInProgress, setFileOperationInProgress] = useState(false);
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
@@ -54,15 +68,33 @@ const Files =
         resetDeleteAlert();
       }
       // if (waitAlert) {
-      //   dispatch(resetWaitAlert());
+      //   resetWaitAlert();
       // }
     }, 4000);
     return () => clearTimeout(timeout);
   }, [uploadAlert, deleteAlert, waitAlert]);
+  // if (course && course.files) {
+    // const fileIDs = course ? course.files.map(file => file._id) : [];
+    // console.log(fileIDs); // This will log the array of file IDs
+  // } else {
+  //   console.log('Course or files not found');
+  // }
   const course = courses.find(course => course._id === currentCourseID);
-  if (isLoading || fileIsLoading || !course) {
+  if ((isLoading || fileIsLoading || !course) && isFileOperationInProgress) {
     return <LoadingSpinner />;
   }
+  // useEffect(() => {
+  //   const fetchFiles = async () => {
+  //     if (fileIDs.length > 0) {
+  //       for (const fileID of fileIDs) {
+  //         await getCourseFile({ currentCourseID, fileID });
+  //       }
+  //     }
+  //   };
+  
+  //   fetchFiles();
+  // }, [currentCourseID, fileIDs]);
+  // console.log(courseFileData)
   useEffect(() => {
     const filePath = courseFileData;
     console.log('files Paths:', filePath);
@@ -135,9 +167,10 @@ const Files =
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('files', file);
-    if (!uploadAlert && !deleteAlert) {
+    console.log(formData);
+    // if (!uploadAlert && !deleteAlert) {
       setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
-    }
+    // }
 
     try {
       const response = await axios.post(`https://ezlearn.onrender.com/course/files/${currentCourseID}`, formData, {
@@ -145,16 +178,28 @@ const Files =
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
-      });
+        });
+      startFileOperation(); // Set file operation in progress
+      console.log(isFileOperationInProgress)
       if (response.status === 200 || response.status === 201) {
-        console.log('test');
-        const { fileId } = response.data;
-        console.log(fileId);
-        const uploadedFile = {
+        console.log('response', response.data);
+        // console.log(fileId);
+        const { fileId, filename } = response.data;
+        const newFile = {
           _id: fileId,
-          // filename: event.target.files[0].name,
-        };
-        getCourseFile(currentCourseID,uploadedFile._id);
+          filename: file.name,
+          path: `https://ezlearn.onrender.com/course/getFiles/${currentCourseID}/${fileId}`,
+          };
+          // setFileIDs(prevFileIDs => [...prevFileIDs, fileId]);
+          setFilesWithPaths(prevFiles => [...prevFiles, newFile]);
+          // await getCourseFile({ currentCourseID, fileID: fileId });
+          console.log(filesWithPaths)
+          // const { fileId } = response.data;
+          // const uploadedFile = {
+        //   _id: fileId,
+        //   // filename: event.target.files[0].name,
+        // };
+        getCourses();
         // dispatch({ type: 'courses/addFile', payload: { courseId: currentCourseId, file: uploadedFile } });    
         setUploadAlert({ variant: 'primary', message: 'File uploaded successfully!' }); // Dispatch setUploadAlert action to set the upload alert
         // const updatedFiles = [...filesWithPaths, uploadedFile];
@@ -167,8 +212,11 @@ const Files =
     } catch (error) {
       setUploadAlert({ variant: 'danger', message: `Error uploading file: ${error.message}` }); // Dispatch setUploadAlert action to set the upload alert
       // setUploadAlert({ variant: 'danger', message: `Error uploading file: ${error.message}` });
+    } finally {
+      finishFileOperation(); // Reset file operation status
     }
   };
+  console.log(filesWithPaths)
 
 
   const handleFileDelete = async (file) => {
@@ -183,12 +231,18 @@ const Files =
           'Content-Type': 'multipart/form-data',
         },
       });
+      startFileOperation(); // Set file operation in progress
+      console.log(isFileOperationInProgress)
       if (response.status === 200 || response.status === 201) {
         console.log('test')
+        // setFileIDs(prevFileIDs => prevFileIDs.filter(id => id !== file._id));
         // const updatedFiles = filesWithPaths.filter(f => f._id !== file._id);
         // setFilesWithPaths(updatedFiles);
-        const fileID = file._id;
-        getCourseFile({currentCourseID,fileID})
+        setFilesWithPaths(prevFiles => prevFiles.filter(f => f._id !== file._id));
+        // await getCourseFile({ currentCourseID, fileID: file._id });
+        getCourses();
+        // const fileID = file._id;
+        // getCourseFile({currentCourseID,fileID})
         setDeleteAlert({ variant: 'primary', message: 'File deleted successfully!' }); // Dispatch setDeleteAlert action to set the delete alert
         // dispatch(fetchCourses(currentCourseId));
       } else {
@@ -198,9 +252,11 @@ const Files =
     } catch (error) {
       setDeleteAlert({ variant: 'danger', message: `Error deleting file: ${error.message}` }); // Dispatch setDeleteAlert action to set the delete alert
       // setDeleteAlert({ variant: 'danger', message: `Error deleting file: ${error.message}` });
+    } finally {
+      finishFileOperation(); // Reset file operation status
     }
   };
-
+console.log(isFileOperationInProgress)
   return (
     <>
       {uploadAlert && (
@@ -290,22 +346,28 @@ const mapStateToProps = state => ({
   currentCourseID: state.courses.currentCourseID,
   isLoading: state.courses.isLoading,
   courseFileData: state.courses.courseFileData,
+  // filesWithPaths: state.courses.filesWithPaths,
   fileIsLoading: state.courses.fileIsLoading,
   deleteAlert: state.courses.deleteAlert,
   uploadAlert: state.courses.uploadAlert,
   waitAlert: state.courses.waitAlert,
   error: state.courses.error,
+  isFileOperationInProgress: state.courses.isFileOperationInProgress,
 });
 
 export default connect(mapStateToProps,
   {
     login,
     getCourseFile,
+    getCourses,
     setUploadAlert,
     setWaitAlert,
     setDeleteAlert,
     resetUploadAlert,
     resetDeleteAlert,
-    resetWaitAlert
+    resetWaitAlert,
+    startFileOperation,
+    finishFileOperation,
+    // setFilesWithPaths
   })
 (Files);

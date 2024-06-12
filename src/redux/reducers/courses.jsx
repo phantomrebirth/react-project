@@ -21,15 +21,19 @@ import {
   SET_WAIT_ALERT,
   RESET_WAIT_ALERT,
   SET_CURRENT_COURSE_ID,
+  SET_FILES_WITH_PATHS,
+  START_FILE_OPERATION,
+  FINISH_FILE_OPERATION,
 } from '../actions/type'
 
 const initialState = {
   coursesData: [],
   courseVideoData: [],
   courseFileData: [],
+  filesWithPaths: [],
   courseAssignmentData: [],
   courseProjectData: [],
-  submittedAssignments: [], // Initialize submittedAssignments as an empty array
+  submittedAssignments: [],
   currentCourseID: null,
   isLoading: false,
   fileIsLoading: false,
@@ -39,6 +43,7 @@ const initialState = {
   uploadAlert: null,
   deleteAlert: null,
   waitAlert: null,
+  isFileOperationInProgress: false,
 };
 
 export default function(state = initialState, action) {
@@ -77,8 +82,13 @@ export default function(state = initialState, action) {
     case COURSE_FILE_SUCCESS:
       return {
         ...state,
-        courseFileData: [payload],
+        courseFileData: [...state.courseFileData, payload],
         fileIsLoading: false,
+      };
+    case SET_FILES_WITH_PATHS:
+      return {
+        ...state,
+        filesWithPaths: action.payload,
       };
     case COURSE_PROJECT_SUCCESS:
       return {
@@ -149,6 +159,18 @@ export default function(state = initialState, action) {
       return {
         ...state,
         waitAlert: null,
+      };
+    case START_FILE_OPERATION:
+      return {
+        ...state,
+        isFileOperationInProgress: true,
+        fileIsLoading: false,
+        isLoading: false,
+      };
+    case FINISH_FILE_OPERATION:
+      return {
+        ...state,
+        isFileOperationInProgress: false,
       };
     default:
       return state;

@@ -9,7 +9,7 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
 // import { selectRole } from '../redux/slices/authSlice';
 // import { selectSubmittedProjects, setSubmittedProjects } from '../redux/slices/ProjectsSlice';
-import { getCourseAssignment, getCourseFile, getCourseProject, getCourseVideo, getCourses, setCurrentCourseID } from '../redux/actions/courses';
+import { finishFileOperation, getCourseAssignment, getCourseFile, getCourseProject, getCourseVideo, getCourses, setCurrentCourseID, startFileOperation } from '../redux/actions/courses';
 import { login } from '../redux/actions/auth';
 import CourseContent from './CourseContent';
 
@@ -31,23 +31,25 @@ const Course = ({
     videoIsLoading,
     projectIsLoading,
     fileIsLoading,
-    assignmentIsLoading
+    assignmentIsLoading,
+    startFileOperation,
+    finishFileOperation,
+    isFileOperationInProgress,
 }) => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const { path } = useParams();
     // const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
     // const submittedProjects = useSelector(selectSubmittedProjects) ?? [];
-    const [hasFetchedProjects, setHasFetchedProjects] = useState(false);
     useEffect(() => {
       if (role === 'student') {
         setStudent(true);
       } else if (role === 'teacher') {
         setTeacher(true);
       }
-    }, [role]);
+    }, [role, isFileOperationInProgress]);
     const [activeTab, setActiveTab] = useState('Chat');
     const hasFetchedCourses = useRef(false);
     const hasFetchedDetails = useRef(false);
@@ -182,18 +184,25 @@ const Course = ({
         setActiveTab(selectedKey);
         setRefreshKey((prevKey) => prevKey + 1);
     };
-
+    // if (isLoading) {
+    //     isFileOperationInProgress === undefined
+    // }
+    // if (isFileOperationInProgress) {
+    //     isLoading === undefined
+    // }
     if (
-        isLoading ||
+        (isLoading ||
         fileIsLoading ||
         assignmentIsLoading ||
         projectIsLoading ||
-        videoIsLoading
+        videoIsLoading) &&
+        isFileOperationInProgress
     ) {
         return (
             <LoadingSpinner/>
         );
     }
+    console.log(isFileOperationInProgress)
     
     if (error) {
         return <div>Error: {error}</div>;
@@ -275,7 +284,8 @@ const mapStateToProps = state => ({
     assignmentIsLoading: state.courses.assignmentIsLoading,
     courseProjectData: state.courses.courseProjectData,
     projectIsLoading: state.courses.projectIsLoading,
+    isFileOperationInProgress: state.courses.isFileOperationInProgress,
     error: state.courses.error,
 });
 
-export default connect(mapStateToProps, { login, getCourses, getCourseAssignment, getCourseFile, getCourseProject, getCourseVideo, setCurrentCourseID })(Course);
+export default connect(mapStateToProps, { login, getCourses, getCourseAssignment, getCourseFile, getCourseProject, getCourseVideo, setCurrentCourseID, startFileOperation, finishFileOperation })(Course);

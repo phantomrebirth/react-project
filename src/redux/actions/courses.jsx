@@ -22,12 +22,17 @@ import {
   SET_WAIT_ALERT,
   RESET_WAIT_ALERT,
   SET_CURRENT_COURSE_ID,
+  SET_FILES_WITH_PATHS,
+  START_FILE_OPERATION,
+  FINISH_FILE_OPERATION,
 } from './type'
 
 
 const apiUrl = "https://ezlearn.onrender.com/"
 
-export const getCourses = () => async (dispatch) => {
+export const getCourses = () => async (dispatch,getState) => {
+  const userID = getState().auth.userID;
+  const role = getState().auth.role;
   const config = {
     headers: {
       Accept: "application/json",
@@ -38,7 +43,16 @@ export const getCourses = () => async (dispatch) => {
   dispatch({ type: COURSES_START });
   try {
     const res = await axios.get(`${apiUrl}getCourse/all`, config);
-    if (res.data) {
+    if (res.data && role === 'teacher') {
+      // Filter the courses where teacherId matches userID
+      const filteredCourses = res.data.filter(course => course.teacherId.includes(userID));
+      console.log(filteredCourses)
+      console.log(userID)
+      dispatch({
+        type: COURSES_SUCCESS,
+        payload: filteredCourses
+      });
+    } else if (res.data && role === 'student') {
       dispatch({
         type: COURSES_SUCCESS,
         payload: res.data
@@ -179,6 +193,7 @@ export const getCourseFile = ({currentCourseID, fileID}) => async (dispatch) => 
 //         type: COURSE_FILE_SUCCESS,
 //         payload: res.data
 //       });
+//       // console.log(res.data)
 //     } else {
 //       dispatch({
 //         type: COURSE_FILE_FAIL,
@@ -259,4 +274,17 @@ export const setWaitAlert = (alert) => ({
 
 export const resetWaitAlert = () => ({
   type: RESET_WAIT_ALERT,
+});
+
+export const setFilesWithPaths = (filesWithPaths) => ({
+  type: SET_FILES_WITH_PATHS,
+  payload: filesWithPaths,
+});
+
+export const startFileOperation = () => ({
+  type: START_FILE_OPERATION,
+});
+
+export const finishFileOperation = () => ({
+  type: FINISH_FILE_OPERATION,
 });
