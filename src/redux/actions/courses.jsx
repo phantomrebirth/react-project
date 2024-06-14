@@ -25,16 +25,22 @@ import {
   SET_FILES_WITH_PATHS,
   START_FILE_OPERATION,
   FINISH_FILE_OPERATION,
+  SET_WAIT_VIDEO_ALERT,
+  RESET_WAIT_VIDEO_ALERT,
 } from './type'
 
 
-const apiUrl = "https://ezlearn.onrender.com/"
+const apiUrl = "https://formally-eager-duckling.ngrok-free.app/"
 
 export const getCourses = () => async (dispatch,getState) => {
   const userID = getState().auth.userID;
   const role = getState().auth.role;
+  const waitVideoAlert = getState().courses.waitVideoAlert || { variant: '', message: '', progress: 0 };
+
   const config = {
     headers: {
+      'ngrok-skip-browser-warning': 'true',
+      // 'User-Agent': 'CustomUserAgent',
       Accept: "application/json",
       "Content-Type": "application/json",
     },
@@ -42,8 +48,19 @@ export const getCourses = () => async (dispatch,getState) => {
 
   dispatch({ type: COURSES_START });
   try {
-    const res = await axios.get(`${apiUrl}getCourse/all`, config);
-    if (res.data && role === 'teacher') {
+    const res = await axios.get(`${apiUrl}getCourse/all`, {
+      ...config,
+      onDownloadProgress: (progressEvent) => {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        dispatch(setWaitVideoAlert({
+          variant: waitVideoAlert.variant,
+          message: waitVideoAlert.message,
+          progress,
+        }));
+      },
+    });
+
+    if (res.data && (role === 'teacher')) {
       // Filter the courses where teacherId matches userID
       const filteredCourses = res.data.filter(course => course.teacherId.includes(userID));
       console.log(filteredCourses)
@@ -52,7 +69,7 @@ export const getCourses = () => async (dispatch,getState) => {
         type: COURSES_SUCCESS,
         payload: filteredCourses
       });
-    } else if (res.data && role === 'student') {
+    } else if (res.data && (role === 'student')) {
       dispatch({
         type: COURSES_SUCCESS,
         payload: res.data
@@ -79,6 +96,8 @@ export const setCurrentCourseID = (courseID) => ({
 export const getCourseProject = ({currentCourseID, projectID}) => async (dispatch) => {
   const config = {
     headers: {
+      'ngrok-skip-browser-warning': 'true',
+      // 'User-Agent': 'CustomUserAgent',
       Accept: "application/json",
       "Content-Type": "application/json",
     },
@@ -122,6 +141,8 @@ export const getCourseProject = ({currentCourseID, projectID}) => async (dispatc
 export const getCourseAssignment = ({currentCourseID, assignmentID}) => async (dispatch) => {
   const config = {
     headers: {
+      'ngrok-skip-browser-warning': 'true',
+      // 'User-Agent': 'CustomUserAgent',
       Accept: "application/json",
       "Content-Type": "application/json",
     },
@@ -164,7 +185,9 @@ export const getCourseAssignment = ({currentCourseID, assignmentID}) => async (d
 
 export const getCourseFile = ({currentCourseID, fileID}) => async (dispatch) => {
   const config = {
+    // 'User-Agent': 'CustomUserAgent',
     headers: {
+    'ngrok-skip-browser-warning': 'true',
       Accept: "application/json",
       "Content-Type": "application/json",
     },
@@ -208,6 +231,8 @@ export const getCourseFile = ({currentCourseID, fileID}) => async (dispatch) => 
 
 export const getCourseVideo = ({currentCourseID, videoID}) => async (dispatch) => {
   const config = {
+    'ngrok-skip-browser-warning': 'true',
+    // 'User-Agent': 'CustomUserAgent',
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -267,9 +292,18 @@ export const resetDeleteAlert = () => ({
   type: RESET_DELETE_ALERT,
 });
 
+export const setWaitVideoAlert = (alert) => ({
+  type: SET_WAIT_VIDEO_ALERT,
+  payload: alert
+});
+
+export const resetWaitVideoAlert = () => ({
+  type: RESET_WAIT_VIDEO_ALERT,
+});
+
 export const setWaitAlert = (alert) => ({
   type: SET_WAIT_ALERT,
-  payload: alert,
+  payload: alert
 });
 
 export const resetWaitAlert = () => ({

@@ -80,9 +80,9 @@ const Files =
   //   console.log('Course or files not found');
   // }
   const course = courses.find(course => course._id === currentCourseID);
-  if ((isLoading || fileIsLoading || !course) && isFileOperationInProgress) {
-    return <LoadingSpinner />;
-  }
+  // if ((isLoading || fileIsLoading || !course) && isFileOperationInProgress) {
+  //   return <LoadingSpinner />;
+  // }
   // useEffect(() => {
   //   const fetchFiles = async () => {
   //     if (fileIDs.length > 0) {
@@ -96,23 +96,33 @@ const Files =
   // }, [currentCourseID, fileIDs]);
   // console.log(courseFileData)
   useEffect(() => {
-    const filePath = courseFileData;
-    console.log('files Paths:', filePath);
-    const files = course.files.map(file => {
-      const matchingPath = filePath.find(path => path.includes(file._id));
-      const basePath = `https://ezlearn.onrender.com/course/getFiles/${currentCourseID}/`;
-      return {
-        ...file,
-        path: matchingPath ? `${basePath}${file._id}` : ''
-      };
-    });
-    setFilesWithPaths(files);
-    console.log('files:', files);
-  }, [currentCourseID, courses, courseFileData]);
+    if (course && course.files && course.files.length > 0) {
+        const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getFiles/${currentCourseID}/`;
+        const files = course.files.map(file => ({
+            ...file,
+            path: `${basePath}${file._id}`,
+        }));
+        setFilesWithPaths(files);
+    }
+  }, [course, currentCourseID]);
   useEffect(() => {
     console.log('files Paths:', filesWithPaths);
   }, [filesWithPaths]);
-  // useEffect(() => {
+    // useEffect(() => {
+    //   const filePath = courseFileData;
+    //   console.log('files Paths:', filePath);
+    //   const files = course.files.map(file => {
+    //     const matchingPath = filePath.find(path => path.includes(file._id));
+    //     const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getFiles/${currentCourseID}/`;
+    //     return {
+    //       ...file,
+    //       path: matchingPath ? `${basePath}${file._id}` : '',
+    //     };
+    //   });
+    //   setFilesWithPaths(files);
+    //   console.log('files:', files);
+    // }, [currentCourseID, courses, courseFileData]);
+    // useEffect(() => {
   //   const filePath = courses.find(course => course._id === currentCourseId)?.files.map(file => `https://ezlearn.onrender.com/course/getFiles/${currentCourseId}/${file._id}`);
   //   const filesWithPaths = courses.find(course => course._id === currentCourseId)?.files.map(file => {
   //     const matchingPath = filePath.find(path => path.includes(file._id));
@@ -133,35 +143,48 @@ const Files =
   const handleFileDownload = async (file) => {
     const { filename, path } = file;
     try {
-      const response = await fetch(path);
+      const response = await fetch(path, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
+      }
       const fileData = await response.arrayBuffer();
-
+      console.log('Downloaded file data:', fileData);
+  
       const pdfDoc = await PDFDocument.load(fileData);
       const newPdfDoc = await PDFDocument.create();
-
+  
       const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
-
+  
       pages.forEach((page) => {
         newPdfDoc.addPage(page);
       });
-
+  
       const pdfBytes = await newPdfDoc.save();
       const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(pdfBlob);
-
+  
       const a = document.createElement('a');
       a.href = url;
       a.download = filename;
-
+  
       document.body.appendChild(a);
       a.click();
-
+  
       URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
       console.error('Error downloading file:', error);
-    };
+      // Handle specific error cases or display a user-friendly message
+    }
   };
+  
+  
+  
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -172,15 +195,17 @@ const Files =
       setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
     // }
 
+    startFileOperation()
+    console.log(isFileOperationInProgress)
     try {
-      const response = await axios.post(`https://ezlearn.onrender.com/course/files/${currentCourseID}`, formData, {
+      const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/files/${currentCourseID}`, formData, {
         headers: {
+          'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'CustomUserAgent',
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
-        });
-      startFileOperation(); // Set file operation in progress
-      console.log(isFileOperationInProgress)
+      });
       if (response.status === 200 || response.status === 201) {
         console.log('response', response.data);
         // console.log(fileId);
@@ -188,7 +213,7 @@ const Files =
         const newFile = {
           _id: fileId,
           filename: file.name,
-          path: `https://ezlearn.onrender.com/course/getFiles/${currentCourseID}/${fileId}`,
+          path: `https://formally-eager-duckling.ngrok-free.app/course/getFiles/${currentCourseID}/${fileId}`,
           };
           // setFileIDs(prevFileIDs => [...prevFileIDs, fileId]);
           setFilesWithPaths(prevFiles => [...prevFiles, newFile]);
@@ -200,7 +225,7 @@ const Files =
         //   // filename: event.target.files[0].name,
         // };
         getCourses();
-        // dispatch({ type: 'courses/addFile', payload: { courseId: currentCourseId, file: uploadedFile } });    
+        // dispatch({ type: 'courses/addFile', payload: { courseId: currentCourseId, file: uploadedFile } }); 
         setUploadAlert({ variant: 'primary', message: 'File uploaded successfully!' }); // Dispatch setUploadAlert action to set the upload alert
         // const updatedFiles = [...filesWithPaths, uploadedFile];
         // setFilesWithPaths(updatedFiles);
@@ -214,25 +239,27 @@ const Files =
       // setUploadAlert({ variant: 'danger', message: `Error uploading file: ${error.message}` });
     } finally {
       finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
     }
   };
   console.log(filesWithPaths)
 
 
   const handleFileDelete = async (file) => {
-    if (!uploadAlert && !deleteAlert) {
+    // if (!uploadAlert && !deleteAlert) {
       setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
-    }
-
+    // }
+    startFileOperation();
+    console.log(isFileOperationInProgress)
     try {
-      const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteFiles/${currentCourseID}/${file._id}`, {
+      const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteFiles/${currentCourseID}/${file._id}`, {
         headers: {
+          'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'CustomUserAgent',
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-      startFileOperation(); // Set file operation in progress
-      console.log(isFileOperationInProgress)
       if (response.status === 200 || response.status === 201) {
         console.log('test')
         // setFileIDs(prevFileIDs => prevFileIDs.filter(id => id !== file._id));
@@ -242,7 +269,7 @@ const Files =
         // await getCourseFile({ currentCourseID, fileID: file._id });
         getCourses();
         // const fileID = file._id;
-        // getCourseFile({currentCourseID,fileID})
+        // getCourseFile({currentCourseID,fileID})   
         setDeleteAlert({ variant: 'primary', message: 'File deleted successfully!' }); // Dispatch setDeleteAlert action to set the delete alert
         // dispatch(fetchCourses(currentCourseId));
       } else {
@@ -254,6 +281,7 @@ const Files =
       // setDeleteAlert({ variant: 'danger', message: `Error deleting file: ${error.message}` });
     } finally {
       finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
     }
   };
 console.log(isFileOperationInProgress)
@@ -334,6 +362,19 @@ console.log(isFileOperationInProgress)
             ))}
           </Row>
         </Container>
+      )}
+      {Array.isArray(filesWithPaths) && filesWithPaths.length == 0 && (
+        <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%'
+                    }}
+        >
+          <p>No videos yet.</p>
+        </div>
       )}
     </>
   );

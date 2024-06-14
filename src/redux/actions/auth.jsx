@@ -8,7 +8,7 @@ import {
   LOGOUT_FAIL,
 } from "./type";
 
-const apiUrl = "https://ezlearn.onrender.com/";
+const apiUrl = "https://formally-eager-duckling.ngrok-free.app/";
 
 export const login = (email, password) => async (dispatch) => {
   const config = {

@@ -137,7 +137,7 @@ const AllAssignments =
     // dispatch(navigateToAssignment());
   };
   
-  const assignmentPath = `https://ezlearn.onrender.com/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
+  const assignmentPath = `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
   
   const handleFileSelect = (event) => {
     const files = event.target.files;

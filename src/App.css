@@ -1706,6 +1706,18 @@ input[type="file"]::placeholder {
     align-items: center;
     justify-content: center;
   }
+  .tAnswers-container {
+    display: inline !important;
+  }
+  .tAll-answers {
+    display: inline !important;
+  }
+  .tAnswer-container {
+    margin-top: 1rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .answer {
     display: flex;
     padding-left: 1rem !important;
@@ -1920,6 +1932,9 @@ input[type="file"]::placeholder {
     width: 1.5rem !important;
   } 
   .all-answers {
+    width: 100% !important;
+  }
+  .tAll-answers {
     width: 100% !important;
   }
   .question-container {
@@ -4529,6 +4544,13 @@ video:focus-within {
   0 0 20px rgba(4, 4, 4, 0.082);
 }
 
+.tUpload-btn:active {
+  border: 2px solid #5f15ff;
+  outline: 1px solid #5f15ff;
+  background-color: #7939FF;
+  color: #fff;
+}
+
 .tUpload-btn:hover {
   border: none;
   background-color: #7939FF;
@@ -4571,6 +4593,13 @@ video:focus-within {
 .tUploaded-btn:focus, .tUpload-btn:focus {
   border: 2px solid #5f15ff;
   outline: 1px solid #5f15ff;
+}
+
+.tUploaded-btn:active {
+  border: 2px solid #5f15ff;
+  outline: 1px solid #5f15ff;
+  background-color: #7939FF;
+  color: #fff;
 }
 
 .tUploaded-icon {
@@ -4678,7 +4707,7 @@ video:focus-within {
   color: #fff;
 }
 
-.tUploadedProject-btn:focus, .tUpload-btn:focus {
+.tUploadedProject-btn:focus, .tUploadProject-btn:focus {
   border: 2px solid #000;
   outline: 1px solid #000;
 }
@@ -4689,8 +4718,196 @@ video:focus-within {
   color: #fff;
 }
 
+.tUploadedProject-btn:active, .tUploadProject-btn:active {
+  border: 2px solid #000;
+  outline: 1px solid #000;
+  background-color: #555;
+  color: #fff;
+}
+
 .projectUp-btn:hover {
   border: none !important;
   background-color: #66666636 !important;
+}
+
+.createQuiz-btn {
+  /* margin: 0 6% 12% 6%; */
+  padding: 1.25%;
+  border: 1px solid #7939FF;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 126%;
+  white-space: wrap;
+  /* width: 10rem; */
+  /* height: 6rem; */
+  color: #7939FF;
+  box-shadow: 
+  0 0 2px rgba(1, 1, 1, 0.159),
+  0 0 4px rgba(2, 2, 2, 0.138),
+  0 0 6px rgba(3, 3, 3, 0.116),
+  0 0 8px rgba(4, 4, 4, 0.082);
+}
+
+.createQuiz-btn:hover {
+  border: none;
+  background-color: #7939FF;
+  color: #fff;
+}
+
+.createQuiz-btn:active {
+  border: 1px solid #5f15ff;
+  outline: 1px solid #5f15ff;
+  background-color: #7939FF;
+  color: #fff;
+}
+
+.createQuiz-btn:focus {
+  border: 1px solid #5f15ff;
+  outline: 1px solid #5f15ff;
+}
+
+.tQuestion-container {
+  margin: 2% 0 1% 0;
+  width: 1080px;
+}
+
+.tQuestion {
+  border: 1px solid #999;
+  border-radius: 0.46rem;
+}
+
+.tQuestion textarea:focus {
+  box-shadow: 0 0 0 0.1rem rgba(144, 84, 255, 0.3) !important;
+  box-shadow: 0 0 0 0.2rem rgba(144, 84, 255, 0.2) !important;
+  border: 1px solid #7839ff9f !important;
+}
+
+.tAnswers-container {
+  align-items: center;
+  display: flex;
+}
+
+.tAll-answers {
+  display: flex;
+  flex-wrap: wrap;
+  width: 27rem;
+}
+
+.tAnswer-container {
+  padding: 0px !important;
+  margin-top: 1.4rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tAnswer {
+  border: 1px solid #999999;
+  border-radius: 0.75rem;
+  width: 92%;
+}
+
+.tAnswer textarea:focus {
+  box-shadow: 0 0 0 0.1rem rgba(144, 84, 255, 0.3) !important;
+  /* box-shadow: 0 0 0 0.2rem rgba(144, 84, 255, 0.2) !important; */
+  border: 1px solid #7839ff9f !important;
+}
+
+.tSave-question {
+  background-color: #7839ff;
+}
+
+.tSave-question:disabled {
+  background-color: #7839ff;
+  border: none;
+}
+
+.tSave-question:hover, .tSave-question:focus, .tSave-question.focus .tSave-question:enabled, .tSave-question:focus-visible, .tSave-question::selection {
+  background-color: #6027da !important;
+}
+
+.tSave-question:active, .tSave-question.active {
+  background-color: #7939FF !important;
+  border: none;
+}
+
+.tUpload-quizBtn {
+  background-color: #7839ff;
+}
+
+.tUpload-quizBtn:disabled {
+  background-color: #7839ff;
+  border: none;
+}
+
+.tUpload-quizBtn:hover, .tUpload-quizBtn:focus {
+  background-color: #6027da !important;
+  border: none;
+}
+
+.tUpload-quizBtn:active {
+  background-color: #7939FF !important;
+  border: none;
+}
+
+/* .tSubmit-quizBtn {
+  background-color: transparent;
+  color: #7939FF;
+  border: 1px solid #7839ff;
+}
+
+.tSubmit-quizBtn:hover {
+  background-color: #7939FF;
+  color: #fff;
+  border: none;
+} */
+
+.correct-check input[type="radio"].form-check-input {
+  /* margin-right: 10px; */
+  appearance: none; /* Remove default appearance */
+  -webkit-appearance: none; /* Remove default appearance for older versions of webkit */
+  -moz-appearance: none; /* Remove default appearance for older versions of Mozilla */
+  width: 16px; /* Optional: Adjust the size of the radio button */
+  height: 16px; /* Optional: Adjust the size of the radio button */
+  border: 1px solid #000; /* Black border around the circle */
+  border-radius: 50%; /* Ensures it's a circle */
+  outline: none; /* Remove outline */
+  cursor: pointer; /* Change cursor to pointer */
+  vertical-align: middle; /* Align vertically */
+}
+
+.correct-check input[type="radio"].form-check-input:checked {
+  background-color: #7839ff; /* Black circle when checked */
+  border-color: #7939ff;
+  outline: 1px solid #7939FF;
+}
+
+.correct-check input[type="radio"].form-check-input:focus,
+.correct-check input[type="radio"].form-check-input:active {
+  box-shadow: 0 0 0 2px #7839ffc0;
+  box-shadow: 0 0 0 3px #7839ff71;
+  box-shadow: 0 0 0 4px #7839ff44;
+  box-shadow: 0 0 0 5px #7839ff38;
+}
+
+.correct-answer-text {
+  color: #7839ff;
+}
+
+.progress-custom {
+  background-color: #afafaf; /* Background color */
+  width: 100%;
+  height: 0.5rem;
+}
+
+.progress-custom .progress-bar {
+  background-color: #7839FF !important; /* Progress bar color */
+  height: 0.5rem;
 }
 

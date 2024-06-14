@@ -18,6 +18,7 @@ import Course from './components/Course.jsx'
 import AllAssignments from './pages/AllAssignments.jsx'
 import AttendanceRates from './pages/AttendanceRates.jsx'
 import Grades from './pages/Grades.jsx'
+import Attendance from './pages/Attendance.jsx'
 
 const ProtectedRoutes = () => {
 
@@ -33,6 +34,7 @@ const ProtectedRoutes = () => {
                 {/* <Route path="/courses/network" element={<Network />} /> */}
                 {/* <Route path="/courses/software-engineering" element={<SoftwareEngineering />} /> */}
                 <Route path="/assignments" element={<AllAssignments />} />
+                <Route path="/attendance" element={<Attendance />} />
                 {/* <Route path="/messages" element={<Messages />} /> */}
                 <Route path="/reminder" element={<Reminder />} />
                 <Route path="/settings" element={<Settings />} />

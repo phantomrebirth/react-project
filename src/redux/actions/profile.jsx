@@ -18,20 +18,22 @@ import {
 } from "./type";
 import { useSelector } from "react-redux";
 
-const apiUrl = "https://ezlearn.onrender.com/users";
+const apiUrl = "https://formally-eager-duckling.ngrok-free.app/users";
 
 export const profile = () => async (dispatch, getState) => {
   const token = getState().auth.token;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': 'true',
+      // 'User-Agent': 'CustomUserAgent',
     },
     responseType: 'blob'
   };
 
   dispatch({ type: PROFILE_START });
   try {
-    const res = await axios.get(`${apiUrl}/getpp/`, config)
+    const res = await axios.get(`${apiUrl}/getPP`, config)
     if (res.data) {
       const imageUrl = URL.createObjectURL(res.data);
       dispatch({
@@ -47,6 +49,7 @@ export const profile = () => async (dispatch, getState) => {
     dispatch({
       type: PROFILE_FAIL,
     });
+    console.log(err)
   }
 };
 
@@ -56,6 +59,8 @@ export const deleteProfile = () => async (dispatch, getState) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': 'true',
+      // 'User-Agent': 'CustomUserAgent',
     },
   };
 
@@ -84,8 +89,10 @@ export const profileUpdate = (formData) => async (dispatch, getState) => {
   const token = getState().auth.token;
   const config = {
     headers: {
+      'ngrok-skip-browser-warning': 'true',
+      // 'User-Agent': 'CustomUserAgent',
       Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data", // Correct content type for file upload
+      "Content-Type": "multipart/form-data",
     },
   };
 
@@ -109,6 +116,7 @@ export const profileUpdate = (formData) => async (dispatch, getState) => {
     dispatch({
       type: PROFILE_UPDATE_FAIL,
     });
+    console.log(err)
   }
 };
 

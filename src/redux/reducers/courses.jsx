@@ -24,6 +24,8 @@ import {
   SET_FILES_WITH_PATHS,
   START_FILE_OPERATION,
   FINISH_FILE_OPERATION,
+  SET_WAIT_VIDEO_ALERT,
+  RESET_WAIT_VIDEO_ALERT,
 } from '../actions/type'
 
 const initialState = {
@@ -43,6 +45,7 @@ const initialState = {
   uploadAlert: null,
   deleteAlert: null,
   waitAlert: null,
+  waitVideoAlert: null,
   isFileOperationInProgress: false,
 };
 
@@ -53,31 +56,37 @@ export default function(state = initialState, action) {
       return {
         ...state,
         currentCourseID: action.payload,
+        isFileOperationInProgress: false,
       };
     case COURSE_PROJECT_START:
       return {
         ...state,
         projectIsLoading: true,
+        isFileOperationInProgress: false,
       }
     case COURSE_ASSIGNMENT_START:
       return {
         ...state,
         assignmentIsLoading: true,
+        isFileOperationInProgress: false,
       }
     case COURSE_FILE_START:
       return {
         ...state,
         fileIsLoading: true,
+        isFileOperationInProgress: false,
       };
     case COURSE_VIDEO_START:
       return {
         ...state,
         videoIsLoading: true,
+        isFileOperationInProgress: false,
       };
     case COURSES_START:
       return {
         ...state,
         isLoading: true,
+        isFileOperationInProgress: false,
       };
     case COURSE_FILE_SUCCESS:
       return {
@@ -113,6 +122,7 @@ export default function(state = initialState, action) {
         ...state,
         coursesData: payload,
         isLoading: false,
+        waitVideoAlert: null,
       };
     case COURSE_VIDEO_FAIL:
     case COURSE_FILE_FAIL:
@@ -133,6 +143,7 @@ export default function(state = initialState, action) {
         ...state,
         uploadAlert: payload,
         waitAlert: null,
+        deleteAlert: null
       };
     case RESET_UPLOAD_ALERT:
       return {
@@ -144,16 +155,29 @@ export default function(state = initialState, action) {
         ...state,
         deleteAlert: payload,
         waitAlert: null,
+        uploadAlert: null,
       };
     case RESET_DELETE_ALERT:
       return {
         ...state,
         deleteAlert: null,
       };
+    case SET_WAIT_VIDEO_ALERT:
+      return {
+        ...state,
+        waitVideoAlert: action.payload,
+      };
+    case RESET_WAIT_VIDEO_ALERT:
+      return {
+        ...state,
+        waitVideoAlert: null,
+      };
     case SET_WAIT_ALERT:
       return {
         ...state,
-        waitAlert: payload,
+        waitAlert: action.payload,
+        deleteAlert: null,
+        uploadAlert: null,
       };
     case RESET_WAIT_ALERT:
       return {
@@ -163,9 +187,12 @@ export default function(state = initialState, action) {
     case START_FILE_OPERATION:
       return {
         ...state,
-        isFileOperationInProgress: true,
         fileIsLoading: false,
+        videoIsLoading: false,
+        assignmentIsLoading: false,
+        projectIsLoading: false,
         isLoading: false,
+        isFileOperationInProgress: true,
       };
     case FINISH_FILE_OPERATION:
       return {

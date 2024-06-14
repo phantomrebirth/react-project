@@ -27,13 +27,14 @@ const Profile = ({ token }) => {
   const fetchProfileData = async () => {
     try {
         // userData(token);
-        // console.log(userData);
-      const response = await axios.get('https://ezlearn.onrender.com/users/me', {
+        console.log(token)
+      const response = await axios.get('https://formally-eager-duckling.ngrok-free.app/users/me', {
         headers: {
-          Authorization: `Bearer ${token}`
+          'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'CustomUserAgent',
+          Authorization: `${token}`,
         }
       });
-      console.log(response.data); // Log the response data to check if password is included
       const { name, email, password } = response.data;
       setUsersData(prevState => ({
         ...prevState,
@@ -41,10 +42,14 @@ const Profile = ({ token }) => {
         email,
         password,
       }));
+      console.log(response.data)
+      console.log(usersData);
     } catch (error) {
       console.error('Error fetching profile data:', error);
     }
   };
+  
+  
 
   const handleSaveChanges = async () => {
     try {
@@ -54,9 +59,11 @@ const Profile = ({ token }) => {
         password: usersData.password
       };      console.log(body);
       // const response = userUpdate(body);
-      const response = await axios.patch('https://ezlearn.onrender.com/users/update',
+      const response = await axios.patch('https://formally-eager-duckling.ngrok-free.app/users/update',
       body, {
         headers: {
+          'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'CustomUserAgent',
           Authorization: `Bearer ${token}`
         }
       });

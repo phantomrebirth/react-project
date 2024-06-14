@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
+import { Alert, Card, Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import ReactPlayer from 'react-player';
 // import { selectRole, selectToken } from '../../redux/slices/authSlice';
 import { connect, useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,8 @@ import axios from 'axios';
 import { IoAdd } from 'react-icons/io5';
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { login } from '../../redux/actions/auth';
-import { finishFileOperation, getCourseVideo, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
+import { finishFileOperation, getCourseVideo, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, resetWaitVideoAlert, setDeleteAlert, setUploadAlert, setWaitAlert, setWaitVideoAlert, startFileOperation } from '../../redux/actions/courses';
+import { CircularProgress } from '@material-ui/core';
 
 const Videos = 
 ({
@@ -28,7 +29,13 @@ const Videos =
     resetDeleteAlert,
     resetUploadAlert,
     resetWaitAlert,
+    setWaitAlert,
+    setDeleteAlert,
+    setUploadAlert,
     getCourses,
+    setWaitVideoAlert,
+    resetWaitVideoAlert,
+    waitVideoAlert,
     isFileOperationInProgress,
     startFileOperation,
     finishFileOperation,
@@ -63,29 +70,69 @@ const Videos =
           // }
         }, 4000);
         return () => clearTimeout(timeout);
-    }, [uploadAlert, deleteAlert, waitAlert]);
+    }, [uploadAlert, deleteAlert, waitVideoAlert]);
     const fileInputRef = useRef(null);
     const course = courses.find(course => course._id === currentCourseID);
     useEffect(() => {
-        const videoPath = courseVideoData;
-        console.log('Video Paths:', videoPath);
-        const videos = course.videos.map(video => {
-          const matchingPath = videoPath.find(path => path.includes(video._id));
-          const basePath = `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/`;
-          return {
-            ...video,
-            path: matchingPath ? `${basePath}${video._id}` : ''
-          };
-        });
-        setVideosPaths(videos);
-        console.log('Videos:', videos);
-    }, [currentCourseID, courses, courseVideoData]);
+        if (course && course.videos && course.videos.length > 0) {
+            const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getVideos/${currentCourseID}/`;
+            const videos = course.videos.map(video => ({
+                ...video,
+                path: `${basePath}${video._id}`,
+            }));
+            setVideosPaths(videos);
+        }
+    }, [course, currentCourseID]);
     useEffect(() => {
         console.log('Videos Paths:', videosPaths);
     }, [videosPaths]);
-    if ((isLoading || videoIsLoading || !course) && isFileOperationInProgress) {
-        return <LoadingSpinner/>;
-    };
+    const [videoUrl, setVideoUrl] = useState('');
+
+    useEffect(() => {
+        const fetchVideoUrl = async () => {
+            try {
+                const promises = videosPaths.map(async video => {
+                    const response = await axios.get(
+                        video.path,
+                        {
+                            headers: {
+                                // 'Authorization': `Bearer ${token}`,
+                                'ngrok-skip-browser-warning': 'true',
+                            },
+                            responseType: 'blob',
+                        }
+                    );
+                    if (response.status === 200) {
+                        const videoBlob = new Blob([response.data], { type: 'video/mp4' });
+                        const videoUrl = URL.createObjectURL(videoBlob);
+                        return { ...video, url: videoUrl };
+                    } else {
+                        console.error(`Failed to fetch video URL for video ${video._id}`);
+                        return null;
+                    }
+                });
+        
+                const urls = await Promise.all(promises);
+                // Assuming you want to set the first fetched video URL
+                const firstValidUrl = urls.filter(url => url !== null);
+                // if (firstValidUrl) {
+                    setVideoUrl(firstValidUrl);
+                // } else {
+                    // console.error('No valid video URLs fetched');
+                // }
+            } catch (error) {
+                console.error('Error fetching video URLs:', error);
+            }
+        };
+  
+        if (videosPaths.length > 0) {
+            fetchVideoUrl();
+        }
+    }, [videosPaths, token]);
+    console.log(videoUrl)
+    // if ((isLoading || videoIsLoading || !course) && isFileOperationInProgress) {
+    //     return <LoadingSpinner/>;
+    // };
     // const videoPath = course.videos.map(video => `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/${video._id}`);
     // const videosPaths = course.videos.map(video => {
     //     const matchingPath = videoPath.find(path => path.includes(video._id));
@@ -95,48 +142,88 @@ const Videos =
     //     };
     // });
 
+    // const handleVideoDownload = async (video) => {
+    //     const { filename, path } = video;
+    //     try {
+    //         const response = await fetch(path);
+    //         const fileData = await response.arrayBuffer();
+    //         const a = document.createElement('a');
+    //         a.href = URL.createObjectURL(new Blob([fileData]));
+    //         a.download = filename;
+    //         document.body.appendChild(a);
+    //         a.click();
+    //         document.body.removeChild(a);
+    //     } catch (error) {
+    //         console.error('Error downloading file:', error);
+    //     };
+    //   };
+
     const handleVideoDownload = async (video) => {
-      const { filename, path } = video;
-      try {
-          const response = await fetch(path);
-          const fileData = await response.arrayBuffer();
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(new Blob([fileData]));
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-      } catch (error) {
-          console.error('Error downloading file:', error);
-      };
+        const { filename, path } = video;
+    
+        try {
+            const response = await fetch(path, {
+                method: 'GET',
+                headers: {
+                    'ngrok-skip-browser-warning': 'true',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error fetching the file: ${response.statusText}`);
+            }
+    
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading the video:', error);
+        }
     };
 
     const handleVideoUpload = async (event) => {
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append('videos', file);
-    
+        // if (!uploadAlert && !deleteAlert) {
+            // setWaitAlert({ variant: 'info', message: 'Uploading your video... please wait', progress: 0 });
+            // }
         try {
-            const response = await axios.post(`https://ezlearn.onrender.com/course/videos/${currentCourseID}`, formData, {
+            const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/videos/${currentCourseID}`, formData, {
                 headers: {
+                    'ngrok-skip-browser-warning': 'true',
+                    // 'User-Agent': 'CustomUserAgent',
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    console.log('Upload Progress:', progress);
+                    setWaitVideoAlert({ variant: 'info', message: 'Uploading your video... please wait', progress });
                 },
             });
             startFileOperation(); // Set file operation in progress
             if (response.status === 200 || response.status === 201) {
                 console.log('Video uploaded successfully!');
-                const { videoId, filename } = response.data;
-                const newVideo = {
-                  _id: videoId,
-                  filename: file.name,
-                  path: `https://ezlearn.onrender.com/course/getVideos/${currentCourseID}/${videoId}`,
-                };
-                console.log(newVideo);
-                console.log(newVideo._id)
+                // const { video, filename } = response.data;
+                // const newVideo = {
+                //   _id: video,
+                //   filename: file.name,
+                //   path: `https://formally-eager-duckling.ngrok-free.app/course/getVideos/${currentCourseID}/${video}`,
+                // };
+                console.log(response.data)
+                // console.log(newVideo);
+                // console.log(newVideo._id)
                 // await getCourseVideo({ currentCourseID, videoID: videoId })
-                setVideosPaths(prevVideos => [...prevVideos, newVideo]);
-                getCourses();
+                // setVideosPaths(prevVideos => [...prevVideos, newVideo]);
+                await getCourses();
                 // const videoID = response._id;
                 // getCourseVideo({currentCourseID, videoID});
                 setUploadAlert({ variant: 'primary', message: 'Video uploaded successfully!' });
@@ -149,26 +236,38 @@ const Videos =
             setUploadAlert({ variant: 'danger', message: `Error uploading video: ${error.message}` });
         } finally {
             finishFileOperation(); // Reset file operation status
+            resetWaitVideoAlert();
         }
     };
 
+    console.log('Videos Paths:', videosPaths);
+
     const handleVideoDelete = async (video) => {
-    
+        // if (!uploadAlert && !deleteAlert) {
+            // setWaitAlert({ variant: 'info', message: 'Deleting your video... please wait', progress: 0 });
+        // }
         try {
-            const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteVideos/${currentCourseID}/${video._id}`, {
+            const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteVideos/${currentCourseID}/${video._id}`, {
                 headers: {
+                    'ngrok-skip-browser-warning': 'true',
+                    // 'User-Agent': 'CustomUserAgent',
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
+                },
+                onDownloadProgress: (progressEvent) => {
+                    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setWaitVideoAlert({ variant: 'info', message: 'Deleting your video... please wait', progress });
                 },
             });
             startFileOperation(); // Set file operation in progress
             if (response.status === 200 || response.status === 201) {
                 console.log('Video deleted successfully!');
                 setVideosPaths(prevVideos => prevVideos.filter(item => item._id !== video._id));
-                getCourses();
+                setVideoUrl(prevVideos => prevVideos.filter(item => item._id !== video._id));
+                await getCourses();
                 // const videoID = video._id;
                 // getCourseVideo({currentCourseID,videoID});
-                setDeleteAlert({ variant: 'primary', message: 'Video deleted successfully!' });
+                // setDeleteAlert({ variant: 'primary', message: 'Video deleted successfully!' });
             } else {
                 console.error('Failed to delete video:', response.statusText);
                 setDeleteAlert({ variant: 'danger', message: `Failed to delete video: ${response.statusText}` });
@@ -178,6 +277,7 @@ const Videos =
             setDeleteAlert({ variant: 'danger', message: `Error deleting video: ${error.message}` });
         } finally {
             finishFileOperation(); // Reset file operation status
+            resetWaitVideoAlert();
         }
     };
 
@@ -212,20 +312,63 @@ const Videos =
 
   return (
     <>
-        {uploadAlert && <Alert variant={uploadAlert.variant} onClose={() => resetUploadAlert()} dismissible>{uploadAlert.message}</Alert>}
-        {deleteAlert && <Alert variant={deleteAlert.variant} onClose={() => resetDeleteAlert()} dismissible>{deleteAlert.message}</Alert>}
+      {uploadAlert && (
+        <Alert variant={uploadAlert.variant} onClose={() => resetUploadAlert()} dismissible>
+          {uploadAlert.message}
+        </Alert>
+      )}
+      {deleteAlert && (
+        <Alert variant={deleteAlert.variant} onClose={() => resetDeleteAlert()} dismissible>
+          {deleteAlert.message}
+        </Alert>
+      )}
+      {waitAlert && (
+        <Alert variant={waitAlert.variant}>
+          {waitAlert.message}
+        </Alert>
+      )}
+      {waitVideoAlert && (
+        <div style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '50%',
+                    textAlign: 'center'
+        }}>
+            <Alert variant= 'info'>
+                {waitVideoAlert ? waitVideoAlert.message : 'Please wait...'}
+                {waitVideoAlert.progress && (
+                    <ProgressBar 
+                                className="progress-custom"
+                                now={waitVideoAlert.progress} 
+                                label={<span style={{ color: "#fff" }}>{`${waitVideoAlert.progress}%`}</span>} 
+                    />
+                )}
+            </Alert>
+        </div>
+      )}
         {student && (
             <Container className='videos-container' style={{ padding: "0", margin: "1rem 0 0 0", flexWrap: "wrap", maxWidth: "none" }}>
-                {videosPaths.slice().reverse().map((video, index) => {
+                {Array.isArray(videoUrl) && videoUrl.length > 0 && videosPaths.length > 0 ? videoUrl.slice().reverse().map((video, index) => {
                     const fileNameWithoutExtension = video.filename.split('.').slice(0, -1).join('.');                        
                     return (
                         <Row key={index} className='players-container' style={{ padding: "0", margin: "0", width: "auto" }}>
                             <div className='player-container'>
                                 <div className='video-player'>
                                     <ReactPlayer className='video'
-                                        url={video.path}
-                                        controls
+                                        url={video.url}
+                                        controls={true}
                                         type="video/mp4"
+                                        width='100%'
+                                        height='100%'
+                                        // config={{
+                                        //     file: {
+                                        //         attributes: {
+                                        //             controlsList: 'nodownload' // Disable download button in some browsers
+                                        //         }
+                                        //     }
+                                        // }}
                                         light={thumbnailUrl}>
                                     </ReactPlayer>
                                 </div>
@@ -241,10 +384,39 @@ const Videos =
                             </div>
                         </Row>
                     );
-                })}
+                }) : course.videos.length > 0 && (
+                    <div style=
+                                {{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    height: '100%',
+                                    paddingTop: '6%'
+                                }}
+                    >
+                        <CircularProgress color="inherit"
+                                            size={50}
+                                            thickness={4}
+                                            style={{color: "#7939ff"}}
+                        />
+                    </div>
+                )}
+                {Array.isArray(videosPaths) && videosPaths.length == 0 && videoUrl.length == 0 && (
+                    <div style=
+                                {{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    height: '100%',
+                                    paddingTop: '6%'
+                                }}
+                    >
+                        <p>No videos yet.</p>
+                    </div>
+                )}
             </Container>
         )}
-        {teacher && (
+        {teacher && !waitVideoAlert && !waitAlert &&(
           <Container className='videos-container' style={{ padding: "0", margin: "1rem 0 0 0", flexWrap: "wrap", maxWidth: "none" }}>
             <Row className='players-container' style={{ padding: "0", margin: "0", display: "block", width: "auto" }}>
                 <div style={{justifyContent: "center", width: "100%"}}>
@@ -272,16 +444,18 @@ const Videos =
                 </div>
                 </div>
             </Row>
-            {videosPaths.slice().reverse().map((video, index) => {
+            {Array.isArray(videoUrl) && videoUrl.length > 0 && videosPaths.length > 0 ? videoUrl.slice().reverse().map((video, index) => {
                 const fileNameWithoutExtension = video.filename.split('.').slice(0, -1).join('.');                        
                 return (
                     <Row key={index} className='players-container' style={{ padding: "0", margin: "0", width: "auto" }}>
                         <div className='player-container'>
                             <div className='video-player'>
                                 <ReactPlayer className='video'
-                                    url={video.path}
-                                    controls
+                                    url={video.url}
+                                    controls={true}
                                     type="video/mp4"
+                                    width='100%'
+                                    height='100%'
                                     light={thumbnailUrl}>
                                 </ReactPlayer>
                             </div>
@@ -300,7 +474,36 @@ const Videos =
                         </div>
                     </Row>
                 );
-            })}
+            }) : course.videos.length > 0 && (
+                <div style=
+                            {{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',
+                                paddingTop: '6%'
+                            }}
+                >
+                    <CircularProgress color="inherit"
+                                        size={50}
+                                        thickness={4}
+                                        style={{color: "#7939ff"}}
+                    />
+                </div>
+            )}
+            {Array.isArray(videosPaths) && videosPaths.length == 0 && videoUrl.length == 0 && (
+                <div style=
+                            {{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',
+                                paddingTop: '6%'
+                            }}
+                >
+                    <p>No videos yet.</p>
+                </div>
+            )}
           </Container>        
         )}
     </>
@@ -318,6 +521,7 @@ const mapStateToProps = state => ({
     deleteAlert: state.courses.deleteAlert,
     uploadAlert: state.courses.uploadAlert,
     waitAlert: state.courses.waitAlert,
+    waitVideoAlert: state.courses.waitVideoAlert,
     error: state.courses.error,
     isFileOperationInProgress: state.courses.isFileOperationInProgress,
 });
@@ -333,6 +537,8 @@ export default connect(mapStateToProps,
       resetUploadAlert,
       resetDeleteAlert,
       resetWaitAlert,
+      setWaitVideoAlert,
+      resetWaitVideoAlert,
       startFileOperation,
       finishFileOperation,
     })

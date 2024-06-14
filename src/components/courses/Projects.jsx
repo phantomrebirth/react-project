@@ -580,6 +580,12 @@ const Projects =
   waitAlert,
   uploadAlert,
   deleteAlert,
+  setWaitAlert,
+  setDeleteAlert,
+  setUploadAlert,
+  resetDeleteAlert,
+  resetUploadAlert,
+  resetWaitAlert,
   currentCourseID,
   isFileOperationInProgress,
   startFileOperation,
@@ -621,25 +627,21 @@ const Projects =
   }, [uploadAlert, deleteAlert, waitAlert]);
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
-    const projectPath = courseProjectData;
-    console.log('Project Paths:', projectPath);
-    const projects = course.projects.map(project => {
-      const matchingPath = projectPath.find(path => path.includes(project._id));
-      const basePath = `https://ezlearn.onrender.com/course/getProjects/${currentCourseID}/`;
-      return {
-        ...project,
-        path: matchingPath ? `${basePath}${project._id}` : ''
-      };
-    });
-    setSubmittedProjects(projects);
-    console.log('Projects:', projects);
-  }, [currentCourseID, courses, courseProjectData]);
+    if (course && course.projects && course.projects.length > 0) {
+        const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getProjects/${currentCourseID}/`;
+        const projects = course.projects.map(project => ({
+            ...project,
+            path: `${basePath}${project._id}`,
+        }));
+        setSubmittedProjects(projects);
+    }
+}, [course, currentCourseID]);
   useEffect(() => {
     console.log('Submitted Projects:', submittedProjects);
   }, [submittedProjects]);
-  if ((isLoading || projectIsLoading || !course) && isFileOperationInProgress) {
-    return <LoadingSpinner />;
-  }
+  // if ((isLoading || projectIsLoading || !course) && isFileOperationInProgress) {
+  //   return <LoadingSpinner />;
+  // }
   // useEffect(() => {
   //   if (currentCourseId){
   //     dispatch(setSubmittedProjects(submittedProjects));
@@ -740,7 +742,15 @@ const Projects =
   const handleProjectDownload = async (project) => {
     const { filename, path } = project;
     try {
-      const response = await fetch(path);
+      const response = await fetch(path, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
+      }
       const fileData = await response.arrayBuffer();
       
       const pdfDoc = await PDFDocument.load(fileData);
@@ -788,9 +798,9 @@ const Projects =
   };
 
   const handleTUploaded = (projectId) => {
-    if (submittedProjects.length !== 0 ) {
+    // if (submittedProjects.length !== 0 ) {
       setTUploaded(true);
-    }
+    // }
     setSubmittedProjectId(projectId);
     // if (projectsPaths===undefined){
     //   setProjectsPaths(submittedProjects);
@@ -823,12 +833,14 @@ const Projects =
         formData.append('projects', selectedFiles[i]);
     }
     formData.append('name', projectName);
-    if (!uploadAlert && !deleteAlert) {
+    // if (!uploadAlert && !deleteAlert) {
         setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
-    }
+    // }
     try {
-        const response = await axios.post(`https://ezlearn.onrender.com/course/projects/${currentCourseID}`, formData, {
+        const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/projects/${currentCourseID}`, formData, {
             headers: {
+              'ngrok-skip-browser-warning': 'true',
+              // 'User-Agent': 'CustomUserAgent',
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
@@ -840,7 +852,7 @@ const Projects =
           const uploadedProject = {
             _id: project,
             filename: selectedFiles[0].name,
-            path: `https://ezlearn.onrender.com/course/getProjects/${currentCourseID}/${project}`,
+            path: `https://formally-eager-duckling.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
           };
           setSubmittedProjects(prevProjects => [...prevProjects, uploadedProject]);
             //   console.log(uploadedProject)
@@ -863,17 +875,19 @@ const Projects =
         setUploadAlert({ variant: 'danger', message: `Error uploading project: ${error.message}` });
     } finally {
       finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
     }
 };
 
   const handleProjectDelete = async (project) => {
-    if (!uploadAlert && !deleteAlert) {
-        setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
-    }
+
+    setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
 
     try {
-        const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteProjects/${currentCourseID}/${project._id}`, {
+        const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteProjects/${currentCourseID}/${project._id}`, {
             headers: {
+              'ngrok-skip-browser-warning': 'true',
+              // 'User-Agent': 'CustomUserAgent',
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
@@ -895,12 +909,9 @@ const Projects =
         setDeleteAlert({ variant: 'danger', message: `Error deleting project: ${error.message}` });
     } finally {
       finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
     }
   };
-
-  // useEffect(() => {
-  //   fetchProjects();
-  // }, [currentCourseId, course.projects]);
 
   return (
     <>
@@ -919,8 +930,34 @@ const Projects =
           {waitAlert.message}
         </Alert>
       )}
+      {Array.isArray(submittedProjects) && submittedProjects.length == 0 && tUploaded &&(
+        <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%'
+                    }}
+        >
+          <p>No projects yet.</p>
+        </div>
+      )}
       {student && (
       <>
+        {Array.isArray(submittedProjects) && submittedProjects.length == 0  &&(
+          <div style=
+                      {{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                        paddingTop: '6%'
+                      }}
+          >
+            <p>No projects yet.</p>
+          </div>
+        )}
           <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
             {!up && submittedProjects && submittedProjects.map((project, index) => (
               <React.Fragment key={index}>
@@ -1050,7 +1087,7 @@ const Projects =
       )}
       {teacher && (
         <>
-          {!tUpload && !tUploaded && (
+          {!tUpload && !tUploaded && !waitAlert && (
             <>
               <Container className='mt-5' style={{display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap"}}>
                 <div style={{width: "100%"}}>

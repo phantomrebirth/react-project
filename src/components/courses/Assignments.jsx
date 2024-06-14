@@ -31,6 +31,12 @@ const Assignments =
   waitAlert,
   uploadAlert,
   deleteAlert,
+  setWaitAlert,
+  setDeleteAlert,
+  setUploadAlert,
+  resetDeleteAlert,
+  resetUploadAlert,
+  resetWaitAlert,
   currentCourseID,
   isFileOperationInProgress,
   startFileOperation,
@@ -79,34 +85,44 @@ const Assignments =
   }, [uploadAlert, deleteAlert, waitAlert]);
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
-    // const assignmentPath = course.assignments.map(assignment => getCourseAssignment(currentCourseID, assignment._id));
-    const assignmentPath = courseAssignmentData;
-    console.log('Assignment Paths:', assignmentPath); // Log assignment paths
-
-    const assignments = course.assignments.map(assignment => {
-      const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
-      const basePath = `https://ezlearn.onrender.com/course/getAssignments/${currentCourseID}/`;
-      return {
-        ...assignment,
-        path: matchingPath ? `${basePath}${assignment._id}` : ''
-      };
-    });
-    setSubmittedAssignments(assignments);
-    // dispatch(updateAssignmentsPaths(assignments));
-    // if (submittedAssignments === undefined) {
-    // if (tUp !== true) {
-      // dispatch(setSubmittedAssignments(assignments));
-    // }
-      // dispatch(setAssignmentsPaths(assignments));
-    // }
-    console.log('Assignments:', assignments);
-  }, [currentCourseID, courses, courseAssignmentData]);
+    if (course && course.assignments && course.assignments.length > 0) {
+        const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
+        const assignments = course.assignments.map(assignment => ({
+            ...assignment,
+            path: `${basePath}${assignment._id}`,
+        }));
+        setSubmittedAssignments(assignments);
+    }
+}, [course, currentCourseID]);
   useEffect(() => {
     console.log('Submitted Assignments:', submittedAssignments);
   }, [submittedAssignments]);
-  if ((isLoading || assignmentIsLoading || !course) && isFileOperationInProgress) {
-    return <LoadingSpinner />;
-  }
+    // useEffect(() => {
+  //   // const assignmentPath = course.assignments.map(assignment => getCourseAssignment(currentCourseID, assignment._id));
+  //   const assignmentPath = courseAssignmentData;
+  //   console.log('Assignment Paths:', assignmentPath); // Log assignment paths
+
+  //   const assignments = course.assignments.map(assignment => {
+  //     const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
+  //     const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
+  //     return {
+  //       ...assignment,
+  //       path: matchingPath ? `${basePath}${assignment._id}` : ''
+  //     };
+  //   });
+  //   setSubmittedAssignments(assignments);
+  //   // dispatch(updateAssignmentsPaths(assignments));
+  //   // if (submittedAssignments === undefined) {
+  //   // if (tUp !== true) {
+  //     // dispatch(setSubmittedAssignments(assignments));
+  //   // }
+  //     // dispatch(setAssignmentsPaths(assignments));
+  //   // }
+  //   console.log('Assignments:', assignments);
+  // }, [currentCourseID, course, courseAssignmentData]);
+  // if ((isLoading || assignmentIsLoading || !course) && isFileOperationInProgress) {
+  //   return <LoadingSpinner />;
+  // }
   // useEffect(() => {
   //   const submittedAssignments = courses.find(course => course._id === currentCourseId)?.submittedAssignments;
   //   dispatch(setSubmittedAssignments(submittedAssignments));
@@ -202,7 +218,15 @@ const Assignments =
     console.log(path);
     console.log(assignment);
     try {
-      const response = await fetch(path);
+      const response = await fetch(path, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
+      }
       const fileData = await response.arrayBuffer();
       
       const pdfDoc = await PDFDocument.load(fileData);
@@ -275,8 +299,10 @@ const Assignments =
     setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
     // }
     try {
-      const response = await axios.post(`https://ezlearn.onrender.com/course/assignments/${currentCourseID}`, formData, {
+      const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/assignments/${currentCourseID}`, formData, {
         headers: {
+          'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'CustomUserAgent',
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
@@ -290,9 +316,9 @@ const Assignments =
         const uploadedAssignment = {
           _id: assignmentId,
           filename: selectedFiles[0].name,
-          path: `https://ezlearn.onrender.com/course/getAssignments/${currentCourseID}/${assignmentId}`
+          path: `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`
         };
-        // console.log(uploadedAssignment)
+        console.log(uploadedAssignment)
         setSubmittedAssignments(prevAssignments => [...prevAssignments, uploadedAssignment]);
         // const assignmentID = assignmentId;
         // getCourseAssignment({currentCourseID, assignmentID});
@@ -317,18 +343,21 @@ const Assignments =
       setUploadAlert({ variant: 'danger', message: `Error uploading assignment: ${error.message}` })
     } finally {
       finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
     }
   };
 
   const handleAssignmentDelete = async (assignment) => {
-    if (!uploadAlert && !deleteAlert) {
+    // if (!uploadAlert && !deleteAlert) {
       // dispatch(setWaitAlert({ variant: 'info', message: 'Deleting... please wait' }));
       setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
-    }
+    // }
 
     try {
-      const response = await axios.delete(`https://ezlearn.onrender.com/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
+      const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
         headers: {
+          'ngrok-skip-browser-warning': 'true',
+          // 'User-Agent': 'CustomUserAgent',
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
@@ -357,6 +386,7 @@ const Assignments =
       setDeleteAlert({ variant: 'danger', message: `Error deleting assignment: ${error.message}` })
     } finally {
       finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
     }
   };
   
@@ -378,8 +408,34 @@ const Assignments =
           {waitAlert.message}
         </Alert>
       )}
+      {Array.isArray(submittedAssignments) && submittedAssignments.length == 0 && tUploaded &&(
+        <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%'
+                    }}
+        >
+          <p>No assignments yet.</p>
+        </div>
+      )}
       {student && (
         <>
+          {Array.isArray(submittedAssignments) && submittedAssignments.length == 0 &&(
+            <div style=
+                        {{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%',
+                          paddingTop: '6%'
+                        }}
+            >
+              <p>No assignments yet.</p>
+            </div>
+          )}
           <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
           {!up && submittedAssignments && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
@@ -510,7 +566,7 @@ const Assignments =
       )}
       {teacher && (
         <>
-          {!tUpload && !tUploaded && (
+          {!tUpload && !tUploaded && !waitAlert && (
             <>
                 <Container className='mt-5' style={{display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap"}}>
                   <div style={{width: "100%"}}>
