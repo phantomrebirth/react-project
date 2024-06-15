@@ -52,6 +52,7 @@ const Assignments =
   const [description, setDescription] = useState('');
   // const assignmentsPaths = useSelector(selectAssignmentsPaths);
   // const submittedAssignments = useSelector((state) => state.courses.courseAssignmentData || []);
+  const [deadline, setDeadline] = useState(''); // State variable for deadline
   const [submittedAssignments, setSubmittedAssignments] = useState([]);
   const [submittedAssignmentId, setSubmittedAssignmentId] = useState(null);
   const [assignmentName, setAssignmentName] = useState('');
@@ -66,12 +67,6 @@ const Assignments =
       setTeacher(true);
     }
   }, [role]);
-  // const currentCourse = courses.find(course => course.path === path);
-  // const currentCourseID = currentCourse ? currentCourse._id : null;
-  // const { coursesLoading, assignmentsLoading, data: courses, currentCourseId } = useSelector(selectCourses);
-  // const uploadAlert = useSelector(state => state.courses.uploadAlert);
-  // const deleteAlert = useSelector(state => state.courses.deleteAlert);
-  // const waitAlert = useSelector(state => state.courses.waitAlert);
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (uploadAlert) {
@@ -86,7 +81,7 @@ const Assignments =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.assignments && course.assignments.length > 0) {
-        const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
+        const basePath = `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
         const assignments = course.assignments.map(assignment => ({
             ...assignment,
             path: `${basePath}${assignment._id}`,
@@ -97,42 +92,6 @@ const Assignments =
   useEffect(() => {
     console.log('Submitted Assignments:', submittedAssignments);
   }, [submittedAssignments]);
-    // useEffect(() => {
-  //   // const assignmentPath = course.assignments.map(assignment => getCourseAssignment(currentCourseID, assignment._id));
-  //   const assignmentPath = courseAssignmentData;
-  //   console.log('Assignment Paths:', assignmentPath); // Log assignment paths
-
-  //   const assignments = course.assignments.map(assignment => {
-  //     const matchingPath = assignmentPath.find(path => path.includes(assignment._id));
-  //     const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
-  //     return {
-  //       ...assignment,
-  //       path: matchingPath ? `${basePath}${assignment._id}` : ''
-  //     };
-  //   });
-  //   setSubmittedAssignments(assignments);
-  //   // dispatch(updateAssignmentsPaths(assignments));
-  //   // if (submittedAssignments === undefined) {
-  //   // if (tUp !== true) {
-  //     // dispatch(setSubmittedAssignments(assignments));
-  //   // }
-  //     // dispatch(setAssignmentsPaths(assignments));
-  //   // }
-  //   console.log('Assignments:', assignments);
-  // }, [currentCourseID, course, courseAssignmentData]);
-  // if ((isLoading || assignmentIsLoading || !course) && isFileOperationInProgress) {
-  //   return <LoadingSpinner />;
-  // }
-  // useEffect(() => {
-  //   const submittedAssignments = courses.find(course => course._id === currentCourseId)?.submittedAssignments;
-  //   dispatch(setSubmittedAssignments(submittedAssignments));
-  // }, [assignmentsPaths]);
-  // useEffect(() => {
-  //   // if (submittedAssignments === undefined) {
-  //   dispatch(setSubmittedAssignments(assignmentsPaths));
-  //   dispatch(setAssignmentsPaths(assignmentsPaths));
-  //   // }
-  // }, [dispatch]);
   
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -145,10 +104,9 @@ const Assignments =
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    console.log('Selected files:', selectedFiles);
     // Find the index of the submitted assignment in the submittedAssignments array
     const submittedIndex = submittedAssignments.findIndex(assignment => assignment._id === submittedAssignmentId);
-    
+    console.log(submittedIndex)
     if (submittedIndex !== -1) {
       // Create a copy of the submittedAssignments array
       const updatedAssignmentsPaths = [...submittedAssignments];
@@ -158,11 +116,6 @@ const Assignments =
         ...updatedAssignmentsPaths[submittedIndex],
         submitted: true // Assuming "submitted" is a boolean field
       };
-      
-      // Update the state with the modified submittedAssignments array
-      // setSubmittedAssignments(updatedAssignmentsPaths); // Update state with modified array
-      // getCourseAssignment({currentCourseID, submittedAssignmentId})
-      // setSubmittedAssignmentId(null); // Reset the submitted assignment ID
       console.log('Submitted assignment:', updatedAssignmentsPaths[submittedIndex]);
     } else {
       console.log('Submitted assignment not found!');
@@ -171,44 +124,67 @@ const Assignments =
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
+    console.log(submittedAssignmentId)
+    setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
+    // Make the API call to submit the assignment
+    try {
+      const formData = new FormData();
+
+      if (selectedFiles && selectedFiles.length > 0) {
+        for (let i = 0; i < selectedFiles.length; i++) {
+          formData.append('assignments-solution', selectedFiles[i], selectedFiles[i].name);
+          console.log(`Appending file: ${selectedFiles[i].name}`);
+        }
+      } else {
+        console.error('No files selected');
+        return;
+      }
+  
+      console.log('FormData entries before submission:');
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      // formData.append('description', description); // Add any additional metadata
     
-    // // Make the API call to submit the assignment
-    // try {
-    //   const formData = new FormData();
-    //   formData.append('assignment', selectedFiles); // Assuming only one file is selected
-    //   formData.append('description', description); // Add any additional metadata
-    
-    //   const response = await fetch('', {
-    //     method: 'POST',
-    //     body: formData,
-    //     // Add any necessary headers, such as authentication tokens or content-type
-    //   });
-    
-    //   if (response.ok) {
-    //     console.log('Assignment submitted successfully');
-    //     // Handle any further actions after successful submission
-    //   } else {
-    //     console.error('Failed to submit assignment');
-    //     // Handle error scenarios
-    //   }
-    // } catch (error) {
-    //   console.error('Error submitting assignment:', error);
-    //   // Handle network errors or other exceptions
-    // }
+      const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log(response);
+      console.log(formData)
+      try {
+        const responseBody = await response.text();
+        console.log('Response body:', responseBody);
+      } catch (err) {
+        console.error('Failed to read response body:', err);
+      }
+      startFileOperation(); // Set file operation in progress
+      if (response.ok) {
+        setUploadAlert({ variant: 'primary', message: 'Assignment submitted successfully!' })
+        // getCourses();
+      } else {
+        setUploadAlert({ variant: 'danger', message: `Failed to submit assignment: ${response.statusText}` })
+      }
+    } catch (error) {
+      setUploadAlert({ variant: 'danger', message: `Error submitting assignment: ${error.message}` })
+    } finally {
+      finishFileOperation(); // Reset file operation status
+      resetWaitAlert();
+    }
   };
   
   const handleInProgressClick = (assignmentId) => {
     setUp(true);
     setSubmittedAssignmentId(assignmentId);
-    // dispatch(navigateToAssignment());
-    // dispatch(setAssignmentsPaths(assignmentsPaths));
-    // if (student && (submittedAssignments === undefined)) {
-    //   dispatch(setSubmittedAssignments(assignmentsPaths));
-    // }
   };
   
   const handleFileSelect = (event) => {
     const files = event.target.files;
+    console.log('Files selected:', files);
     setSelectedFiles(files);
   };
   
@@ -272,12 +248,7 @@ const Assignments =
   const handleTUploaded = (assignmentId) => {
     setTUploaded(true);
     setSubmittedAssignmentId(assignmentId);
-    // if (submittedAssignments === undefined) {
-    //   dispatch(setAssignmentsPaths(assignmentsPaths));
-    //   dispatch(setSubmittedAssignments(assignmentsPaths));
-    // };
     console.log(submittedAssignments)
-    // console.log(assignmentsPaths)
   };
 
   const handleAssignmentNameClick = (assignment) => {
@@ -293,13 +264,23 @@ const Assignments =
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append('assignments', selectedFiles[i]);
     }
-    formData.append('name', assignmentName);
+    // Append assignment name
+    formData.append('filename', assignmentName);
+
+    // Append deadline date (assuming you have a form control for deadline)
+    formData.append('deadline', deadline); // Assuming 'deadline' is a state variable holding the selected date
+    console.log(formData)
+
+
+    // Append current upload time
+    const currentDate = new Date();
+    formData.append('uploadtime', currentDate.toISOString()); // Adjust date formatting as per backend requirements
     // if (!uploadAlert && !deleteAlert) {
     //   dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
     setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
     // }
     try {
-      const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/assignments/${currentCourseID}`, formData, {
+      const response = await axios.post(`https://flea-helped-locust.ngrok-free.app/course/assignments/${currentCourseID}`, formData, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -316,7 +297,7 @@ const Assignments =
         const uploadedAssignment = {
           _id: assignmentId,
           filename: selectedFiles[0].name,
-          path: `https://formally-eager-duckling.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`
+          path: `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`
         };
         console.log(uploadedAssignment)
         setSubmittedAssignments(prevAssignments => [...prevAssignments, uploadedAssignment]);
@@ -333,7 +314,8 @@ const Assignments =
         setTUp(true);
         setSelectedFiles([]);
         setAssignmentName('');
-        setUploadAlert({ variant: 'primary', message: 'assignment uploaded successfully!' })
+        setDeadline('');
+        setUploadAlert({ variant: 'primary', message: 'Assignment uploaded successfully!' })
       } else {
         // dispatch(setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` }));
         setUploadAlert({ variant: 'danger', message: `Failed to upload assignment: ${response.statusText}` })
@@ -354,7 +336,7 @@ const Assignments =
     // }
 
     try {
-      const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
+      const response = await axios.delete(`https://flea-helped-locust.ngrok-free.app/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -372,11 +354,6 @@ const Assignments =
         // getCourseAssignment({currentCourseID, assignmentID});
         getCourses();
         setDeleteAlert({ variant: 'primary', message: 'Assignment deleted successfully!' })
-        // dispatch(setAssignmentsPaths(updatedAssignments));
-        // dispatch(setSubmittedAssignments(updatedAssignments));
-        // dispatch(updateAssignmentsPaths(updatedAssignments));
-        // console.log(submittedAssignments)
-        // console.log(assignmentsPaths)
       } else {
         // dispatch(setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` }));
         setDeleteAlert({ variant: 'danger', message: `Failed to delete assignment: ${response.statusText}` })
@@ -602,10 +579,12 @@ const Assignments =
                       <div>
                       <Form.Group controlId="formDeadline" style={{width: "69%"}}>
                         <Form.Label>Deadline</Form.Label>
-                        <Form.Control className='pfEmail' 
-                                      type="text"
-                                      placeholder="00/00"
-                                      // name="name"
+                        <Form.Control
+                          className='pfEmail'
+                          type="date"
+                          placeholder="YYYY-MM-DD"
+                          value={deadline} // Assuming 'deadline' is a state variable
+                          onChange={(e) => setDeadline(e.target.value)} // Assuming 'setDeadline' updates the state
                         />
                       </Form.Group>
                       </div>

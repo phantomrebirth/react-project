@@ -2146,7 +2146,7 @@ input[type="file"]::placeholder {
 .ass-zeros {
   color: #808080;
   font-size: 69%;
-  margin: 1% 0px 0px 0px !important;
+  margin: 1% 0px 0px 0px;
 }
 
 .ass-btn2 {

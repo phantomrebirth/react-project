@@ -8,11 +8,12 @@ import {
   LOGOUT_FAIL,
 } from "./type";
 
-const apiUrl = "https://formally-eager-duckling.ngrok-free.app/";
+const apiUrl = "https://flea-helped-locust.ngrok-free.app/";
 
 export const login = (email, password) => async (dispatch) => {
   const config = {
     headers: {
+      'ngrok-skip-browser-warning': 'true',
       Accept: "application/json",
       "Content-Type": "application/json",
     },

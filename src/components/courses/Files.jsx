@@ -198,7 +198,7 @@ const Files =
     startFileOperation()
     console.log(isFileOperationInProgress)
     try {
-      const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/files/${currentCourseID}`, formData, {
+      const response = await axios.post(`https://flea-helped-locust.ngrok-free.app/course/files/${currentCourseID}`, formData, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -213,7 +213,7 @@ const Files =
         const newFile = {
           _id: fileId,
           filename: file.name,
-          path: `https://formally-eager-duckling.ngrok-free.app/course/getFiles/${currentCourseID}/${fileId}`,
+          path: `https://flea-helped-locust.ngrok-free.app/course/getFiles/${currentCourseID}/${fileId}`,
           };
           // setFileIDs(prevFileIDs => [...prevFileIDs, fileId]);
           setFilesWithPaths(prevFiles => [...prevFiles, newFile]);
@@ -252,7 +252,7 @@ const Files =
     startFileOperation();
     console.log(isFileOperationInProgress)
     try {
-      const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteFiles/${currentCourseID}/${file._id}`, {
+      const response = await axios.delete(`https://flea-helped-locust.ngrok-free.app/course/deleteFiles/${currentCourseID}/${file._id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -373,7 +373,7 @@ console.log(isFileOperationInProgress)
                       paddingTop: '6%'
                     }}
         >
-          <p>No videos yet.</p>
+          <p>No Files yet.</p>
         </div>
       )}
     </>

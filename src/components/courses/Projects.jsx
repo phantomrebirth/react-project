@@ -600,6 +600,7 @@ const Projects =
   const [description, setDescription] = useState('');
   // const projectsPaths = useSelector(selectProjectsPaths);
   // const submittedProjects = useSelector(selectSubmittedProjects) ?? [];
+  const [deadline, setDeadline] = useState(''); // State variable for deadline
   const [submittedProjects, setSubmittedProjects] = useState([]);
   const [submittedProjectId, setSubmittedProjectId] = useState(null);
   const [projectName, setProjectName] = useState('');
@@ -628,7 +629,7 @@ const Projects =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.projects && course.projects.length > 0) {
-        const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getProjects/${currentCourseID}/`;
+        const basePath = `https://flea-helped-locust.ngrok-free.app/course/getProjects/${currentCourseID}/`;
         const projects = course.projects.map(project => ({
             ...project,
             path: `${basePath}${project._id}`,
@@ -723,6 +724,56 @@ const Projects =
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
+    setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
+        // Make the API call to submit the assignment
+    try {
+      const formData = new FormData();
+
+      if (selectedFiles && selectedFiles.length > 0) {
+        for (let i = 0; i < selectedFiles.length; i++) {
+          formData.append('projects-solution', selectedFiles[i], selectedFiles[i].name);
+          console.log(`Appending file: ${selectedFiles[i].name}`);
+        }
+      } else {
+        console.error('No files selected');
+        return;
+      }
+  
+      console.log('FormData entries before submission:');
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      // formData.append('description', description); // Add any additional metadata
+    
+      const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log(response);
+      console.log(formData)
+      try {
+        const responseBody = await response.text();
+        console.log('Response body:', responseBody);
+      } catch (err) {
+        console.error('Failed to read response body:', err);
+      }
+      startFileOperation();
+      if (response.ok) {
+        setUploadAlert({ variant: 'primary', message: `Project submitted successfully: ${response.statusText}` });
+        // getCourses();
+      } else {
+        setUploadAlert({ variant: 'danger', message: `Failed to submit project: ${response.statusText}` });
+      }
+    } catch (error) {
+      setUploadAlert({ variant: 'danger', message: `Error submitting project: ${error.message}` });
+    } finally {
+      finishFileOperation();
+      resetWaitAlert();
+    }
   };
 
   const handleInProgressClick = (projectId) => {
@@ -832,12 +883,21 @@ const Projects =
     for (let i = 0; i < selectedFiles.length; i++) {
         formData.append('projects', selectedFiles[i]);
     }
-    formData.append('name', projectName);
+    formData.append('filename', projectName);
+
+    // Append deadline date (assuming you have a form control for deadline)
+    formData.append('deadline', deadline); // Assuming 'deadline' is a state variable holding the selected date
+    console.log(formData)
+
+
+    // Append current upload time
+    const currentDate = new Date();
+    formData.append('uploadtime', currentDate.toISOString()); // Adjust date formatting as per backend requirements
     // if (!uploadAlert && !deleteAlert) {
         setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
     // }
     try {
-        const response = await axios.post(`https://formally-eager-duckling.ngrok-free.app/course/projects/${currentCourseID}`, formData, {
+        const response = await axios.post(`https://flea-helped-locust.ngrok-free.app/course/projects/${currentCourseID}`, formData, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               // 'User-Agent': 'CustomUserAgent',
@@ -852,7 +912,7 @@ const Projects =
           const uploadedProject = {
             _id: project,
             filename: selectedFiles[0].name,
-            path: `https://formally-eager-duckling.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
+            path: `https://flea-helped-locust.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
           };
           setSubmittedProjects(prevProjects => [...prevProjects, uploadedProject]);
             //   console.log(uploadedProject)
@@ -884,7 +944,7 @@ const Projects =
     setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
 
     try {
-        const response = await axios.delete(`https://formally-eager-duckling.ngrok-free.app/course/deleteProjects/${currentCourseID}/${project._id}`, {
+        const response = await axios.delete(`https://flea-helped-locust.ngrok-free.app/course/deleteProjects/${currentCourseID}/${project._id}`, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               // 'User-Agent': 'CustomUserAgent',
@@ -1123,11 +1183,13 @@ const Projects =
                       <div>
                         <Form.Group controlId="formDeadline" style={{width: "69%"}}>
                           <Form.Label>Deadline</Form.Label>
-                          <Form.Control className='pfEmail' 
-                                        type="text"
-                                        placeholder="00/00"
-                                        // name="name"
-                          />
+                            <Form.Control
+                              className='pfEmail'
+                              type="date"
+                              placeholder="YYYY-MM-DD"
+                              value={deadline} // Assuming 'deadline' is a state variable
+                              onChange={(e) => setDeadline(e.target.value)} // Assuming 'setDeadline' updates the state
+                            />
                         </Form.Group>
                       </div>
                     </Col>

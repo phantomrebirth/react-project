@@ -28,7 +28,7 @@ const Profile = ({ token }) => {
     try {
         // userData(token);
         console.log(token)
-      const response = await axios.get('https://formally-eager-duckling.ngrok-free.app/users/me', {
+      const response = await axios.get('https://flea-helped-locust.ngrok-free.app/users/me', {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -59,7 +59,7 @@ const Profile = ({ token }) => {
         password: usersData.password
       };      console.log(body);
       // const response = userUpdate(body);
-      const response = await axios.patch('https://formally-eager-duckling.ngrok-free.app/users/update',
+      const response = await axios.patch('https://flea-helped-locust.ngrok-free.app/users/update',
       body, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
