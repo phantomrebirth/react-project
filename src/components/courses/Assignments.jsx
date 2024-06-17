@@ -18,6 +18,11 @@ import { login } from '../../redux/actions/auth';
 import { finishFileOperation, getCourseAssignment, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { useParams } from 'react-router-dom';
 
+const formatDateTime = (dateTimeStr) => {
+  const date = new Date(dateTimeStr);
+  return date.toLocaleDateString(); // This will display only the date part
+};
+
 const Assignments = 
  ({ 
   role, 
@@ -81,18 +86,35 @@ const Assignments =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.assignments && course.assignments.length > 0) {
-        const basePath = `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
-        const assignments = course.assignments.map(assignment => ({
-            ...assignment,
-            path: `${basePath}${assignment._id}`,
-        }));
-        setSubmittedAssignments(assignments);
+      const basePath = `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
+      const assignments = course.assignments.map(assignment => {
+        // Format assignment's uploadtime and deadline
+        const formattedAssignment = {
+          ...assignment,
+          path: `${basePath}${assignment._id}`,
+          uploadtime: formatDateTime(assignment.uploadtime), // Assuming formatDateTime is a function that formats the date
+          deadline: formatDateTime(assignment.deadline),
+        };  
+        // Format solutions' uploadtime if solutions array exists
+        if (assignment.solutions && assignment.solutions.length > 0) {
+          const formattedSolutions = assignment.solutions.map(solution => ({
+            ...solution,
+            uploadtime: formatDateTime(solution.uploadtime), // Format each solution's uploadtime
+          }));
+          formattedAssignment.solutions = formattedSolutions;
+        }
+
+        return formattedAssignment;
+      });
+      setSubmittedAssignments(assignments);
+      // localStorage.setItem('submittedAssignments', JSON.stringify(assignments));
+      console.log(assignments)
     }
-}, [course, currentCourseID]);
+  }, [course, currentCourseID]);
   useEffect(() => {
     console.log('Submitted Assignments:', submittedAssignments);
   }, [submittedAssignments]);
-  
+
   const handleChange = (event) => {
     setDescription(event.target.value);
   };
@@ -103,78 +125,65 @@ const Assignments =
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+  
     // Find the index of the submitted assignment in the submittedAssignments array
     const submittedIndex = submittedAssignments.findIndex(assignment => assignment._id === submittedAssignmentId);
-    console.log(submittedIndex)
+  
     if (submittedIndex !== -1) {
       // Create a copy of the submittedAssignments array
-      const updatedAssignmentsPaths = [...submittedAssignments];
-      
-      // Update the submitted assignment's status to "submitted"
-      updatedAssignmentsPaths[submittedIndex] = {
-        ...updatedAssignmentsPaths[submittedIndex],
-        submitted: true // Assuming "submitted" is a boolean field
-      };
-      console.log('Submitted assignment:', updatedAssignmentsPaths[submittedIndex]);
+      const updatedAssignments = [...submittedAssignments];
+      setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
+
+      try {
+        const formData = new FormData();
+  
+        if (selectedFiles && selectedFiles.length > 0) {
+          for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('assignments-solution', selectedFiles[i], selectedFiles[i].name);
+            const uploadDate = new Date().toLocaleDateString();
+            formData.append('uploadtime', uploadDate);
+          }
+        } else {
+          console.error('No files selected');
+          return;
+        }
+  
+        const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        startFileOperation();
+        if (response.ok) {
+          updatedAssignments[submittedIndex] = {
+            ...updatedAssignments[submittedIndex],
+            submitted: "Submitted",
+            submittedtime: new Date().toLocaleDateString(),
+          };
+          getCourses()
+          console.log(response.data)
+          setSubmittedAssignments(updatedAssignments);
+          setUploadAlert({ variant: 'primary', message: 'Assignment submitted successfully!' });
+        } else {
+          setUploadAlert({ variant: 'danger', message: `Failed to submit assignment: ${response.statusText}` });
+        }
+      } catch (error) {
+        console.error('Error submitting assignment:', error);
+        setUploadAlert({ variant: 'danger', message: `Error submitting assignment: ${error.message}` });
+      } finally {
+        finishFileOperation(); // Reset file operation status
+        resetWaitAlert();
+      }
     } else {
       console.log('Submitted assignment not found!');
     }
-    
+  
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
-    console.log(submittedAssignmentId)
-    setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
-    // Make the API call to submit the assignment
-    try {
-      const formData = new FormData();
-
-      if (selectedFiles && selectedFiles.length > 0) {
-        for (let i = 0; i < selectedFiles.length; i++) {
-          formData.append('assignments-solution', selectedFiles[i], selectedFiles[i].name);
-          console.log(`Appending file: ${selectedFiles[i].name}`);
-        }
-      } else {
-        console.error('No files selected');
-        return;
-      }
-  
-      console.log('FormData entries before submission:');
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-      // formData.append('description', description); // Add any additional metadata
-    
-      const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      console.log(response);
-      console.log(formData)
-      try {
-        const responseBody = await response.text();
-        console.log('Response body:', responseBody);
-      } catch (err) {
-        console.error('Failed to read response body:', err);
-      }
-      startFileOperation(); // Set file operation in progress
-      if (response.ok) {
-        setUploadAlert({ variant: 'primary', message: 'Assignment submitted successfully!' })
-        // getCourses();
-      } else {
-        setUploadAlert({ variant: 'danger', message: `Failed to submit assignment: ${response.statusText}` })
-      }
-    } catch (error) {
-      setUploadAlert({ variant: 'danger', message: `Error submitting assignment: ${error.message}` })
-    } finally {
-      finishFileOperation(); // Reset file operation status
-      resetWaitAlert();
-    }
   };
   
   const handleInProgressClick = (assignmentId) => {
@@ -264,17 +273,9 @@ const Assignments =
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append('assignments', selectedFiles[i]);
     }
-    // Append assignment name
     formData.append('filename', assignmentName);
-
-    // Append deadline date (assuming you have a form control for deadline)
-    formData.append('deadline', deadline); // Assuming 'deadline' is a state variable holding the selected date
-    console.log(formData)
-
-
-    // Append current upload time
-    const currentDate = new Date();
-    formData.append('uploadtime', currentDate.toISOString()); // Adjust date formatting as per backend requirements
+    formData.append('deadline', deadline);
+    formData.append('uploadtime', new Date().toISOString());
     // if (!uploadAlert && !deleteAlert) {
     //   dispatch(setWaitAlert({ variant: 'info', message: 'Uploading... please wait' }));
     setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
@@ -297,8 +298,12 @@ const Assignments =
         const uploadedAssignment = {
           _id: assignmentId,
           filename: selectedFiles[0].name,
-          path: `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`
+          path: `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`,
+          uploadtime: new Date().toLocaleDateString(),
+          deadline: deadline,
+          // submitted: "notSubmitted"
         };
+        console.log(response.data)
         console.log(uploadedAssignment)
         setSubmittedAssignments(prevAssignments => [...prevAssignments, uploadedAssignment]);
         // const assignmentID = assignmentId;
@@ -416,7 +421,7 @@ const Assignments =
           <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
           {!up && submittedAssignments && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
-                {(assignment._id !== submittedAssignmentId) && !assignment.submitted && (
+                {(assignment._id !== submittedAssignmentId && assignment.solutions.length === 0) && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol2'>
                     <div className="assignment-container2">
                       <div className='assignment-header'>
@@ -431,7 +436,7 @@ const Assignments =
                       >
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                          <h6 className='ass-zeros'>Uploaded {assignment.uploadtime} - Deadline {assignment.deadline}</h6>
                         </div>
                         <button className='ass-btn2'>
                           In progress
@@ -440,7 +445,7 @@ const Assignments =
                     </div>
                   </Col>
                 )}
-                {(assignment._id === submittedAssignmentId || assignment.submitted) && (
+                {(assignment._id === submittedAssignmentId || assignment.solutions.length !== 0) && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol1'>
                     <div className='assignment-container'>
                       <div className='assignment-header'>
@@ -451,7 +456,7 @@ const Assignments =
                       <div key={assignment.filename} className='assignment'>
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded {assignment.uploaded} - submitted {assignment.submitted}</h6>
+                          <h6 className='ass-zeros'>Submitted {assignment.solutions.length > 0 ? assignment.solutions[0].uploadtime : '...'}</h6>
                         </div>
                         <button className='ass-btn' style={{cursor: "unset"}}>
                           {assignment.submitted ? "Submitted" : "Done"}
@@ -484,7 +489,7 @@ const Assignments =
                             >
                               <div className='assName-container'>
                                 <h5 className='ass-name'>{assignment.filename}</h5>
-                                <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                                <h6 className='ass-zeros'>Uploaded {assignment.uploadtime} - Deadline {assignment.deadline}</h6>
                               </div>
                               <div className='downloadAss-container'>
                                 <a>
@@ -646,7 +651,7 @@ const Assignments =
                       >
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                          <h6 className='ass-zeros'>Uploaded {assignment.uploadtime} - Deadline {assignment.deadline}</h6>
                         </div>
                         <div className='downloadAss-container'>
                           <a onClick={(event) => { event.stopPropagation(); handleAssignmentDelete(assignment);}} className='delete-ass'>

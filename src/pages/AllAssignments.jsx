@@ -47,8 +47,13 @@ import { Col, Row } from 'react-bootstrap';
 import LoadingSpinner from '../redux/actions/LoadingSpinner';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { PDFDocument } from 'pdf-lib';
-import { getCourseAssignment, getCourses, resetWaitAlert } from '../redux/actions/courses';
+import { finishFileOperation, getCourseAssignment, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../redux/actions/courses';
 import { login } from '../redux/actions/auth';
+
+const formatDateTime = (dateTimeStr) => {
+  const date = new Date(dateTimeStr);
+  return date.toLocaleDateString(); // This will display only the date part
+};
 
 const AllAssignments = 
 ({
@@ -59,6 +64,20 @@ const AllAssignments =
     courseAssignmentData,
     courses,
     // currentCourseID,
+    getCourses,
+    waitAlert,
+    uploadAlert,
+    deleteAlert,
+    setWaitAlert,
+    setDeleteAlert,
+    setUploadAlert,
+    resetDeleteAlert,
+    resetUploadAlert,
+    resetWaitAlert,
+    currentCourseID,
+    isFileOperationInProgress,
+    startFileOperation,
+    finishFileOperation,
 }) => {
   
 //   const dispatch = useDispatch();
@@ -85,13 +104,24 @@ const AllAssignments =
 //   const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
   useEffect(() => {
     if (!isLoading || !assignmentIsLoading) {
-      const allAssignments = courses.flatMap(course => {
-        return course.assignments.map(assignment => ({
-          ...assignment,
-          courseId: course._id,
-          course: course.name
+      const allAssignments = courses.flatMap(course => course.assignments.map(assignment => {
+          const formattedAssignment = {
+            ...assignment,
+            courseId: course._id,
+            course: course.name,
+            uploadtime: formatDateTime(assignment.uploadtime), // Assuming formatDateTime is a function that formats the date
+            deadline: formatDateTime(assignment.deadline),
+          };
+          if (assignment.solutions && assignment.solutions.length > 0) {
+            const formattedSolutions = assignment.solutions.map(solution => ({
+              ...solution,
+              uploadtime: formatDateTime(solution.uploadtime), // Format each solution's uploadtime
+            }));
+            formattedAssignment.solutions = formattedSolutions;
+          }
+    
+          return formattedAssignment;
         }));
-      });
       setSubmittedAssignments(allAssignments);
     }
   }, [courses, isLoading, assignmentIsLoading]);
@@ -102,25 +132,60 @@ const AllAssignments =
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    console.log('Selected files:', selectedFiles);
-    
+  
+    // Find the index of the submitted assignment in the submittedAssignments array
     const submittedIndex = submittedAssignments.findIndex(assignment => assignment._id === submittedAssignmentId);
-    
+  
     if (submittedIndex !== -1) {
-      const updatedAssignmentsPaths = [...submittedAssignments];
-      
-      updatedAssignmentsPaths[submittedIndex] = {
-        ...updatedAssignmentsPaths[submittedIndex],
-        submitted: true
-      };
-      
-      setSubmittedAssignments(updatedAssignmentsPaths);
-      console.log('Submitted assignment:', updatedAssignmentsPaths[submittedIndex]);
+      // Create a copy of the submittedAssignments array
+      const updatedAssignments = [...submittedAssignments];
+  
+      try {
+        const formData = new FormData();
+  
+        if (selectedFiles && selectedFiles.length > 0) {
+          for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('assignments-solution', selectedFiles[i], selectedFiles[i].name);
+            const uploadDate = new Date().toLocaleDateString();
+            formData.append('uploadtime', uploadDate);
+          }
+        } else {
+          console.error('No files selected');
+          return;
+        }
+  
+        const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/assignments/solution/${clickedCourseId}/${clickedAssignmentId}`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+  
+        if (response.ok) {
+          updatedAssignments[submittedIndex] = {
+            ...updatedAssignments[submittedIndex],
+            submitted: "Submitted",
+            submittedtime: new Date().toLocaleDateString(),
+          };
+          getCourses()
+          console.log(response.data)
+          setSubmittedAssignments(updatedAssignments);
+          setUploadAlert({ variant: 'primary', message: 'Assignment submitted successfully!' });
+        } else {
+          setUploadAlert({ variant: 'danger', message: `Failed to submit assignment: ${response.statusText}` });
+        }
+      } catch (error) {
+        console.error('Error submitting assignment:', error);
+        setUploadAlert({ variant: 'danger', message: `Error submitting assignment: ${error.message}` });
+      } finally {
+        finishFileOperation(); // Reset file operation status
+        resetWaitAlert();
+      }
     } else {
       console.log('Submitted assignment not found!');
     }
-    
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
@@ -143,39 +208,50 @@ const AllAssignments =
     const files = event.target.files;
     setSelectedFiles(files);
   };
-  
+
   const handleAssignmentDownload = async (assignment) => {
     const { filename } = assignment;
+    console.log(filename);
+    console.log(assignmentPath);
+    console.log(assignment);
     try {
-      const response = await fetch(assignmentPath);
+      const response = await fetch(assignmentPath, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
+      }
       const fileData = await response.arrayBuffer();
       
       const pdfDoc = await PDFDocument.load(fileData);
       const newPdfDoc = await PDFDocument.create();
       
-        const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
-        
-        pages.forEach((page) => {
-          newPdfDoc.addPage(page);
-        });
-        
-        const pdfBytes = await newPdfDoc.save();
-        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(pdfBlob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        
-        document.body.appendChild(a);
-        a.click();
-        
-        URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      } catch (error) {
-        console.error('Error downloading file:', error);
-      };
-    }; 
+      const pages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
+      
+      pages.forEach((page) => {
+        newPdfDoc.addPage(page);
+      });
+      
+      const pdfBytes = await newPdfDoc.save();
+      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(pdfBlob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      
+      document.body.appendChild(a);
+      a.click();
+      
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    };
+  }; 
     
   const handleCancel = () => {
     // setShowFirstAssignment(true);
@@ -188,6 +264,9 @@ const AllAssignments =
   if (isLoading || assignmentIsLoading) {
     return <LoadingSpinner/>;
   }
+  console.log(submittedAssignments)
+  console.log(submittedAssignmentId)
+  console.log(clickedAssignmentId)
   
   return (
     <>
@@ -196,7 +275,7 @@ const AllAssignments =
           <Row style={{ marginLeft: "1%", marginRight: "0", marginBottom: "0", padding: "0"}} className='mt-3 assignments-container'>
             {!up && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
-                {(assignment._id !== submittedAssignmentId) && !assignment.submitted && (
+                {(assignment._id !== submittedAssignmentId && assignment.solutions.length === 0) && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol2'>
                     <div className="assignment-container2">
                       <div className='assignment-header'>
@@ -207,7 +286,7 @@ const AllAssignments =
                       <div className='assignment' onClick={() => handleInProgressClick(assignment._id, assignment.courseId)} style={{cursor: "pointer", backgroundColor: "#f0f0f0"}} title='Open Assignmet'>
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                          <h6 className='ass-zeros'>Uploaded {assignment.uploadtime} - Deadline {assignment.deadline}</h6>
                         </div>
                         <button className='ass-btn2'>
                           In progress
@@ -216,7 +295,7 @@ const AllAssignments =
                     </div>
                   </Col>
                 )}
-                {(assignment._id === submittedAssignmentId || assignment.submitted) && (
+                {(assignment._id === submittedAssignmentId || assignment.solutions.length !== 0) && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol1'>
                     <div className='assignment-container'>
                       <div className='assignment-header'>
@@ -227,7 +306,7 @@ const AllAssignments =
                       <div key={assignment.filename} className='assignment'>
                         <div className='assName-container'>
                           <h5 className='ass-name'>{assignment.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded {assignment.uploaded} - submitted {assignment.submitted}</h6>
+                          <h6 className='ass-zeros'>Submitted {assignment.solutions.length > 0 ? assignment.solutions[0].uploadtime : '...'}</h6>
                         </div>
                         <button className='ass-btn' style={{cursor: "unset"}}>
                           {assignment.submitted ? "Submitted" : "Done"}
@@ -261,7 +340,7 @@ const AllAssignments =
                             <div className='assignment' key={index} onClick={() => handleAssignmentDownload(assignment)} style={{cursor: "pointer"}} title={`Download ${assignment.filename}`}>
                               <div className='assName-container'>
                                 <h5 className='ass-name'>{assignment.filename}</h5>
-                                <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                                <h6 className='ass-zeros'>Uploaded {assignment.uploadtime} - Deadline {assignment.deadline}</h6>
                               </div>
                               <div className='downloadAss-container'>
                                 <a>
@@ -326,20 +405,32 @@ const AllAssignments =
 };
 
 const mapStateToProps = state => ({
-    role: state.auth.role,
-    token: state.auth.token,
-    courses: state.courses.coursesData,
-    // currentCourseID: state.courses.currentCourseID,
-    isLoading: state.courses.isLoading,
-    courseAssignmentData: state.courses.courseAssignmentData,
-    assignmentIsLoading: state.courses.assignmentIsLoading,
-    error: state.courses.error,
-  });
+  role: state.auth.role,
+  token: state.auth.token,
+  courses: state.courses.coursesData,
+  // currentCourseID: state.courses.currentCourseID,
+  isLoading: state.courses.isLoading,
+  courseAssignmentData: state.courses.courseAssignmentData,
+  assignmentIsLoading: state.courses.assignmentIsLoading,
+  deleteAlert: state.courses.deleteAlert,
+  uploadAlert: state.courses.uploadAlert,
+  waitAlert: state.courses.waitAlert,
+  error: state.courses.error,
+  isFileOperationInProgress: state.courses.isFileOperationInProgress
+});
 
 export default connect(mapStateToProps,
     {
       login,
       getCourseAssignment,
-      getCourses
+      getCourses,
+      setUploadAlert,
+      setWaitAlert,
+      setDeleteAlert,
+      resetUploadAlert,
+      resetDeleteAlert,
+      resetWaitAlert,
+      startFileOperation,
+      finishFileOperation,
     })
 (AllAssignments);

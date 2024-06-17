@@ -97,7 +97,7 @@ const Files =
   // console.log(courseFileData)
   useEffect(() => {
     if (course && course.files && course.files.length > 0) {
-        const basePath = `https://formally-eager-duckling.ngrok-free.app/course/getFiles/${currentCourseID}/`;
+        const basePath = `https://flea-helped-locust.ngrok-free.app/course/getFiles/${currentCourseID}/`;
         const files = course.files.map(file => ({
             ...file,
             path: `${basePath}${file._id}`,

@@ -8,6 +8,11 @@ import {
 import { login } from '../../redux/actions/auth';
 import axios from 'axios';
 
+const formatDateTime = (dateTimeStr) => {
+  const date = new Date(dateTimeStr);
+  return date.toLocaleDateString(); // This will display only the date part
+};
+
 const Submitted = ({
   role, 
   token, 
@@ -42,13 +47,21 @@ const Submitted = ({
       if (course.assignments?.length) {
         setSubmittedAssignments(course.assignments
           .filter(assignment => assignment.solutions?.length)
-          .map(assignment => ({ ...assignment, path: `${basePath}/getAssignments/${currentCourseID}/${assignment._id}` }))
+          .map(assignment => ({ ...assignment, 
+            path: `${basePath}/getAssignments/${currentCourseID}/${assignment._id}` ,
+            uploadtime: formatDateTime(assignment.uploadtime),
+            deadline: formatDateTime(assignment.deadline),
+          }))
         );
       }
       if (course.projects?.length) {
         setSubmittedProjects(course.projects
           .filter(project => project.solutions?.length)
-          .map(project => ({ ...project, path: `${basePath}/getProjects/${currentCourseID}/${project._id}` }))
+          .map(project => ({ ...project, 
+            path: `${basePath}/getProjects/${currentCourseID}/${project._id}` ,
+            uploadtime: formatDateTime(project.uploadtime),
+            deadline: formatDateTime(project.deadline),
+          }))
         );
       }
     }
@@ -106,13 +119,13 @@ const Submitted = ({
                     </h5>
                     <div style={{ display: "flex", justifyContent: "center", width: "100%", alignItems: "center" }}>
                       <h6 className='ass-zeros' style={{ fontSize: "78%", margin: "3% 4% 0 0" }}>
-                        uploaded {item.uploadDate}
+                        Submitted {item.uploadtime}
                       </h6>
                       <h6 className='ass-zeros' style={{ fontSize: "78%", margin: "3% 4% 0 0" }}>
                         - 
                       </h6>
                       <h6 className='ass-zeros' style={{ fontSize: "78%", margin: "3% 4% 0 0" }}>
-                        deadline {item.deadline}
+                        Deadline {item.deadline}
                       </h6>
                     </div>
                   </div>

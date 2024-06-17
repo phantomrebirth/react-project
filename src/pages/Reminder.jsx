@@ -1,45 +1,109 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import { Container, Card, Button, Form, Row, Col, Dropdown } from 'react-bootstrap';
 import { IoAdd } from "react-icons/io5";
 import { SlOptions } from "react-icons/sl";
 import { IoArrowForward } from "react-icons/io5";
 import { IoClose } from 'react-icons/io5';
+import { login } from '../redux/actions/auth';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
-const Reminder = () => {
+const Reminder = 
+({
+  token,
+  role
+}) => {
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [notes, setNotes] = useState([]);
   const [selectedNoteIndex, setSelectedNoteIndex] = useState(null);
-
   const [noteTitle, setNoteTitle] = useState('');
   const [noteBody, setNoteBody] = useState('');
+  const [noteIds, setNoteIds] = useState([]);
+  const [teacher, setTeacher] = useState(false);
+  const [student, setStudent] = useState(false);
+  useEffect(() => {
+    if (role === 'student') {
+      setStudent(true);
+    } else if (role === 'teacher') {
+      setTeacher(true);
+    }
+  }, [role]);
+  useEffect(() => {
+      fetchNotes();
+  }, []);
 
-  const handleNoteSave = () => {
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.get('https://flea-helped-locust.ngrok-free.app/getReminder/all', {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const formattedNotes = response.data.map(note => ({
+        ...note,
+        formattedDate: new Date(note.createdAt).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      }));
+      setNotes(formattedNotes);
+      console.log(response.data)
+      setNoteIds(response.data.map(note => note._id)); // Store the note IDs
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
+  };
+
+  const handleNoteSave = async () => {
     if (noteTitle.trim() === '' || noteBody.trim() === '') {
       alert('Please fill in both title and body for the note.');
       return;
     }
 
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const newNote = {
       title: noteTitle,
-      body: noteBody,
-      date: new Date().toLocaleDateString('en-US', options),
+      note: noteBody,
     };
 
-    if (selectedNoteIndex !== null) {
-      const updatedNotes = [...notes];
-      updatedNotes[selectedNoteIndex] = newNote;
-      setNotes(updatedNotes);
-    } else {
-      // setNotes([newNote, ...notes]); to display the last one first
-      setNotes([...notes, newNote]);
-    }
+    try {
+      if (selectedNoteIndex !== null) {
+        const noteID = noteIds[selectedNoteIndex];
+        await axios.delete(`https://flea-helped-locust.ngrok-free.app/reminders/${noteID}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
 
-    setNoteTitle('');
-    setNoteBody('');
-    setShowNoteForm(false);
-    setSelectedNoteIndex(null);
+      const response = await axios.post('https://flea-helped-locust.ngrok-free.app/reminders', newNote, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const savedNote = {
+        ...response.data,
+        formattedDate: new Date(response.data.createdAt).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      };
+      setNotes([savedNote, ...notes]); // Add new note at the beginning
+      setNoteIds([savedNote._id, ...noteIds]); // Add new note ID at the beginning
+
+      await fetchNotes();
+      setNoteTitle('');
+      setNoteBody('');
+      setShowNoteForm(false);
+      setSelectedNoteIndex(null);
+    } catch (error) {
+      console.error('Error posting the note to the backend:', error);
+    }
   };
 
   const handleCloseNoteForm = () => {
@@ -50,18 +114,33 @@ const Reminder = () => {
   };
 
   const handleEditNote = (index) => {
-    const selectedNote = notes[index];
+    const originalIndex = notes.length - 1 - index; // Adjust the index for the reversed array
+    const selectedNote = notes[originalIndex];
     setNoteTitle(selectedNote.title);
-    setNoteBody(selectedNote.body);
+    setNoteBody(selectedNote.note);
     setShowNoteForm(true);
-    setSelectedNoteIndex(index);
+    setSelectedNoteIndex(originalIndex);
   };
 
-  const handleDeleteNote = (index) => {
-    const updatedNotes = [...notes];
-    updatedNotes.splice(index, 1);
-    setNotes(updatedNotes);
+  const handleDeleteNote = async (noteID) => {
+    try {
+      await axios.delete(`https://flea-helped-locust.ngrok-free.app/reminders/${noteID}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await fetchNotes(); // Fetch notes again to update the UI
+    } catch (error) {
+      console.error('Error deleting the note:', error);
+    }
   };
+
+  // const handleDeleteNote = (index) => {
+  //   const updatedNotes = [...notes];
+  //   updatedNotes.splice(index, 1);
+  //   setNotes(updatedNotes);
+  // };
 
   const handleOptionsButtonClick = (index) => {
     document.getElementById(`dropdown-${index}`).click();
@@ -70,7 +149,7 @@ const Reminder = () => {
   return (
     <Container className='reminder-container' style={{ margin: "0" }}>
       <Row>
-        {!showNoteForm && (
+        {!showNoteForm && teacher && (
           <Col md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
             <Card style={{ padding: "0" }} className='addR-container' onClick={() => setShowNoteForm(true)} title='Create note'>
               <Card.Body>
@@ -81,7 +160,7 @@ const Reminder = () => {
             </Card>
           </Col>
         )}
-        {!showNoteForm && notes.map((note, index) => (
+        {!showNoteForm && notes.slice().reverse().map((note, index) => (
           <Col key={index} md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
             <Card style={{ padding: "0" }} className='addedR-container'>
               <Card.Body className='addedReminder-body'>
@@ -89,22 +168,26 @@ const Reminder = () => {
                   {note.title}
                 </Card.Title>
                 <Card.Text className='addedReminder-text'>
-                  {note.body}
+                  {note.note}
                 </Card.Text>
                 <Card.Footer style={{ padding: "0" }} className='addedR-footer'>
                   <div id='reminder-date'>
-                    <span className="ml-auto" >{note.date}</span>
+                    <span className="ml-auto" >{note.formattedDate}</span>
                   </div>
-                  <div className='reminderO-container'>
-                    <SlOptions  onClick={() => handleOptionsButtonClick(index)} className='reminder-options'/>
-                  </div>
-                  <Dropdown className="dropdown" style={{display: "contents"}}>
-                    <Dropdown.Toggle variant="success" id={`dropdown-${index}`} style={{display: "none"}}/>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => handleEditNote(index)}>Edit</Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleDeleteNote(index)}>Delete</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                  {teacher && (
+                    <>
+                      <div className='reminderO-container'>
+                        <SlOptions  onClick={() => handleOptionsButtonClick(index)} className='reminder-options'/>
+                      </div>
+                      <Dropdown className="dropdown" style={{display: "contents"}}>
+                        <Dropdown.Toggle variant="success" id={`dropdown-${index}`} style={{display: "none"}}/>
+                        <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => handleEditNote(index)}>Edit</Dropdown.Item>
+                          <Dropdown.Item onClick={() => handleDeleteNote(note._id)}>Delete</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </>
+                  )}
                 </Card.Footer>
               </Card.Body>
             </Card>
@@ -564,7 +647,12 @@ const Reminder = () => {
   // );
 };
 
-export default Reminder;
+const mapStateToProps = state => ({
+  token: state.auth.token,
+  role: state.auth.role,
+})
+
+export default connect(mapStateToProps, { login })(Reminder);
 
 
 {/* <Card.Footer style={{ padding: "0" }} className='addedR-footer'> */}

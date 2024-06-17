@@ -567,6 +567,11 @@ import axios from 'axios';
 import { finishFileOperation, getCourseProject, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { login } from '../../redux/actions/auth';
 
+const formatDateTime = (dateTimeStr) => {
+  const date = new Date(dateTimeStr);
+  return date.toLocaleDateString(); // This will display only the date part
+};
+
 const Projects = 
 ({
   role,
@@ -629,12 +634,27 @@ const Projects =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.projects && course.projects.length > 0) {
-        const basePath = `https://flea-helped-locust.ngrok-free.app/course/getProjects/${currentCourseID}/`;
-        const projects = course.projects.map(project => ({
-            ...project,
-            path: `${basePath}${project._id}`,
-        }));
-        setSubmittedProjects(projects);
+      const basePath = `https://flea-helped-locust.ngrok-free.app/course/getProjects/${currentCourseID}/`;
+      const projects = course.projects.map(project => {
+        // Format assignment's uploadtime and deadline
+        const formattedProject = {
+          ...project,
+          path: `${basePath}${project._id}`,
+          uploadtime: formatDateTime(project.uploadtime), // Assuming formatDateTime is a function that formats the date
+          deadline: formatDateTime(project.deadline),
+        };  
+        // Format solutions' uploadtime if solutions array exists
+        if (project.solutions && project.solutions.length > 0) {
+          const formattedSolutions = project.solutions.map(solution => ({
+            ...solution,
+            uploadtime: formatDateTime(solution.uploadtime), // Format each solution's uploadtime
+          }));
+          formattedProject.solutions = formattedSolutions;
+        }
+
+        return formattedProject;
+      });
+      setSubmittedProjects(projects);
     }
 }, [course, currentCourseID]);
   useEffect(() => {
@@ -708,72 +728,67 @@ const Projects =
     const submittedIndex = submittedProjects.findIndex(project => project._id === submittedProjectId);
     
     if (submittedIndex !== -1) {
-      const updatedProjectsPaths = [...submittedProjects];
-      
-      updatedProjectsPaths[submittedIndex] = {
-        ...updatedProjectsPaths[submittedIndex],
-        submitted: true
-      };
-  
-      setSubmittedProjects(updatedProjectsPaths);
-      console.log('Submitted assignment:', updatedProjectsPaths[submittedIndex]);
-    } else {
-      console.log('Submitted assignment not found!');
-    }
+      const updatedProjects = [...submittedProjects];
+
+      setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
+          // Make the API call to submit the assignment
+      try {
+        const formData = new FormData();
+
+        if (selectedFiles && selectedFiles.length > 0) {
+          for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('projects-solution', selectedFiles[i], selectedFiles[i].name);
+            console.log(`Appending file: ${selectedFiles[i].name}`);
+            const uploadDate = new Date().toLocaleDateString();
+            formData.append('uploadtime', uploadDate);
+          }
+        } else {
+          console.error('No files selected');
+          return;
+        }
     
+        console.log('FormData entries before submission:');
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
+        // formData.append('description', description); // Add any additional metadata
+      
+        const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        console.log(response);
+        console.log(formData)
+        startFileOperation();
+        if (response.ok) {
+          updatedProjects[submittedIndex] = {
+            ...updatedProjects[submittedIndex],
+            submitted: "Submitted",
+            submittedtime: new Date().toLocaleDateString(),
+          };
+          getCourses()
+          setSubmittedProjects(updatedProjects);
+          setUploadAlert({ variant: 'primary', message: `Project submitted successfully: ${response.statusText}` });
+          // getCourses();
+        } else {
+          setUploadAlert({ variant: 'danger', message: `Failed to submit project: ${response.statusText}` });
+        }
+      } catch (error) {
+        setUploadAlert({ variant: 'danger', message: `Error submitting project: ${error.message}` });
+      } finally {
+        finishFileOperation();
+        resetWaitAlert();
+      }
+    } else {
+      console.log('Submitted project not found!');
+    }
     setSelectedFiles([]);
     setDescription('');
     setUp(false);
-    setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
-        // Make the API call to submit the assignment
-    try {
-      const formData = new FormData();
-
-      if (selectedFiles && selectedFiles.length > 0) {
-        for (let i = 0; i < selectedFiles.length; i++) {
-          formData.append('projects-solution', selectedFiles[i], selectedFiles[i].name);
-          console.log(`Appending file: ${selectedFiles[i].name}`);
-        }
-      } else {
-        console.error('No files selected');
-        return;
-      }
-  
-      console.log('FormData entries before submission:');
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-      // formData.append('description', description); // Add any additional metadata
-    
-      const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      console.log(response);
-      console.log(formData)
-      try {
-        const responseBody = await response.text();
-        console.log('Response body:', responseBody);
-      } catch (err) {
-        console.error('Failed to read response body:', err);
-      }
-      startFileOperation();
-      if (response.ok) {
-        setUploadAlert({ variant: 'primary', message: `Project submitted successfully: ${response.statusText}` });
-        // getCourses();
-      } else {
-        setUploadAlert({ variant: 'danger', message: `Failed to submit project: ${response.statusText}` });
-      }
-    } catch (error) {
-      setUploadAlert({ variant: 'danger', message: `Error submitting project: ${error.message}` });
-    } finally {
-      finishFileOperation();
-      resetWaitAlert();
-    }
   };
 
   const handleInProgressClick = (projectId) => {
@@ -885,14 +900,8 @@ const Projects =
     }
     formData.append('filename', projectName);
 
-    // Append deadline date (assuming you have a form control for deadline)
-    formData.append('deadline', deadline); // Assuming 'deadline' is a state variable holding the selected date
-    console.log(formData)
-
-
-    // Append current upload time
-    const currentDate = new Date();
-    formData.append('uploadtime', currentDate.toISOString()); // Adjust date formatting as per backend requirements
+    formData.append('deadline', deadline);
+    formData.append('uploadtime', new Date().toISOString());
     // if (!uploadAlert && !deleteAlert) {
         setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
     // }
@@ -913,6 +922,9 @@ const Projects =
             _id: project,
             filename: selectedFiles[0].name,
             path: `https://flea-helped-locust.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
+            uploadtime: new Date().toLocaleDateString(),
+            deadline: deadline,
+            // submitted: "notSubmitted"
           };
           setSubmittedProjects(prevProjects => [...prevProjects, uploadedProject]);
             //   console.log(uploadedProject)
@@ -1021,7 +1033,7 @@ const Projects =
           <Row style={{ margin: "0", padding: "0"}} className='assignments-container' key={course._id}>
             {!up && submittedProjects && submittedProjects.map((project, index) => (
               <React.Fragment key={index}>
-                {(project._id !== submittedProjectId) && !project.submitted && (
+                {(project._id !== submittedProjectId && project.solutions.length === 0) && (
                   <Col key={index} style={{ margin: "0", padding: "0"}} className='asscol2'>
                     <div className="assignment-container2">
                       <div className='assignment-header'>
@@ -1032,7 +1044,7 @@ const Projects =
                       <div className='project' onClick={() => handleInProgressClick(project._id)} style={{cursor: "pointer", backgroundColor: "#f0f0f0"}} title='Open Assignmet'>
                         <div className='projectName-container'>
                           <h5 className='project-name'>{project.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                          <h6 className='ass-zeros'>Uploaded {project.uploadtime} - Deadline {project.deadline}</h6>
                         </div>
                         <button className='project-btn'>
                           In progress
@@ -1041,7 +1053,7 @@ const Projects =
                     </div>
                   </Col>
                 )}
-                {(project._id === submittedProjectId || project.submitted) && (
+                {(project._id === submittedProjectId || project.solutions.length !== 0) && (
                   <Col style={{ margin: "0", padding: "0"}} className='asscol2'>
                     <div className='project-container'>
                       <div className='projectH-container'>
@@ -1052,10 +1064,10 @@ const Projects =
                       <div className='project'>
                         <div className='projectName-container'>
                           <h5 className='project-name'>{project.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                          <h6 className='ass-zeros'>Submitted {project.solutions.length > 0 ? project.solutions[0].uploadtime : '...'}</h6>
                         </div>
                         <button className='project-btn' style={{cursor: "unset", backgroundColor: "#7939ff"}}>
-                          Submitted
+                          {project.submitted ? "Submitted" : "Done"}
                         </button>
                       </div>
                     </div>
@@ -1080,7 +1092,7 @@ const Projects =
                                 <div className='project' key={index} onClick={() => handleProjectDownload(project)} style={{cursor: "pointer"}} title={`Download ${project.filename}`}>
                                   <div className='projectName-container'>
                                     <h5 className='ass-name'>{project.filename}</h5>
-                                    <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                                    <h6 className='ass-zeros'>Uploaded {project.uploadtime} - Deadline {project.deadline}</h6>
                                   </div>
                                   <div className='downloadAss-container'>
                                     <a>
@@ -1260,7 +1272,7 @@ const Projects =
                       >
                         <div className='projectName-container'>
                           <h5 className='ass-name'>{project.filename}</h5>
-                          <h6 className='ass-zeros'>uploaded 00/00 - deadline 00/00</h6>
+                          <h6 className='ass-zeros'>Uploaded {project.uploadtime} - Deadline {project.deadline}</h6>
                         </div>
                         <div className='downloadAss-container'>
                           <a onClick={(event) => { event.stopPropagation(); project.path && handleProjectDelete(project)}}
