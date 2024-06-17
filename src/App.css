@@ -4884,7 +4884,7 @@ video:focus-within {
 }
 
 .correct-check input[type="radio"].form-check-input:checked {
-  background-color: #7839ff; /* Black circle when checked */
+  background-color: #7839ff;
   border-color: #7939ff;
   outline: 1px solid #7939FF;
 }

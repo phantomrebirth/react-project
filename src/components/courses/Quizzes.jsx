@@ -9,6 +9,8 @@ import { login } from '../../redux/actions/auth';
 import { IoArrowForward } from "react-icons/io5";
 import { IoClose } from 'react-icons/io5';
 import { finishFileOperation, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
+import axios from 'axios';
+import { format } from 'date-fns';
 
 const Quizzes = 
 ({
@@ -45,18 +47,40 @@ const Quizzes =
       name: '',
       duration: '',
       startTime: '',
-      endTime: ''
     });
+    const [quizzes, setQuizzes] = useState([]);
     useEffect(() => {
         if (role === 'student') {
           setStudent(true);
+          fetchQuizzes();
         } else if (role === 'teacher') {
           setTeacher(true);
         }
         // dispatch(fetchCourses());
     }, [role]);
-    // const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
     const course = courses.find(course => course._id === currentCourseID);
+    const fetchQuizzes = async () => {
+        try {
+            const response = await axios.get(`https://flea-helped-locust.ngrok-free.app/quiz/${currentCourseID}`, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const quizzesWithFormattedTime = response.data.quiz.map(quiz => ({
+                ...quiz,
+                formattedStartDate: format(new Date(quiz.startTime), 'PP'),
+                formattedStartTime: format(new Date(quiz.startTime), 'HH:mm'),
+                formattedEndTime: format(new Date(new Date(quiz.startTime).getTime() + quiz.duration * 60000), 'HH:mm'),
+                formattedQuizStartTime: format(new Date(quiz.startTime), 'PPpp')
+            }));
+            setQuizzes(quizzesWithFormattedTime);
+        } catch (error) {
+            console.error("Error fetching quizzes: ", error);
+        }
+    };
+    console.log(quizzes)
+    // const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
     // if (isLoading || !course) {
     //   return <LoadingSpinner />;
     // }
@@ -83,7 +107,6 @@ const Quizzes =
         name: '',
         duration: '',
         startTime: '',
-        endTime: ''
       });
     };
   
@@ -98,7 +121,7 @@ const Quizzes =
     };
   
     const handleCorrectAnswerChange = (index) => {
-      setCurrentQuestion({ ...currentQuestion, correctAnswer: index });
+      setCurrentQuestion({ ...currentQuestion, correctAnswerIndex: index });
     };
   
     const handleSaveQuestion = () => {
@@ -110,8 +133,8 @@ const Quizzes =
         newQuestions.push(currentQuestion);
       }
       setQuestions(newQuestions);
-      setCurrentQuestion({ question: '', answers: ['', '', '', ''], correctAnswer: null });
-      setHighlightedAnswer(currentQuestion.correctAnswer); // Highlight correct answer after saving
+      setCurrentQuestion({ question: '', answers: ['', '', '', ''], correctAnswerIndex: null });
+      setHighlightedAnswer(currentQuestion.correctAnswerIndex); // Highlight correct answer after saving
     };
   
     const handleEditQuestion = (index) => {
@@ -124,36 +147,39 @@ const Quizzes =
       setQuestions(newQuestions);
       if (editingIndex !== null && editingIndex === index) {
         setEditingIndex(null);
-        setCurrentQuestion({ question: '', answers: ['', '', '', ''], correctAnswer: null });
+        setCurrentQuestion({ question: '', answers: ['', '', '', ''], correctAnswerIndex: null });
       } else if (editingIndex !== null && editingIndex > index) {
         setEditingIndex(editingIndex - 1);
       }
     };
   
     const handleSubmitQuiz = () => {
-      const payload = {
-        quizDetails,
-        questions
+        const payload = {
+            title: quizDetails.name,
+            duration: quizDetails.duration,
+            startTime: quizDetails.startTime,
+            courseId: currentCourseID,
+            questions: questions.map(q => ({
+              question: q.question,
+              answers: q.answers,
+              correctAnswerIndex: q.correctAnswerIndex
+            }))
+          };
+        axios.post('https://flea-helped-locust.ngrok-free.app/quiz', payload, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(response => {
+          console.log('Success:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+        handleExitCreateQuiz();
       };
-      console.log(payload)
-      fetch('YOUR_BACKEND_ENDPOINT', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        // Clear everything after successful submission
-        // handleExitCreateQuiz();
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-      handleExitCreateQuiz()
-    };
   
     const handleQuizDetailsChange = (e) => {
       const { name, value } = e.target;
@@ -170,12 +196,11 @@ const Quizzes =
         name: '',
         duration: '',
         startTime: '',
-        endTime: ''
       });
     };
   
-    const isSaveDisabled = !currentQuestion.question.trim() || currentQuestion.answers.some(answer => !answer.trim()) || currentQuestion.correctAnswer === null;
-    const isSubmitDisabled = questions.length === 0 || !quizDetails.name.trim() || !quizDetails.duration.trim() || !quizDetails.startTime.trim() || !quizDetails.endTime.trim();
+    const isSaveDisabled = !currentQuestion.question.trim() || currentQuestion.answers.some(answer => !answer.trim()) || currentQuestion.correctAnswerIndex === null;
+    const isSubmitDisabled = questions.length === 0 || !quizDetails.name.trim() || !quizDetails.duration.trim() || !quizDetails.startTime.trim();
     const isOpenModalDisabled = questions.length === 0
 
   return (
@@ -187,81 +212,83 @@ const Quizzes =
       )}
         {student && (
             <>
-                {showFinishedQuiz && !showQuiz && (
+                {showFinishedQuiz && !showQuiz && Array.isArray(quizzes) && quizzes.length !== 0 &&(
                 <>
-                    <Row className='quizzes-container' style={{ margin: "0", padding: "0"}}>
-                        <Col style={{ margin: "0", padding: "0"}} className='quiz-col2'>
-                            <div className='aQ-container'>
-                                <div className='quiz-header'>
-                                    <ul className='q-head'>
-                                        <li>{course.name}</li>
-                                    </ul>
-                                </div>
-                                <div className='attempt-quiz' onClick={handleAttemptQuizClick} style={{cursor: "pointer"}}>
-                                    <div className='aQName-container'>
-                                        <h5 className='aQ-name'>Quiz</h5>
-                                        <h6 className='ass-zeros'>uploaded 00/00</h6>
-                                    </div>
-                                    <button className='aQ-btn'>
-                                        Attempt Quiz
-                                    </button>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </>
-                )}
-                <div>
-                    {!showFinishedQuiz && !showQuiz &&(
-                        <>
-                        <Row style={{ margin: "0", padding: "0" }} className='attempt-container'>
-                            <Col style={{ margin: "0", padding: "0"}}>
-                                <div className='aQ-container' style={{marginLeft: "0px"}}>
+                    {quizzes && quizzes.map((quiz, index) => (
+                        <Row key={index} className='quizzes-container' style={{ margin: "0", padding: "0"}}>
+                            <Col style={{ margin: "0", padding: "0"}} className='quiz-col2'>
+                                <div className='aQ-container'>
                                     <div className='quiz-header'>
                                         <ul className='q-head'>
                                             <li>{course.name}</li>
                                         </ul>
                                     </div>
-                                    <div className='attempt-quiz'>
+                                    <div className='attempt-quiz' onClick={handleAttemptQuizClick} style={{cursor: "pointer"}}>
                                         <div className='aQName-container'>
-                                            <h5 className='aQ-name'>Quiz</h5>
-                                            {/* <h6 className='ass-zeros'>uploaded 00/00</h6> */}
+                                            <h5 className='aQ-name'>Quiz - {quiz.title}</h5>
+                                            <h6 className='ass-zeros'>starts at: {quiz.formattedQuizStartTime}</h6>
                                         </div>
-                                        <button className='aQ-btn' style={{cursor: "unset"}}>
-                                            Attempt now
+                                        <button className='aQ-btn'>
+                                            Attempt Quiz
                                         </button>
                                     </div>
                                 </div>
                             </Col>
-                            <Col style={{ margin: "0", padding: "0"}} md={7} lg={7} xl={7}>
-                                <div className='startQ-container'>
-                                    <button className='startQ-btn' onClick={handleStartQuizClick}>
-                                        Start Quiz
-                                    </button>
-                                </div>
-                            </Col>
                         </Row>
+                    ))}
+                </>
+                )}
+                <div>
+                    {!showFinishedQuiz && !showQuiz && quizzes && quizzes.map((quiz, index) =>(
+                        <>
+                            <Row key={index} style={{ margin: "0", padding: "0" }} className='attempt-container'>
+                                <Col style={{ margin: "0", padding: "0"}}>
+                                    <div className='aQ-container' style={{marginLeft: "0px"}}>
+                                        <div className='quiz-header'>
+                                            <ul className='q-head'>
+                                                <li>{course.name}</li>
+                                            </ul>
+                                        </div>
+                                        <div className='attempt-quiz'>
+                                            <div className='aQName-container'>
+                                                <h5 className='aQ-name'>Quiz - {quiz.title}</h5>
+                                                {/* <h6 className='ass-zeros'>uploaded 00/00</h6> */}
+                                            </div>
+                                            <button className='aQ-btn' style={{cursor: "unset"}}>
+                                                Attempt now
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col style={{ margin: "0", padding: "0"}} md={7} lg={7} xl={7}>
+                                    <div className='startQ-container'>
+                                        <button className='startQ-btn' onClick={handleStartQuizClick}>
+                                            Start Quiz
+                                        </button>
+                                    </div>
+                                </Col>
+                            </Row>
                             <div className='qd-container'>
                                 <div className='qdHeader-container'>
                                     <h4 className='qd-header'>Quiz Details</h4>
                                 </div>
                                 <div className='quiz-details'>
                                     <p>
-                                        13/2/2024
+                                        {quiz.formattedStartDate}
                                     </p>
                                     <p>
-                                        Open:     18:00
+                                        Open:     {quiz.formattedStartTime}
                                     </p>
                                     <p>
-                                        Close:    18:30
+                                        Close:    {quiz.formattedEndTime}
                                     </p>
                                     <p>
-                                        No. of questions: 15
+                                        No. of questions: {quiz.questions.length}
                                     </p>
                                 </div>
                             </div>
                         </>
-                    )}
+                    ))}
                 </div>
                 <div>
                     {showQuiz &&(
@@ -312,7 +339,7 @@ const Quizzes =
                             type="radio" 
                             name="correctAnswer" 
                             id="correctAnswerA" 
-                            checked={currentQuestion.correctAnswer === 0}
+                            checked={currentQuestion.correctAnswerIndex === 0}
                             onChange={() => handleCorrectAnswerChange(0)}
                             style={{ marginRight: "10px" }}
                             className='correct-check'
@@ -345,7 +372,7 @@ const Quizzes =
                             type="radio" 
                             name="correctAnswer" 
                             id="correctAnswerB" 
-                            checked={currentQuestion.correctAnswer === 1}
+                            checked={currentQuestion.correctAnswerIndex === 1}
                             onChange={() => handleCorrectAnswerChange(1)}
                             style={{ marginRight: "10px" }}
                             className='correct-check'
@@ -380,7 +407,7 @@ const Quizzes =
                             type="radio" 
                             name="correctAnswer" 
                             id="correctAnswerC" 
-                            checked={currentQuestion.correctAnswer === 2}
+                            checked={currentQuestion.correctAnswerIndex === 2}
                             onChange={() => handleCorrectAnswerChange(2)}
                             style={{ marginRight: "10px" }}
                             className='correct-check'
@@ -413,7 +440,7 @@ const Quizzes =
                             type="radio" 
                             name="correctAnswer" 
                             id="correctAnswerD" 
-                            checked={currentQuestion.correctAnswer === 3}
+                            checked={currentQuestion.correctAnswerIndex === 3}
                             onChange={() => handleCorrectAnswerChange(3)}
                             style={{ marginRight: "10px" }}
                             className='correct-check'
@@ -457,7 +484,7 @@ const Quizzes =
                         {q.answers.map((answer, idx) => (
                             <li key={idx}>
                             answer {String.fromCharCode(65 + idx)}: &nbsp; {/* Add a non-breaking space */}
-                            <span className={q.correctAnswer === idx ? 'correct-answer-text' : ''}>
+                            <span className={q.correctAnswerIndex === idx ? 'correct-answer-text' : ''}>
                                 {answer}
                             </span>
                             </li>
@@ -505,7 +532,7 @@ const Quizzes =
                             onChange={handleQuizDetailsChange}
                         />
                         </FloatingLabel>
-                        <FloatingLabel controlId="floatingEndTime" label="End Time" className="mb-3">
+                        {/* <FloatingLabel controlId="floatingEndTime" label="End Time" className="mb-3">
                         <Form.Control
                             type="datetime-local"
                             placeholder="Enter end time"
@@ -513,7 +540,7 @@ const Quizzes =
                             value={quizDetails.endTime}
                             onChange={handleQuizDetailsChange}
                         />
-                        </FloatingLabel>
+                        </FloatingLabel> */}
                     </Form>
                     </Modal.Body>
                     <Modal.Footer>
