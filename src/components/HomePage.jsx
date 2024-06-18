@@ -211,46 +211,48 @@ const HomePage =
       )}
       {teacher && (
         <div>
-          <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}} className='homeCourses-container'>
-            <Container className='cards-container' style={{padding: "0", width: "100%"}} fluid>
-              <Row xs={1} md={2} xl={12} className="g-4" style={{padding: "0",
-                                                                  flexWrap: "nowrap",
-                                                                  justifyContent: "space-between",
-                                                                  width: "100%",
-                                                                  maxWidth:"100%"}}
-                                          id='cardsRow'
-              >
-                {courses.map((course, idx) => (
-                  <Col key={idx} className='cards' style={{margin: "1rem 5% 1rem 5px", padding: "0 4px 0 0", maxWidth: "34rem"}}>
-                    <Link to={`/courses/${course.path}`} className='cards-link'>
-                    <Card style=
-                      {{
-                        transform: "none",
-                        minHeight: "252px",
-                        backgroundColor: "#fff",
-                        border: "1px solid #000",
-                        boxShadow: "0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.3) inset, 0 0 8px rgba(121, 57, 255, 0.3) inset",
-                      }} 
-                      title='Open course'
-                    >
-                        <Card.Body>
-                          <Card.Title className='card-title' style={{color: "#000"}}>{course.name}</Card.Title>
-                          <div className='progress-container'>
-                            <h5 className='card-text' style={{color: "#000"}}>Progress</h5>
-                            <div className="progress-bar" style={{backgroundColor: "#bbb"}}>
-                              <div className="progress" style={{ width: `${course.progress * 100}%`, backgroundColor: "#7939ff" }}></div>
+          <Container style={{display: "flex", justifyContent: "center", padding: "0"}}>
+            <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}} className='homeCourses-container'>
+              <Container className='cards-container' style={{padding: "0", width: "100%"}} fluid>
+                <Row xs={1} md={2} xl={12} className="g-4" style={{padding: "0",
+                                                                    flexWrap: "nowrap",
+                                                                    justifyContent: "center",
+                                                                    width: "100%",
+                                                                    maxWidth:"100%"}}
+                                            id='cardsRow'
+                >
+                  {courses.map((course, idx) => (
+                    <Col key={idx} className='cards' style={{margin: "1rem 0% 1rem 5px", padding: "0 24px 0 20px", maxWidth: "34rem"}}>
+                      <Link to={`/courses/${course.path}`} className='cards-link'>
+                      <Card style=
+                        {{
+                          // transform: "none",
+                          minHeight: "252px",
+                          backgroundColor: "#fff",
+                          border: "1px solid #000",
+                          boxShadow: "0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.1), 0 0 8px rgba(121, 57, 255, 0.3) inset, 0 0 8px rgba(121, 57, 255, 0.3) inset",
+                        }} 
+                        title='Open course'
+                      >
+                          <Card.Body>
+                            <Card.Title className='card-title' style={{color: "#000"}}>{course.name}</Card.Title>
+                            <div className='progress-container'>
+                              <h5 className='card-text' style={{color: "#000"}}>Progress</h5>
+                              <div className="progress-bar" style={{backgroundColor: "#bbb"}}>
+                                <div className="progress" style={{ width: `${course.progress * 100}%`, backgroundColor: "#7939ff" }}></div>
+                              </div>
                             </div>
-                          </div>
-                          <div className='arrow-container'>
-                            <div className='arrow-tail' style={{backgroundColor: "#000"}}></div>
-                            <FaChevronRight className='arrow-head' style={{color: "#000"}} />
-                          </div>
-                        </Card.Body>
-                    </Card>
-                    </Link>
-                  </Col>
-                ))}
-              </Row>
+                            <div className='arrow-container'>
+                              <div className='arrow-tail' style={{backgroundColor: "#000"}}></div>
+                              <FaChevronRight className='arrow-head' style={{color: "#000"}} />
+                            </div>
+                          </Card.Body>
+                      </Card>
+                      </Link>
+                    </Col>
+                  ))}
+                </Row>
+              </Container>
             </Container>
           </Container>
         </div>

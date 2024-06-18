@@ -4743,8 +4743,8 @@ video:focus-within {
   flex-wrap: wrap;
   font-size: 126%;
   white-space: wrap;
-  /* width: 10rem; */
-  /* height: 6rem; */
+  width: 10rem;
+  height: 5rem;
   color: #7939FF;
   box-shadow: 
   0 0 2px rgba(1, 1, 1, 0.159),
