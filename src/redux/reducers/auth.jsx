@@ -23,6 +23,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isLoading: true,
+        error: null,
       };
     case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
@@ -34,6 +35,7 @@ export default function(state = initialState, action) {
         token: payload.token,
         role: payload.role,
         userID: payload.userID,
+        error: null,
       };
     case LOGOUT_SUCCESS:
       localStorage.removeItem('token');
@@ -44,7 +46,8 @@ export default function(state = initialState, action) {
         isLoading: false,
         token: null,
         role: null,
-        userID: null
+        userID: null,
+        error: null,
       }
     case LOGOUT_FAIL:
     case LOGIN_FAIL:

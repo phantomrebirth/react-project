@@ -52,6 +52,82 @@ const HomePage =
     );
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(date);
+  };
+
+  const lastTwoCourses = courses.slice(-2); // Get the last two courses
+
+  const renderAssignments = () => {
+    if (courses.length === 0) {
+      return null;
+    }
+
+    const renderAssignmentStatus = (assignment) => {
+      if (!assignment) return 'No assignment';
+      return assignment.solutions && assignment.solutions.length > 0 ? 'Completed' : 'In progress';
+    };
+
+    const firstCourseAssignment = courses[0].assignments[0]?.filename || 'No assignment';
+    const firstCourseAssignmentTime = formatDate(courses[0].assignments[0]?.uploadtime) || '';
+    const firstCourseAssignmentStatus = renderAssignmentStatus(courses[0].assignments[0]);
+
+    const secondCourseAssignment = courses[1].assignments[0]?.filename || 'No assignment';
+    const secondCourseAssignmentTime = formatDate(courses[1].assignments[0]?.uploadtime) || '';
+    const secondCourseAssignmentStatus = renderAssignmentStatus(courses[1].assignments[0]);
+
+    return (
+      <>
+        <Row>
+          <div className='home-myAssContainer'>
+            <div className='home-myAssTitleContainer'>
+              <h4 className='home-myAssTitle'>
+                {courses[0].name}
+              </h4>
+              <div className='home-myAssNameContainer'>
+                <h6 className='home-myAssName'>
+                  {firstCourseAssignment},
+                </h6>
+                <h6 className='home-myAssDate'>
+                  Uploaded at: {firstCourseAssignmentTime}
+                </h6>
+              </div>
+            </div>
+            <div className='home-myAssBtnContainer'>
+              <button className='home-myAssBtn'>
+                {firstCourseAssignmentStatus}
+              </button>
+            </div>
+          </div>
+        </Row>
+        <Row>
+          <div className='home-myAssContainer'>
+            <div className='home-myAssTitleContainer'>
+              <h4 className='home-myAssTitle'>
+                {courses[1].name}
+              </h4>
+              <div className='home-myAssNameContainer'>
+                <h6 className='home-myAssName'>
+                  {secondCourseAssignment},
+                </h6>
+                <h6 className='home-myAssDate'>
+                  Uploaded at: {secondCourseAssignmentTime}
+                </h6>
+              </div>
+            </div>
+            <div className='home-myAssBtnContainer'>
+              <button className='home-myAssBtn'>
+                {secondCourseAssignmentStatus}
+              </button>
+            </div>
+          </div>
+        </Row>
+      </>
+    );
+  };
+
   console.log(role);
 
   return (
@@ -90,10 +166,10 @@ const HomePage =
                                                                 maxWidth:"100%"}}
                                         id='cardsRow'
               >
-                {homeCourses.map((course, idx) => (
+                {courses.slice(-2).reverse().map((course, idx) => (
                 // margin: "1rem 3% 1rem 4px",
                   <Col key={idx} className='cards' style={{margin: "1rem 5% 1rem 5px", padding: "0 4px 0 0", maxWidth: "34rem"}}>
-                    <Link to={course.path} className='cards-link'>
+                    <Link to={`/courses/${course.path}`} className='cards-link'>
                       <Card style={{transform: "none",
                                     minHeight: "252px",
                                     backgroundColor: "#fff",
@@ -105,11 +181,12 @@ const HomePage =
                             title='Open course'
                       >
                         <Card.Body>
-                          <Card.Title className='card-title' style={{color: "#000"}}>{course.title}</Card.Title>
+                          <Card.Title className='card-title' style={{color: "#000"}}>{course.name}</Card.Title>
                           <div className='progress-container'>
                             <h5 className='card-text' style={{color: "#000"}}>Progress</h5>
                             <div className="progress-bar" style={{backgroundColor: "#bbb"}}>
-                              <div className="progress" style={{ width: `${course.progress * 100}%`, backgroundColor: "#7939ff" }}></div>
+                            {/* <div className="progress" style={{ width: `${course.progress * 100}%`, backgroundColor: "#7939ff" }}></div> */}
+                              <div className="progress" style={{ width: `${70}%`, backgroundColor: "#7939ff" }}></div>
                             </div>
                           </div>
                           <div className='arrow-container'>
@@ -133,15 +210,15 @@ const HomePage =
                   My Assignments
                 </h3>
               </Row>
-              <Row>
+              {/* <Row>
                 <div className='home-myAssContainer'>
                   <div className='home-myAssTitleContainer'>
                     <h4 className='home-myAssTitle'>
-                      Computer Vision
+                      {courses[0].title}
                     </h4>
                     <div className='home-myAssNameContainer'>
                       <h6 className='home-myAssName'>
-                        Assignment 1 , 
+                        {firstCourseAssignment},
                       </h6>
                       <h6 className='home-myAssDate'>
                         6-2-2024
@@ -176,7 +253,8 @@ const HomePage =
                     </button>
                   </div>
                 </div>
-              </Row>
+              </Row> */}
+              {renderAssignments()}
             </Container>
             {/* paddingBottom: "1%", */}
             <Container style={{ maxWidth: "100%", margin: "0.5rem 0 0 0"}}

@@ -27,7 +27,6 @@ const Profile = ({ token }) => {
   const fetchProfileData = async () => {
     try {
         // userData(token);
-        console.log(token)
       const response = await axios.get('https://flea-helped-locust.ngrok-free.app/users/me', {
         headers: {
           'ngrok-skip-browser-warning': 'true',
@@ -42,8 +41,6 @@ const Profile = ({ token }) => {
         email,
         password,
       }));
-      console.log(response.data)
-      console.log(usersData);
     } catch (error) {
       console.error('Error fetching profile data:', error);
     }
@@ -57,7 +54,7 @@ const Profile = ({ token }) => {
         // name: userData.name,
         email: usersData.email,
         password: usersData.password
-      };      console.log(body);
+      };
       // const response = userUpdate(body);
       const response = await axios.patch('https://flea-helped-locust.ngrok-free.app/users/update',
       body, {
@@ -164,7 +161,7 @@ const Profile = ({ token }) => {
                   type={showPassword ? "text" : "password"}
                   placeholder="New Password"
                   name="password"
-                  value={usersData.password}
+                  value={usersData.password || ''}
                   onChange={(e) => setUsersData(prevState => ({
                     ...prevState,
                     password: e.target.value

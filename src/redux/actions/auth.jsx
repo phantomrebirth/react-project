@@ -45,6 +45,7 @@ export const login = (email, password) => async (dispatch) => {
     // notify();
     dispatch({
       type: LOGIN_FAIL,
+      payload: error.response?.data?.message || 'Login failed',
     });
   }
 };
@@ -58,6 +59,7 @@ export const logout = () => async (dispatch) => {
   } catch {
     dispatch({
       type: LOGOUT_FAIL,
+      payload: error.response?.data?.message || 'Logout failed',
     });
   }
 };

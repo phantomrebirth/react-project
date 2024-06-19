@@ -17,6 +17,7 @@ import { openLogOutModal } from "../redux/actions/logOutModalAction";
 import LogOutModal from "../redux/actions/LogOutModal";
 import { profile } from "../redux/actions/profile";
 import Search from "./Search";
+import logo00 from '../assets/images/logo00.png'
 // import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
 // import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
 // import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
@@ -109,7 +110,7 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
         <HiBars3 className="barsIcon"/>
       </div>
       <NavLink to='/' className="navLogo-container">
-        <img src="src/assets/images/logo00.png" alt="" className="nav-logo"/>
+        <img src={logo00} alt="" className="nav-logo"/>
       </NavLink>
       <Search/>
       <div className="notifications-container" ref={notificationRef}>

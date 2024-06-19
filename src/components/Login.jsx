@@ -1,5 +1,5 @@
 // import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { connect, useDispatch, useSelector } from 'react-redux';
@@ -8,40 +8,48 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 // import LoadingSpinner from '../redux/actions/LoadingSpinner';
 import { CircularProgress } from '@material-ui/core';
 import { login } from '../redux/actions/auth';
-const Login = ({login, token, role}) => {
-    const emailInput = document.getElementById("emailInput");
-    const passwordInput = document.getElementById("passwordInput");
-    const email_error = document.getElementById('email_error');
-    const password_error = document.getElementById('password_error');
-    const login_error = document.getElementById('login_error');
-    const isLoading = useSelector((state) => state.auth.isLoading);
-    const dispatch = useDispatch();
+import LOGO from '../assets/images/LOGOIII.png'
+import emailIcon from '../assets/images/email.png'
+import passwordIcon from '../assets/images/password.png'
+import closedEye from '../assets/images/eye-closed.png'
+import openEye from '../assets/images/eye.png'
+
+
+const Login = ({login, token, role, error, isLoading}) => {
+    // const emailInput = document.getElementById("emailInput");
+    // const passwordInput = document.getElementById("passwordInput");
+    // const email_error = document.getElementById('email_error');
+    // const password_error = document.getElementById('password_error');
+    // const login_error = document.getElementById('login_error');
+    const emailInput = useRef(null);
+    const passwordInput = useRef(null);
+    const emailError = useRef(null);
+    const passwordError = useRef(null);
+    const loginError = useRef(null);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordVisibility, setPasswordVisibility] = useState("password")
-    const openEye = "/src/assets/images/eye.png";
-    const closedEye = "/src/assets/images/eye-closed.png";
     const [isEyeClosed, setIsEyeClosed] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(isLoading);
 
     const validated = useCallback(() => {
         if (email && email.length < 8 && email.length !== 0) {
-            emailInput.style.border = "1px solid #f00";
-            email_error.style.display = "block";
+            emailInput.current.style.border = "1px solid #f00";
+            emailError.current.style.display = "block";
             return false;
         } else {
-            emailInput.style.border = "1px solid silver";
-            email_error.style.display = "none";
+            emailInput.current.style.border = "1px solid silver";
+            emailError.current.style.display = "none";
         }
 
         if (password && password.length < 6) {
-            passwordInput.style.border = "1px solid #f00";
-            password_error.style.display = "block";
+            passwordInput.current.style.border = "1px solid #f00";
+            passwordError.current.style.display = "block";
             return false;
         } else {
-            passwordInput.style.border = "1px solid silver";
-            password_error.style.display = "none";
+            passwordInput.current.style.border = "1px solid silver";
+            passwordError.current.style.display = "none";
         }
         return email && email.length >= 8 && password && password.length >= 6;
     }, [email, password]);
@@ -54,57 +62,30 @@ const Login = ({login, token, role}) => {
 
     const navigate = useNavigate();
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     if (validated()) {
-    //         try {
-    //             const response = await axios.post('https://ezlearn.onrender.com/users/login', { email, password });
-    //             const token = response.data.token;
-    //             const role = response.data.role;
-    //             dispatch(setToken(token), setRole(role));
-    //             console.log("role: ", role);
-    //             // localStorage.setItem('token', token);
-    //             navigate('/');
-    //             // console.log(token);
-    //         } catch (error) {
-    //             console.error(error);
-    //             if (error.response && error.response.data && error.response.data.error) {
-    //                 setErrorMessage(error.response.data.error);
-    //             } else {
-    //                 setErrorMessage("An error occurred during login.");
-    //             }
-    //         }
-    //     }
-    // };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validated()) {
-            setLoading(true); // Set loading to true when the form is submitted
+            setLoading(true);
             try {
                 console.log(email, password)
-                login(email, password);
+                await login(email, password);
                 console.log('aha')
-                // dispatch(setToken(token));
-                // dispatch(setRole(role));
-                if (token && role) {
-                    // Navigation only occurs if a token is received
+                if (token) {
                     navigate('/');
-                // } else {
-                //     // If no token is received, display an error message
-                //     setErrorMessage("Email or password is incorrect, try again.");
-                    // dispatch(clearToken());
-                    // clearToken();
+                } else {
+                    setErrorMessage("Email or password is incorrect, try again.");
+                    setLoading(false);
                 }
             } catch (error) {
-                // Handle any errors during the login process
                 if (error.payload && error.payload.error) {
                     setErrorMessage(error.payload.error);
                 } else {
                     setErrorMessage("An error occurred during login, try again.");
+                    // setErrorMessage("Email or password is incorrect, try again.");
+                    setLoading(false);
                 }
             }
-            setLoading(false); // Set loading to false after the login process completes
+            setLoading(false);
         }
     };
 
@@ -125,7 +106,7 @@ const Login = ({login, token, role}) => {
     return (
         <>
             {/* <p className='SHAlogo'>S<span style={{ color: "#7939ff" }}>H</span>A</p> */}
-            <img src='src/assets/images/LOGOIII.png' alt='' className='logo'/>
+            <img src={LOGO} alt='' className='logo'/>
             <Row>
                 <Col sm={12} md={12} lg={6} xl={6} xxl={6}>
                     <div className="contForm" style={{ minHeight: "100vh" }}>
@@ -134,9 +115,9 @@ const Login = ({login, token, role}) => {
                         </h1>
                         <form onSubmit={handleSubmit} id="loginForm" className="loginForm">
                             <div className="fontEmail"></div>
-                            <div id="emailInput" style={{ borderColor: "silver" }}>
+                            <div ref={emailInput} id="emailInput" style={{ borderColor: "silver" }}>
                                 <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                    <img id="emailIcon" src="src/assets/images/email.png" alt="email" />
+                                    <img id="emailIcon" src={emailIcon} alt="email" />
                                 </div>
                                 <input type="email"
                                        name="email" 
@@ -146,14 +127,14 @@ const Login = ({login, token, role}) => {
                                        onChange={handleInputChange}/>
                             </div>
                             <div id="e-error">
-                                <div id="email_error" style={{ display: "none" }}>
+                                <div ref={emailError} id="email_error" style={{ display: "none" }}>
                                     Please fill up your Email
                                 </div>
                             </div>
                             <div className="fontPassword"></div>
-                            <div id="passwordInput">
+                            <div ref={passwordInput} id="passwordInput">
                                 <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                    <img id="passwordIcon" src="src/assets/images/password.png" alt="password" />
+                                    <img id="passwordIcon" src={passwordIcon} alt="password" />
                                 </div>
                                 <input type={passwordVisibility} 
                                        required 
@@ -170,17 +151,17 @@ const Login = ({login, token, role}) => {
                                     )}
                                </div>
                             </div>
-                            <div id="pass-error">
+                            <div ref={passwordError} id="pass-error">
                                 <div id="password_error" style={{ display: "none" }}>
                                     Please fill up your password
                                 </div>
                             </div>
-                            <div id="login_error" style={{ color: "red" }}>
+                            <div ref={loginError} id="login_error" style={{ color: "red" }}>
                                 {errorMessage}
                             </div>
                             <input type="hidden" name="_csrf" value="your_csrf_token" />
                             <div id="sub-btn">
-                                {isLoading ? (
+                                {loading ? (
                                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '13vh' }}
                                     >
                                     <CircularProgress color="inherit"
