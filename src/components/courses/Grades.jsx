@@ -72,7 +72,7 @@ console.log(quizzes)
     <>
         {student && quizzes && quizzes.map((quiz, index) => (
             <>
-            {quiz.grades.length > 0 ? (
+              {quiz.grades.length > 0 && (
                 <Row key={index} className='grades-container' style={{ margin: "0", padding: "0"}}>
                     <Col style={{ margin: "0", padding: "0"}}>
                         <div className='fQ-container'>
@@ -98,8 +98,13 @@ console.log(quizzes)
                         </div>
                     </Col>
                 </Row>
-            ) : (
-                <div style=
+              )}
+            </>
+        ))}
+        {student && quizzes && quizzes.map((quiz, index) => (
+            <div key={index}>
+                {quiz.grades.length === 0 && (
+                    <div style=
                             {{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -107,12 +112,25 @@ console.log(quizzes)
                                 height: '100%',
                                 paddingTop: '6%'
                             }}
-                >
-                    You haven't submitted any quizzes yet.
-                </div>
-            )}
-            </>
+                    >
+                        You haven't submitted any quizzes yet.
+                    </div>
+                )}
+            </div>
         ))}
+        {student && quizzes.length === 0 && (
+            <div style=
+                    {{
+                       display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                        paddingTop: '6%'
+                    }}
+            >
+                You haven't submitted any quizzes yet.
+            </div>
+        )}
         {teacher && (
             <div>_</div>
         )}

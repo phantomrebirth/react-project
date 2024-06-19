@@ -16,6 +16,7 @@ import { login, logout } from "../redux/actions/auth";
 import { openLogOutModal } from "../redux/actions/logOutModalAction";
 import LogOutModal from "../redux/actions/LogOutModal";
 import { profile } from "../redux/actions/profile";
+import Search from "./Search";
 // import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
 // import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
 // import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
@@ -110,15 +111,7 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
       <NavLink to='/' className="navLogo-container">
         <img src="src/assets/images/logo00.png" alt="" className="nav-logo"/>
       </NavLink>
-      <div className="searchBar-container">
-        <div className="searchIcon-container">
-          <CiSearch className="search-icon"/>
-        </div>
-        {/* <div className="searchBar-hr">|</div> */}
-        <div className="search-container">
-          <input className="search" type="text" placeholder="Search"/>
-        </div>
-      </div>
+      <Search/>
       <div className="notifications-container" ref={notificationRef}>
         <div className="bell-container" onClick={handleBellClick}>
           <div className="notifications">

@@ -12,6 +12,7 @@ import { finishFileOperation, getCourses, resetDeleteAlert, resetUploadAlert, re
 import axios from 'axios';
 import { format } from 'date-fns';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
+import quizIcon from '../../assets/images/quiz.png';
 
 const Quizzes = 
 ({
@@ -436,38 +437,40 @@ console.log(quizzesAvailability)
             {!createQuiz && (
                 <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", height: "60vh", flexWrap: "wrap" }}>
                     <div style={{ margin: "auto" }}>
-                    <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "2rem"}}>
-
-                    <button className='createQuiz-btn' onClick={handleCreateQuiz} disabled={isCreateQuizDisabled}>
-                        Create quiz
-                        <IoArrowForward style={{ padding: "2% 0 0 3%", fontSize: "126%" }} />
-                    </button>
-                    </div>
-                    {quizzes && quizzes.map((quiz, index) => (
-                        <Row key={index} className='quizzes-container' style={{ margin: "0", padding: "0"}}>
-                            <Col style={{ margin: "0", padding: "0"}} className='quiz-col2'>
-                                <div className='aQ-container'>
-                                    <div className='attempt-quiz' onClick={() => handleEditQuiz(quiz)} 
-                                        style={{
-                                                cursor: quiz.grades.length === 0 ? 'pointer' : 'default',
-                                                // pointerEvents: quiz.grades.length === 0 ? 'auto' : 'none',
-                                        }}
-                                        title={quiz.grades.length === 0 ? `Edit quiz ${quiz.title}` : `Delete the last quiz first`}
-                                    >
-                                        <div className='aQName-container'>
-                                            <h5 className='aQ-name'>Quiz - {quiz.title}</h5>
-                                            <h6 className='ass-zeros'>starts at: {quiz.formattedQuizStartTime}</h6>
-                                        </div>
-                                        <div className='downloadAss-container'>
-                                            <a onClick={(event) => { event.stopPropagation(); handleQuizDelete(quiz._id);}} className='delete-ass'>
-                                                <MdOutlineDeleteOutline className='deleteAss-icon' title='Delete' style={{cursor: "pointer"}}/>
-                                            </a>
+                        <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                            <button className='createQuiz-btn' onClick={handleCreateQuiz} disabled={isCreateQuizDisabled}>
+                                Create quiz
+                                <IoArrowForward style={{ padding: "2% 0 2% 3%", fontSize: "150%" }} />
+                            </button>
+                        </div>
+                        {quizzes && quizzes.map((quiz, index) => (
+                            <Row key={index} className='quizzes-container' style={{ margin: "3rem 0 0 0", padding: "0", justifyContent: "center" }}>
+                                <Col style={{ margin: "0", padding: "0"}} className='quiz-col2'>
+                                    <div className='aQ-container' style={{margin: "3rem 0 0 0 !important"}}>
+                                        <div className='attempt-quiz' onClick={() => handleEditQuiz(quiz)} 
+                                            style={{
+                                                    cursor: quiz.grades.length === 0 ? 'pointer' : 'default',
+                                                    // pointerEvents: quiz.grades.length === 0 ? 'auto' : 'none',
+                                            }}
+                                            title={quiz.grades.length === 0 ? `Edit quiz ${quiz.title}` : `Delete the last quiz first`}
+                                        >
+                                            <div className='aQName-container'>
+                                                <h5 className='aQ-name'>Quiz - {quiz.title}</h5>
+                                                <h6 className='ass-zeros'>starts at: {quiz.formattedQuizStartTime}</h6>
+                                            </div>
+                                            <div className='downloadAss-container'>
+                                                <a onClick={(event) => { event.stopPropagation(); handleQuizDelete(quiz._id);}} className='delete-ass'>
+                                                    <MdOutlineDeleteOutline className='deleteAss-icon' title='Delete' style={{cursor: "pointer"}}/>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </Col>
-                        </Row>
-                    ))}
+                                </Col>
+                            </Row>
+                        ))}
+                    </div>
+                    <div className='quizIcon-container'>
+                        <img src={quizIcon} alt="Quiz Icon" className= 'quiz-icon' />
                     </div>
                 </div>
             )}
@@ -479,7 +482,7 @@ console.log(quizzesAvailability)
                             <IoClose style={{fontSize: "150%"}}/>
                         </button>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "99%" }}>
                         <div className='tQuestion-container'>
                         <FloatingLabel controlId="floatingTextarea2" label={`Question ${editingIndex !== null ? editingIndex + 1 : questions.length + 1}`} className='tQuestion'>
                             <Form.Control
