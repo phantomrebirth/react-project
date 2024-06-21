@@ -5,7 +5,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 
-const Search = ({ token }) => {
+const Search = ({ token, role, userID, courses }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
@@ -26,7 +26,7 @@ const Search = ({ token }) => {
     debounceTimeout.current = setTimeout(async () => {
       if (value.length > 0) {
         try {
-          const response = await axios.get('https://flea-helped-locust.ngrok-free.app/search', {
+          const response = await axios.get('https://glorious-expert-koala.ngrok-free.app/search', {
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
@@ -35,6 +35,7 @@ const Search = ({ token }) => {
             params: { term: value },
           });
           setResults(response.data);
+          console.log(response.data)
           setError('');
           setFocusedIndex(-1); // Reset focused index when results change
         } catch (error) {
@@ -156,6 +157,8 @@ const Search = ({ token }) => {
 const mapStateToProps = (state) => ({
   token: state.auth.token,
   role: state.auth.role,
+  userID: state.auth.userID,
+  courses: state.courses.coursesData,
 });
 
 export default connect(mapStateToProps)(Search);

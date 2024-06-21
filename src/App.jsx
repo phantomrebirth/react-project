@@ -9,8 +9,9 @@ import { useEffect, useState } from 'react'
 import ProtectedRoutes from './ProtectedRoutes.jsx'
 import LoadingSpinner from './redux/actions/LoadingSpinner.jsx'
 import { login } from './redux/actions/auth.jsx'
+import Admin from './pages/Admin.jsx'
 
-const App = ({token}) => {
+const App = ({ token, role }) => {
   const navigate = useNavigate()
   // // const token = useSelector(selectToken);
   useEffect(() => {
@@ -29,6 +30,7 @@ const App = ({token}) => {
     <Routes>
       <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
       <Route path="*" element={token ? <ProtectedRoutes/> : <Navigate to="/login" />} />
+      <Route path="/admin" element={(token && role === 'admin') ? <Admin/> : <Navigate to="/login" />} />
        {/* <Route path="/login" element={<Login />} />
       <Route path="*" element={<ProtectedRoutes/>} /> */}
     </Routes>
@@ -37,6 +39,7 @@ const App = ({token}) => {
 
 const mapStateToProps = state => ({
   token: state.auth.token,
+  role: state.auth.role,
 })
   
 export default connect(mapStateToProps, { login})(App);

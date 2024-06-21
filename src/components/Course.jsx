@@ -250,7 +250,7 @@ const Course = ({
                                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                                 <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
                                     <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
-                                        {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Submitted', 'Attendance Rate'].map(tabName => (
+                                        {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Submitted', 'Attendance'].map(tabName => (
                                             <Nav.Link key={tabName} id='tabz' className='tab-link' eventKey={tabName}>{tabName}</Nav.Link>
                                         ))}
                                     </Nav>

@@ -80,7 +80,7 @@ const Login = ({login, token, role, error, isLoading}) => {
                 if (error.payload && error.payload.error) {
                     setErrorMessage(error.payload.error);
                 } else {
-                    setErrorMessage("An error occurred during login, try again.");
+                    setErrorMessage("An error occurred during login, try again later.");
                     // setErrorMessage("Email or password is incorrect, try again.");
                     setLoading(false);
                 }

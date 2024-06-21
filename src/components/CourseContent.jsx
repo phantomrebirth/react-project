@@ -58,7 +58,7 @@ const CourseContent = ({ course, activeTab, refreshKey, isLoading, videoIsLoadin
             {activeTab === 'Assignments' && <Assignments key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Projects' && <Projects key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Grades' && <Grades key={refreshKey} courseId={course} loading={coursesLoading} />}
-            {activeTab === 'Attendance Rate' && <AttendanceRate key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {(activeTab === 'Attendance Rate' || activeTab === 'Attendance') && <AttendanceRate key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Quizzes' && <Quizzes key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Submitted' && <Submitted key={refreshKey} courseId={course} loading={coursesLoading} />}
         </>

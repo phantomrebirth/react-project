@@ -154,7 +154,7 @@ const AllAssignments =
           return;
         }
   
-        const response = await fetch(`https://flea-helped-locust.ngrok-free.app/course/assignments/solution/${clickedCourseId}/${clickedAssignmentId}`, {
+        const response = await fetch(`https://glorious-expert-koala.ngrok-free.app/course/assignments/solution/${clickedCourseId}/${clickedAssignmentId}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -202,7 +202,7 @@ const AllAssignments =
     // dispatch(navigateToAssignment());
   };
   
-  const assignmentPath = `https://flea-helped-locust.ngrok-free.app/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
+  const assignmentPath = `https://glorious-expert-koala.ngrok-free.app/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
   
   const handleFileSelect = (event) => {
     const files = event.target.files;

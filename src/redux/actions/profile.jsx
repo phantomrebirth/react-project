@@ -18,7 +18,7 @@ import {
 } from "./type";
 import { useSelector } from "react-redux";
 
-const apiUrl = "https://flea-helped-locust.ngrok-free.app/users";
+const apiUrl = "https://glorious-expert-koala.ngrok-free.app/users";
 
 export const profile = () => async (dispatch, getState) => {
   const token = getState().auth.token;

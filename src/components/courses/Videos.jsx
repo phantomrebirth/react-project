@@ -75,7 +75,7 @@ const Videos =
     const course = courses.find(course => course._id === currentCourseID);
     useEffect(() => {
         if (course && course.videos && course.videos.length > 0) {
-            const basePath = `https://flea-helped-locust.ngrok-free.app/course/getVideos/${currentCourseID}/`;
+            const basePath = `https://glorious-expert-koala.ngrok-free.app/course/getVideos/${currentCourseID}/`;
             const videos = course.videos.map(video => ({
                 ...video,
                 path: `${basePath}${video._id}`,
@@ -196,7 +196,7 @@ const Videos =
             // setWaitAlert({ variant: 'info', message: 'Uploading your video... please wait', progress: 0 });
             // }
         try {
-            const response = await axios.post(`https://flea-helped-locust.ngrok-free.app/course/videos/${currentCourseID}`, formData, {
+            const response = await axios.post(`https://glorious-expert-koala.ngrok-free.app/course/videos/${currentCourseID}`, formData, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
                     // 'User-Agent': 'CustomUserAgent',
@@ -247,7 +247,7 @@ const Videos =
             // setWaitAlert({ variant: 'info', message: 'Deleting your video... please wait', progress: 0 });
         // }
         try {
-            const response = await axios.delete(`https://flea-helped-locust.ngrok-free.app/course/deleteVideos/${currentCourseID}/${video._id}`, {
+            const response = await axios.delete(`https://glorious-expert-koala.ngrok-free.app/course/deleteVideos/${currentCourseID}/${video._id}`, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
                     // 'User-Agent': 'CustomUserAgent',

@@ -41,7 +41,7 @@ const Quiz =
 
   const fetchQuizzes = async () => {
     try {
-        const response = await axios.get(`https://flea-helped-locust.ngrok-free.app/quiz/${currentCourseID}`, {
+        const response = await axios.get(`https://glorious-expert-koala.ngrok-free.app/quiz/${currentCourseID}`, {
             headers: {
                 'ngrok-skip-browser-warning': 'true',
                 'Authorization': `Bearer ${token}`
@@ -93,7 +93,7 @@ const Quiz =
 
   const handleFinishClick = async () => {
     try {
-      await axios.post(`https://flea-helped-locust.ngrok-free.app/quiz/submit/${quizID}`, {
+      await axios.post(`https://glorious-expert-koala.ngrok-free.app/quiz/submit/${quizID}`, {
         answers: selectedAnswers
       }, {
         headers: {

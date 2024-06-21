@@ -8,7 +8,7 @@ import {
   LOGOUT_FAIL,
 } from "./type";
 
-const apiUrl = "https://flea-helped-locust.ngrok-free.app/";
+const apiUrl = "https://glorious-expert-koala.ngrok-free.app/";
 
 export const login = (email, password) => async (dispatch) => {
   const config = {
@@ -24,16 +24,18 @@ export const login = (email, password) => async (dispatch) => {
   try {
     const res = await axios.post(`${apiUrl}users/login`, body, config);
     console.log("asd")
-    console.log("API response:", res.data); // Debug: Log the API response
+    console.log("API response:", res.data);
     const userID = res.data.user._id
+    const name = res.data.user.name
     if (res.data) {
       dispatch({
         type: LOGIN_SUCCESS,
         payload: {
           token: res.data.token,
           role: res.data.role,
-          userID: userID
-        }, // Ensure payload contains token and role
+          userID: userID,
+          name: name
+        },
       });
     } else {
       // notify();
