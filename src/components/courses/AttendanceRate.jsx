@@ -62,6 +62,7 @@ const AttendanceRate =
                 // Send FormData with axios
                 const axiosResponse = await axios.post('https://glorious-expert-koala.ngrok-free.app/attendance', formData, {
                     headers: {
+                        'ngrok-skip-browser-warning': 'true',
                         'Authorization': `Bearer ${token}`
                     }
                 });

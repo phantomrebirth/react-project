@@ -18,19 +18,22 @@ const App = ({ token, role }) => {
     if (window.location.pathname === '/' && (token === null | token === undefined)) {
       // clearToken();
       navigate("/login");
+    } else if (role === 'admin' && window.location.pathname === '/') {
+      navigate("/admin")
+    } else if (role !== 'admin' && window.location.pathname === '/') {
+      navigate("/")
     }
     //  else if (token) {
     //   navigate('/');
     // }
-  }, [token, 
-    // clearToken, 
-    navigate]);
+  }, [token, role, navigate]);
   
   return (
     <Routes>
-      <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
-      <Route path="*" element={token ? <ProtectedRoutes/> : <Navigate to="/login" />} />
-      <Route path="/admin" element={(token && role === 'admin') ? <Admin/> : <Navigate to="/login" />} />
+    <Route path="/login" element={(token && (role !== 'admin')) ? <Navigate to="/" /> : (token && (role === 'admin')) ? <Navigate to="/admin" /> : <Login />} />
+    <Route path="*" element={token ? <ProtectedRoutes/> : <Navigate to="/login" />} />
+    <Route path="/admin" element={token && role === 'admin' ? <Admin /> : <Navigate to="/login" />} />
+      {/* <Route path="/admin" element={(token && role === 'admin') ? <Admin/> : <Navigate to="/login" />} /> */}
        {/* <Route path="/login" element={<Login />} />
       <Route path="*" element={<ProtectedRoutes/>} /> */}
     </Routes>

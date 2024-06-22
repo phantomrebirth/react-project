@@ -395,6 +395,19 @@ const AllAssignments =
               </div>
             </div>
           )}
+          {courses[0].assignments.length === 0 && (
+            <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%'
+                    }}
+            >
+              <p>No assignments yet.</p>
+            </div>
+          )}
         </>
       )}
       {teacher && (

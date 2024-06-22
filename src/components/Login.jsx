@@ -70,8 +70,10 @@ const Login = ({login, token, role, error, isLoading}) => {
                 console.log(email, password)
                 await login(email, password);
                 console.log('aha')
-                if (token) {
+                if (token && (role !== 'admin')) {
                     navigate('/');
+                } else if (token && (role === 'admin')) {
+                    navigate('/admin');
                 } else {
                     setErrorMessage("Email or password is incorrect, try again.");
                     setLoading(false);

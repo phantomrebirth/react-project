@@ -18,6 +18,7 @@ import LogOutModal from "../redux/actions/LogOutModal";
 import { profile } from "../redux/actions/profile";
 import Search from "./Search";
 import logo00 from '../assets/images/logo00.png'
+import Notifications from "./Notifications";
 // import CVAnnouncements from "./courses/computer-vision/CVAnnouncements";
 // import ProgrammingAnnouncements from "./courses/programming/ProgrammingAnnouncements";
 // import AIAnnouncements from "./courses/artificial-intelligence/AIAnnouncements";
@@ -44,18 +45,18 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
   const notificationRef = useRef(null);
   const logOut = useSelector((state) => state.logOutModalReducer.isLogOutOpen);
 //   const role = useSelector(selectRole);
-//   const [teacher, setTeacher] = useState(false);
-//   const [student, setStudent] = useState(false);
+  const [teacher, setTeacher] = useState(false);
+  const [student, setStudent] = useState(false);
 //   useEffect(() => {
 //     dispatch(fetchProfilePicture(token));
 //   }, [dispatch, token]);
-//   useEffect(() => {
-//     if (role === 'student') {
-//       setStudent(true);
-//     } else if (role === 'teacher') {
-//       setTeacher(true);
-//     }
-//   }, [role]);
+  useEffect(() => {
+    if (role === 'student') {
+      setStudent(true);
+    } else if (role === 'teacher') {
+      setTeacher(true);
+    }
+  }, [role]);
   useEffect(() => {
     if (!imageUrl) {
       profile(token);
@@ -99,10 +100,10 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
     openLogOutModal();
   };
 
-  const handleBellClick = () => {
-    setNotificationDropdownOpen(!notificationDropdownOpen);
-    setBellClicked(true);
-  };
+  // const handleBellClick = () => {
+  //   setNotificationDropdownOpen(!notificationDropdownOpen);
+  //   setBellClicked(true);
+  // };
 
   return (
     <div className='navbar'>
@@ -113,7 +114,10 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
         <img src={logo00} alt="" className="nav-logo"/>
       </NavLink>
       <Search/>
-      <div className="notifications-container" ref={notificationRef}>
+      {student && (
+        <Notifications/>
+      )}
+      {/* <div className="notifications-container" ref={notificationRef}>
         <div className="bell-container" onClick={handleBellClick}>
           <div className="notifications">
             {!bellClicked && (<div className="notifications-num">6+</div>)}
@@ -129,7 +133,7 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
               <div className="notifications-headerContainer">
                 <p className="notifications-header">Notifications</p>
               </div>
-              <div className="notification-items">
+              <div className="notification-items"> */}
                 {/* {student && ( */}
                   <>
                     {/* <div className='notification-dropdown-item' title="Open">
@@ -162,11 +166,11 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
                     </div> */}
                   </>
                 {/* )} */}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+              {/* </div> */}
+            {/* </div> */}
+          {/* )} */}
+        {/* </div> */}
+      {/* </div> */}
       <div className="userIconContainer" ref={userIconRef} onClick={handleClickUserIcon}>
         {isLoading ? (
           <div>

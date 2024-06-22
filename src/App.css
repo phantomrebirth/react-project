@@ -1873,6 +1873,13 @@ input[type="file"]::placeholder {
   .dropdown-search {
     top: 29px !important;
   }
+  .allAssignments-link {
+    margin-top: 1.5rem !important;
+  }
+  .notification-dropdown-item {
+    padding: 10px;
+    font-size: 83%;
+  }
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
@@ -3393,6 +3400,11 @@ video:focus-within {
   font-size: 170%;
 }
 
+.allAssignments-link {
+  width: fit-content;
+  margin-top: 2.5rem;
+}
+
 .home-myAssContainer {
   /* background-color: #d6d6d6; */
   background-color: #e0e0e0;
@@ -3410,7 +3422,8 @@ video:focus-within {
 }
 
 .home-myAssTitleContainer {
-  padding: 0% 1.6%;
+  /* padding: 0% 1.6%; */
+  margin-left: 1.6%;
   min-width: 333px;
 }
 
@@ -3445,7 +3458,7 @@ video:focus-within {
   font-size: 150%;
   background-color: #7939ff;
   /* width: 10rem; */
-  width: 10.75rem;
+  width: 11.75rem;
   /* height: 2.77rem; */
   height: 3rem;
   border: none;
@@ -4234,6 +4247,8 @@ video:focus-within {
 .notification-dropdown-item {
   padding: 10px;
   cursor: pointer;
+  color: #000;
+  font-size: 99%;
 }
 
 .notification-dropdown-item:hover {
