@@ -42,7 +42,7 @@ const Notifications = ({
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await axios.get('https://glorious-expert-koala.ngrok-free.app/notifications', {
+                const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/notifications', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'ngrok-skip-browser-warning': 'true',
@@ -61,7 +61,7 @@ const Notifications = ({
 
         fetchNotifications();
 
-        socket.current = io('https://glorious-expert-koala.ngrok-free.app', {
+        socket.current = io('https://thankful-ample-shrimp.ngrok-free.app', {
             transports: ['websocket'],
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -118,7 +118,7 @@ const Notifications = ({
 
     const markAsRead = async (id) => {
         try {
-            const response = await axios.patch(`https://glorious-expert-koala.ngrok-free.app/notifications/${id}/read`, {}, {
+            const response = await axios.patch(`https://thankful-ample-shrimp.ngrok-free.app/notifications/${id}/read`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'ngrok-skip-browser-warning': 'true',

@@ -86,7 +86,7 @@ const Assignments =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.assignments && course.assignments.length > 0) {
-      const basePath = `https://glorious-expert-koala.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
+      const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
       const assignments = course.assignments.map(assignment => {
         // Format assignment's uploadtime and deadline
         const formattedAssignment = {
@@ -148,7 +148,7 @@ const Assignments =
           return;
         }
   
-        const response = await fetch(`https://glorious-expert-koala.ngrok-free.app/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
+        const response = await fetch(`https://thankful-ample-shrimp.ngrok-free.app/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -281,7 +281,7 @@ const Assignments =
     setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
     // }
     try {
-      const response = await axios.post(`https://glorious-expert-koala.ngrok-free.app/course/assignments/${currentCourseID}`, formData, {
+      const response = await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/course/assignments/${currentCourseID}`, formData, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -298,7 +298,7 @@ const Assignments =
         const uploadedAssignment = {
           _id: assignmentId,
           filename: selectedFiles[0].name,
-          path: `https://glorious-expert-koala.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`,
+          path: `https://thankful-ample-shrimp.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`,
           uploadtime: new Date().toLocaleDateString(),
           deadline: deadline,
           // submitted: "notSubmitted"
@@ -341,7 +341,7 @@ const Assignments =
     // }
 
     try {
-      const response = await axios.delete(`https://glorious-expert-koala.ngrok-free.app/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
+      const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',

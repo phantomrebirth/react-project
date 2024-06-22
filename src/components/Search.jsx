@@ -26,7 +26,7 @@ const Search = ({ token, role, userID, courses }) => {
     debounceTimeout.current = setTimeout(async () => {
       if (value.length > 0) {
         try {
-          const response = await axios.get('https://glorious-expert-koala.ngrok-free.app/search', {
+          const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/search', {
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,

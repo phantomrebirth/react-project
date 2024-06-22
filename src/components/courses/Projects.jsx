@@ -634,7 +634,7 @@ const Projects =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.projects && course.projects.length > 0) {
-      const basePath = `https://glorious-expert-koala.ngrok-free.app/course/getProjects/${currentCourseID}/`;
+      const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course/getProjects/${currentCourseID}/`;
       const projects = course.projects.map(project => {
         // Format assignment's uploadtime and deadline
         const formattedProject = {
@@ -753,7 +753,7 @@ const Projects =
         }
         // formData.append('description', description); // Add any additional metadata
       
-        const response = await fetch(`https://glorious-expert-koala.ngrok-free.app/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
+        const response = await fetch(`https://thankful-ample-shrimp.ngrok-free.app/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -906,7 +906,7 @@ const Projects =
         setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
     // }
     try {
-        const response = await axios.post(`https://glorious-expert-koala.ngrok-free.app/course/projects/${currentCourseID}`, formData, {
+        const response = await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/course/projects/${currentCourseID}`, formData, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               // 'User-Agent': 'CustomUserAgent',
@@ -921,7 +921,7 @@ const Projects =
           const uploadedProject = {
             _id: project,
             filename: selectedFiles[0].name,
-            path: `https://glorious-expert-koala.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
+            path: `https://thankful-ample-shrimp.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
             uploadtime: new Date().toLocaleDateString(),
             deadline: deadline,
             // submitted: "notSubmitted"
@@ -956,7 +956,7 @@ const Projects =
     setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
 
     try {
-        const response = await axios.delete(`https://glorious-expert-koala.ngrok-free.app/course/deleteProjects/${currentCourseID}/${project._id}`, {
+        const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/deleteProjects/${currentCourseID}/${project._id}`, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               // 'User-Agent': 'CustomUserAgent',

@@ -43,7 +43,7 @@ const Submitted = ({
 
   useEffect(() => {
     if (course) {
-      const basePath = `https://glorious-expert-koala.ngrok-free.app/course`;
+      const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course`;
       if (course.assignments?.length) {
         setSubmittedAssignments(course.assignments
           .filter(assignment => assignment.solutions?.length)
@@ -71,7 +71,7 @@ const Submitted = ({
       try {
         const promises = submittedItems.flatMap(item =>
           item.solutions?.map(solution => axios.get(
-            `https://glorious-expert-koala.ngrok-free.app/course/${itemType}/solution/${currentCourseID}/${item._id}/${solution._id}`,
+            `https://thankful-ample-shrimp.ngrok-free.app/course/${itemType}/solution/${currentCourseID}/${item._id}/${solution._id}`,
             { headers: { 'Authorization': `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' }, responseType: 'blob' }
           )) || []
         );

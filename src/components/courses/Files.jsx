@@ -97,7 +97,7 @@ const Files =
   // console.log(courseFileData)
   useEffect(() => {
     if (course && course.files && course.files.length > 0) {
-        const basePath = `https://glorious-expert-koala.ngrok-free.app/course/getFiles/${currentCourseID}/`;
+        const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course/getFiles/${currentCourseID}/`;
         const files = course.files.map(file => ({
             ...file,
             path: `${basePath}${file._id}`,
@@ -198,7 +198,7 @@ const Files =
     startFileOperation()
     console.log(isFileOperationInProgress)
     try {
-      const response = await axios.post(`https://glorious-expert-koala.ngrok-free.app/course/files/${currentCourseID}`, formData, {
+      const response = await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/course/files/${currentCourseID}`, formData, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -213,7 +213,7 @@ const Files =
         const newFile = {
           _id: fileId,
           filename: file.name,
-          path: `https://glorious-expert-koala.ngrok-free.app/course/getFiles/${currentCourseID}/${fileId}`,
+          path: `https://thankful-ample-shrimp.ngrok-free.app/course/getFiles/${currentCourseID}/${fileId}`,
           };
           // setFileIDs(prevFileIDs => [...prevFileIDs, fileId]);
           setFilesWithPaths(prevFiles => [...prevFiles, newFile]);
@@ -252,7 +252,7 @@ const Files =
     startFileOperation();
     console.log(isFileOperationInProgress)
     try {
-      const response = await axios.delete(`https://glorious-expert-koala.ngrok-free.app/course/deleteFiles/${currentCourseID}/${file._id}`, {
+      const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/deleteFiles/${currentCourseID}/${file._id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',

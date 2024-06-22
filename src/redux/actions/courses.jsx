@@ -30,7 +30,7 @@ import {
 } from './type'
 
 
-const apiUrl = "https://glorious-expert-koala.ngrok-free.app/"
+const apiUrl = "https://thankful-ample-shrimp.ngrok-free.app/"
 
 export const getCourses = () => async (dispatch,getState) => {
   const userID = getState().auth.userID;
