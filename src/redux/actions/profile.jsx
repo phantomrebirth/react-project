@@ -16,7 +16,6 @@ import {
   // USER_DATA_SUCCESS,
   // USER_DATA_FAIL,
 } from "./type";
-import { useSelector } from "react-redux";
 
 const apiUrl = "https://thankful-ample-shrimp.ngrok-free.app/users";
 

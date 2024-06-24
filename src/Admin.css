@@ -1,0 +1,83 @@
+/* Admin.css */
+.adminBody {
+  font-family: 'Times New Roman', Times, serif;
+  /* overflow-y: auto !important; */
+  padding-bottom: 1rem;
+}
+
+.admin-navbar {
+  background-color: #343a40; /* Dark background */
+}
+  
+.admin-navbar .nav-link, .admin-navbar .navbar-brand {
+  color: #fff; /* White text */
+}
+  
+.admin-navbar .nav-link:hover, .admin-navbar .navbar-brand:hover {
+  color: #ccc; /* Lighter text on hover */
+}
+  
+.admin-dropdown-menu {
+  background-color: #343a40; /* Match navbar background */
+  border: none; /* Remove border */
+}
+  
+.admin-dropdown-menu .dropdown-item {
+  color: #fff; /* White text */
+}
+  
+.admin-dropdown-menu .dropdown-item:hover {
+  background-color: #495057; /* Darker background on hover */
+}
+
+.admin-dropdown .dropdown-menu.show {
+  inset: auto 0px auto auto !important;
+  background-color: #212529 !important;
+  width: auto !important;
+  border-radius: 0.5rem !important;
+  /* font-size: 1.125rem !important; */
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
+}
+
+.fade.admin-logout-modal.modal.show {
+  background-color: #0000008f;
+  backdrop-filter: none !important;
+}
+
+.admin-logout-modal .modal-backdrop.show{
+  opacity: 0 !important;
+}
+
+.admin-logout-modal .modal-content {
+  top: 0 !important;
+  background-color: #212529 !important;
+}
+
+.admin-logo {
+  font-size: 2rem;
+  font-style: italic;
+}
+
+.nav-links {
+  font-size: 1.125rem;
+  padding-bottom: 0.25rem;
+}
+
+.adminSpinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 66vh;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-logo {
+    font-size: 1.5rem !important;
+  }
+  .nav-links {
+    font-size: 1.125rem !important;
+    padding-bottom: 5% !important;
+  }
+}
+

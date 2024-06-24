@@ -66,7 +66,7 @@ export default function(state = initialState, action) {
     case PROFILE_SUCCESS:
       return {
         ...state,
-        image: payload,
+        image: action.payload,
         isLoading: false,
       };
     // case USER_DATA_FAIL:

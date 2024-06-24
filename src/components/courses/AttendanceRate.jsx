@@ -5,9 +5,10 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 // import { fetchCourses, selectCourses } from '../../redux/slices/coursesSlice';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { login } from '../../redux/actions/auth';
-import { FaCamera } from 'react-icons/fa6';
+import { FaCamera, FaPaperPlane } from 'react-icons/fa6';
 import AttendanceCameraModal from '../AttendanceCameraModel';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
 
 const AttendanceRate = 
 ({
@@ -18,13 +19,13 @@ const AttendanceRate =
     isLoading
 }) => {
 
-    // const dispatch = useDispatch();
-    // const role = useSelector(selectRole);
     const [teacher, setTeacher] = useState(false);
     const [student, setStudent] = useState(false);
     const [showCamera, setShowCamera] = useState(false);
     const [capturedPhoto, setCapturedPhoto] = useState(null);
     const [capturedPhotoPending, setCapturedPhotoPending] = useState(false);
+    const [photoSent, setPhotoSent] = useState(false);
+
     useEffect(() => {
         if (role === 'student') {
           setStudent(true);
@@ -68,13 +69,37 @@ const AttendanceRate =
                 });
     
                 console.log('Photo sent successfully:', axiosResponse.data);
-                // Handle success scenario (e.g., show success message)
+                setPhotoSent(true);
             } catch (error) {
                 console.error('Error sending photo:', error);
                 // Handle error scenario (e.g., show error message)
             }
         }
     };
+
+    const handleGetAttendance = async () => {
+        try {
+          const response = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/attendance/${currentCourseID}`, {
+            headers: {
+              'ngrok-skip-browser-warning': 'true',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          setPhotoSent(false);
+          console.log('Attendance data:', response.data);
+            // Create a new workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(response.data);
+
+            // Append the worksheet to the workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
+
+            // Generate an Excel file and download it
+            XLSX.writeFile(wb, 'attendance.xlsx');
+        } catch (error) {
+          console.error('Error fetching attendance data:', error);
+        }
+      };
 
     
     const handleDeleteCapturedPhoto = () => {
@@ -168,24 +193,36 @@ const AttendanceRate =
 
                 <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
                     {capturedPhotoPending && (
-                        <div className="captured-photo-container" style={{maxWidth: "666px", maxHeight: "400px", bottom: "0"}}>
-                            <img src={capturedPhoto} alt="Captured" className='captured-photo' style={{maxWidth: "none"}}/>
+                        <div className="attendance-photo-container">
+                            <img src={capturedPhoto} alt="Captured" className='attendance-photo'/>
                             <button className="captured-deleteBtn" onClick={handleDeleteCapturedPhoto} title='Cancel'>
                                 X
                             </button>
                         </div>
                     )}
                 </div>
-                <div style={{width: "100%", height: "50vh", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <div className='cameraBtn-container'>
                     {!capturedPhotoPending && (
-                        <Button variant= 'primary' className="attendance-cameraBtn" onClick={handleCameraClick} disabled={capturedPhotoPending}>
-                            <FaCamera className='camera-icon' style={{ fontSize: "2rem", marginRight: "1rem"}} title='Open camera'/>
-                            Take Attendance
-                        </Button>
-                    )}    
+                        <>
+                            {!photoSent ? (
+                            <Button variant='primary' className="attendance-cameraBtn" onClick={handleCameraClick} disabled={capturedPhotoPending}>
+                                <FaCamera className='camera-icon' style={{ fontSize: "2rem", marginRight: "1rem"}} title='Open camera'/>
+                                Take Picture
+                            </Button>
+                            ) : (
+                            <Button variant='primary' className="attendance-cameraBtn" onClick={handleGetAttendance} disabled={capturedPhotoPending}>
+                                <FaCamera className='camera-icon' style={{ fontSize: "2rem", marginRight: "1rem"}} title='Create new file'/>
+                                Save Attendance
+                            </Button>
+                            )}
+                        </>
+                    )}
+                </div>
+                <div className='sendAttendanceBtn-container'>
                     {capturedPhotoPending && (
-                        <button className="attendance-cameraBtn" onClick={handleSendCapturedPhoto}>
-                            Send Photo
+                        <button className="attendance-sendBtn" onClick={handleSendCapturedPhoto}>
+                            Take Attendance
+                            <FaPaperPlane style={{margin: "0 0 0 1rem"}}/>
                         </button>
                     )}
                 </div>

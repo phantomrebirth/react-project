@@ -61,6 +61,7 @@ const HomePage =
 
   const lastTwoCourses = courses.slice(-2); // Get the last two courses
 
+  console.log(lastTwoCourses)
   const renderAssignments = () => {
     if (courses.length === 0) {
       return null;
@@ -105,6 +106,7 @@ const HomePage =
             </div>
           </Row>
         )}
+        {/* secondCourseAssignment !== 0 && secondCourseAssignmentTime !== (undefined || null || "Invalid Date") && */}
         {secondCourseAssignment !== 0 && secondCourseAssignmentTime !== (undefined || null || "Invalid Date") && lastTwoCourses[0].assignments.length > 0  && (
           <Row>
             <div className='home-myAssContainer'>
@@ -143,12 +145,7 @@ const HomePage =
           <Container style={{padding: "0px", margin: "0", width: "100%", maxWidth:"100%", display: "inline-block"}}>
             <Row>
               <h1 className='homepage-description'>
-                {/* <span style={{color: "#7939ff"}}
-                  >EZ
-                </span> */}
-                the e-learning we <span style={{textDecoration: "line-through", fontWeight: "normal"}}
-                  >know
-                </span> deserve.
+                Welcome !
               </h1>
             </Row>
             <Row>
@@ -209,7 +206,7 @@ const HomePage =
             </Container>
           )}
           <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}}>
-            {courses[0].assignments.length > 0 && (
+            {/* {courses[0].assignments.length > 0 && ( */}
               <Container style={{maxWidth: "100%", display: "inline-block"}}
                         className='home-AssContainer'
               >
@@ -267,7 +264,7 @@ const HomePage =
                 </Row> */}
                 {renderAssignments()}
               </Container>
-            )}
+            {/* )} */}
             {/* paddingBottom: "1%", */}
             <Container style={{ maxWidth: "100%", margin: "0.5rem 0 0 0"}}
                       className='home-QuizContainer'

@@ -184,7 +184,9 @@ const Navbar = ({ token, toggleSidebar, role, openLogOutModal, profile }) => {
         ) : (
           <img src={imageUrl} alt="" className="nav-pfPicture"/>
         )}
-        {/* <FaChevronDown className="userChevron"/> */}
+        {teacher && (
+          <FaChevronDown className="userChevron"/>
+        )}
       </div>
       {dropdownOpen && (
         <div className="dropdownMenu" ref={dropdownRef}>
