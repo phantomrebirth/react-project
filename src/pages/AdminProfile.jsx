@@ -20,6 +20,14 @@ const Profile = ({ token, logout }) => {
   useEffect(() => {
     fetchProfileData();
   }, []);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (showSuccess) {
+        setShowSuccess(false);
+      }
+    }, 4000);
+    return () => clearTimeout(timeout);
+  }, [showSuccess]);
 
   const fetchProfileData = async () => {
     try {

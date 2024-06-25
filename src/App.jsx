@@ -47,7 +47,7 @@ const App = ({ token, role }) => {
       </Routes>
       {token && role === 'admin' && (
         <AdminNavbar>
-          <div style={{overflowY: "auto", width: "100%", height: "100vh", paddingBottom: "3rem"}}>
+          {/* <div style={{overflowY: "auto", width: "100%", height: "100vh", paddingBottom: "3rem"}}> */}
             <div className='adminBody'>
               <Routes>
                 <Route path="/admin" element={token && role === 'admin' ? <Admin /> : <Navigate to="/login" />} />
@@ -56,7 +56,7 @@ const App = ({ token, role }) => {
                 <Route path="/admin/users" element={token && role === 'admin' ? <AdminUsers /> : <Navigate to="/login" />} />
               </Routes>
             </div>
-          </div>
+          {/* </div> */}
         </AdminNavbar>
       )}
     </>

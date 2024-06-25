@@ -13,7 +13,7 @@ import emailIcon from '../assets/images/email.png'
 import passwordIcon from '../assets/images/password.png'
 import closedEye from '../assets/images/eye-closed.png'
 import openEye from '../assets/images/eye.png'
-
+import loginImage from '../assets/images/login-image.png'
 
 const Login = ({login, token, role, error, isLoading}) => {
     // const emailInput = document.getElementById("emailInput");
@@ -106,84 +106,88 @@ const Login = ({login, token, role, error, isLoading}) => {
     }
     
     return (
-        <>
-            {/* <p className='SHAlogo'>S<span style={{ color: "#7939ff" }}>H</span>A</p> */}
-            <img src={LOGO} alt='' className='logo'/>
-            <Row>
-                <Col sm={12} md={12} lg={6} xl={6} xxl={6}>
-                    <div className="contForm" style={{ minHeight: "100vh" }}>
-                        <h1 className="label" >
-                            L O G I N
-                        </h1>
-                        <form onSubmit={handleSubmit} id="loginForm" className="loginForm">
-                            <div className="fontEmail"></div>
-                            <div ref={emailInput} id="emailInput" style={{ borderColor: "silver" }}>
-                                <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                    <img id="emailIcon" src={emailIcon} alt="email" />
-                                </div>
-                                <input type="email"
-                                       name="email" 
-                                       id="email" 
-                                       required placeholder="Email address" 
-                                       value={email} 
-                                       onChange={handleInputChange}/>
-                            </div>
-                            <div id="e-error">
-                                <div ref={emailError} id="email_error" style={{ display: "none" }}>
-                                    Please fill up your Email
-                                </div>
-                            </div>
-                            <div className="fontPassword"></div>
-                            <div ref={passwordInput} id="passwordInput">
-                                <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                    <img id="passwordIcon" src={passwordIcon} alt="password" />
-                                </div>
-                                <input type={passwordVisibility} 
-                                       required 
-                                       name="password" 
-                                       id="password" 
-                                       placeholder="Password" 
-                                       value={password} 
-                                       onChange={handleInputChange}/>
-                                <div className='eyeIcon-container'>
-                                    {isEyeClosed ? (
-                                        <img src={closedEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
-                                    ) : (
-                                        <img src={openEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
-                                    )}
-                               </div>
-                            </div>
-                            <div ref={passwordError} id="pass-error">
-                                <div id="password_error" style={{ display: "none" }}>
-                                    Please fill up your password
-                                </div>
-                            </div>
-                            <div ref={loginError} id="login_error" style={{ color: "red" }}>
-                                {errorMessage}
-                            </div>
-                            <input type="hidden" name="_csrf" value="your_csrf_token" />
-                            <div id="sub-btn">
-                                {loading ? (
-                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '13vh' }}
-                                    >
-                                    <CircularProgress color="inherit"
-                                                        size={50}
-                                                        thickness={4}
-                                                        style={{color: "#7939ff"}}
-                                                        />
+        <div style={{overflowY: "auto", width: "100%"}}>
+            <div>
+                <img src={LOGO} alt='' className='logo'/>
+                <Row>
+                    <Col sm={12} md={12} lg={6} xl={6} xxl={6}>
+                        <div className="contForm" style={{ minHeight: "100vh" }}>
+                            <h1 className="label" >
+                                L O G I N
+                            </h1>
+                            <form onSubmit={handleSubmit} id="loginForm" className="loginForm">
+                                <div className="fontEmail"></div>
+                                <div ref={emailInput} id="emailInput" style={{ borderColor: "silver" }}>
+                                    <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                                        <img id="emailIcon" src={emailIcon} alt="email" />
                                     </div>
-                                ) : (
-                                    <button className='submit' type='submit'>Login</button>
-                                )}
-                            </div>
-                        </form>
-                    </div>
-                </Col>
-                <Col sm={0} md={0} lg={6} xl={6} xxl={6}>
-                    <div id="backgroundMark"></div>
-                </Col>
-            </Row>
-        </>
+                                    <input type="email"
+                                        name="email" 
+                                        id="email" 
+                                        required placeholder="Email address" 
+                                        value={email} 
+                                        onChange={handleInputChange}/>
+                                </div>
+                                <div id="e-error">
+                                    <div ref={emailError} id="email_error" style={{ display: "none" }}>
+                                        Please fill up your Email
+                                    </div>
+                                </div>
+                                <div className="fontPassword"></div>
+                                <div ref={passwordInput} id="passwordInput">
+                                    <div style={{width: "8%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                                        <img id="passwordIcon" src={passwordIcon} alt="password" />
+                                    </div>
+                                    <input type={passwordVisibility} 
+                                        required 
+                                        name="password" 
+                                        id="password" 
+                                        placeholder="Password" 
+                                        value={password} 
+                                        onChange={handleInputChange}/>
+                                    <div className='eyeIcon-container'>
+                                        {isEyeClosed ? (
+                                            <img src={closedEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
+                                        ) : (
+                                            <img src={openEye} alt="eye" id='eyeIcon' onClick={EyeIcon} />
+                                        )}
+                                </div>
+                                </div>
+                                <div ref={passwordError} id="pass-error">
+                                    <div id="password_error" style={{ display: "none" }}>
+                                        Please fill up your password
+                                    </div>
+                                </div>
+                                <div ref={loginError} id="login_error" style={{ color: "red" }}>
+                                    {errorMessage}
+                                </div>
+                                <input type="hidden" name="_csrf" value="your_csrf_token" />
+                                <div id="sub-btn">
+                                    {loading ? (
+                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '13vh' }}
+                                        >
+                                        <CircularProgress color="inherit"
+                                                            size={50}
+                                                            thickness={4}
+                                                            style={{color: "#7939ff"}}
+                                                            />
+                                        </div>
+                                    ) : (
+                                        <button className='submit' type='submit'>Log in</button>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
+                    </Col>
+                    <Col sm={0} md={0} lg={6} xl={6} xxl={6}>
+                        <div id="backgroundMark" style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <img src={loginImage} alt='' style={{width: "100%", height: "100%", marginTop: "auto"}} />
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+            {/* <p className='SHAlogo'>S<span style={{ color: "#7939ff" }}>H</span>A</p> */}
+        </div>
     );
 };
 

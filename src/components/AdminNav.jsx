@@ -10,13 +10,32 @@ import MyVerticallyCenteredModal from './MyVerticallyCenteredModal';
 const AdminNavbar = ({ logout, image, error, isLoading, children, token , profile, activeLink }) => {
   const [modalShow, setModalShow] = useState(false);
   const userIconRef = useRef(null);
-  const currentPath = window.location.pathname; // Get current URL path
+  const currentPath = window.location.pathname;
+  const [contentHeight, setContentHeight] = useState('100vh');
 
   useEffect(() => {
     if (!image) {
       profile(token);
     }
   }, [token]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const navbarHeight = document.querySelector('nav').offsetHeight;
+      setContentHeight(`calc(100vh - ${navbarHeight}px)`);
+    };
+
+    // Initial call
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleLogout = () => {
     setModalShow(false);
@@ -71,7 +90,7 @@ const AdminNavbar = ({ logout, image, error, isLoading, children, token , profil
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div>
+      <div style={{ height: contentHeight, overflowY: "auto", width: "100%" }}>
         {children}
       </div>
     </>

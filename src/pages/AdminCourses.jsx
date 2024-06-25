@@ -12,11 +12,27 @@ const AdminCourses = ({ token }) => {
   const [notification, setNotification] = useState({ show: false, message: '', variant: '' });
   const [formDataCourse, setFormDataCourse] = useState({
     courseId: '',
-    newCourseId: '',
     courseName: '',
     coursePath: '',
     teacherId: []
   });
+  const [updateCourseId, setUpdateCourseId] = useState(null);
+
+  useEffect(() => {
+    if (courses.length === 0 && isLoading) {
+      fetchCourses();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (showAlert) {
+        setShowAlert(false);
+        setNotification({ show: false, message: '', variant: '' })
+      }
+    }, 4000);
+    return () => clearTimeout(timeout);
+  }, [showAlert, notification]);
 
   const fetchCourses = async () => {
     try {
@@ -33,12 +49,6 @@ const AdminCourses = ({ token }) => {
     }
   };
 
-  useEffect(() => {
-    if (courses.length === 0 && isLoading) {
-      fetchCourses();
-    }
-  }, [isLoading]);
-
   const handleDelete = async (courseId) => {
     try {
       await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/delete/${courseId}`, {
@@ -47,9 +57,31 @@ const AdminCourses = ({ token }) => {
         }
       });
       await fetchCourses();
+      setNotification({ show: true, message: 'Course deleted successfully!', variant: 'success' });
     } catch (err) {
       setError(err.message);
+      setNotification({ show: true, message: 'Failed to delete course. Please try again.', variant: 'danger' });
     }
+  };
+
+  const handleUpdateClick = (course) => {
+    setFormDataCourse({
+      courseId: course._id,
+      courseName: course.name,
+      coursePath: course.path,
+      teacherId: course.teacherId
+    });
+    setUpdateCourseId(course._id);
+  };
+
+  const handleCancelUpdate = () => {
+    setUpdateCourseId(null);
+    setFormDataCourse({
+      courseId: '',
+      courseName: '',
+      coursePath: '',
+      teacherId: []
+    });
   };
 
   const generateCoursePath = (courseName) => {
@@ -59,7 +91,6 @@ const AdminCourses = ({ token }) => {
   const onChangeCourse = (e) => {
     const { name, value } = e.target;
     if (name === 'teacherId') {
-      // Split teacherId input by comma and trim each value
       const teacherIds = value.split(',').map(id => id.trim());
       setFormDataCourse({
         ...formDataCourse,
@@ -76,34 +107,54 @@ const AdminCourses = ({ token }) => {
 
   const onUpdateCourse = async (e) => {
     e.preventDefault();
-    const { courseId, newCourseId, courseName, coursePath, teacherId } = formDataCourse;
+    const { courseName, coursePath, teacherId } = formDataCourse;
     try {
       const payload = {
-        _id: newCourseId,
         name: courseName,
         path: coursePath,
         teacherId: teacherId
       };
-  
-      const headers = {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true'
-      };
-  
+
       const res = await axios.patch(
-        `https://thankful-ample-shrimp.ngrok-free.app/update/admin/${courseId}`,
+        `https://thankful-ample-shrimp.ngrok-free.app/course/update/admin/${updateCourseId}`,
         payload,
-        { headers }
+        { headers: {
+          'ngrok-skip-browser-warning': 'true'
+        } }
       );
-  
+
       setNotification({ show: true, message: 'Course updated successfully!', variant: 'success' });
-      setFormDataCourse({ courseId: '', newCourseId: '', courseName: '', coursePath: '', teacherId: [] });
+      setFormDataCourse({ courseId: '', courseName: '', coursePath: '', teacherId: [] });
+      setUpdateCourseId(null);
       fetchCourses();
     } catch (error) {
       setNotification({ show: true, message: 'Failed to update course. Please try again.', variant: 'danger' });
     }
   };
-  
+
+  const onSubmitCourse = async (e) => {
+    e.preventDefault();
+    try {
+      const dataToSend = {
+        _id: formDataCourse.courseId,
+        name: formDataCourse.courseName,
+        path: formDataCourse.coursePath,
+        teacherId: formDataCourse.teacherId
+      };
+
+      const res = await axios.post('https://thankful-ample-shrimp.ngrok-free.app/course', dataToSend, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true'
+        }
+      });
+
+      setNotification({ show: true, message: 'Course created successfully!', variant: 'success' });
+      setFormDataCourse({ courseId: '', courseName: '', coursePath: '', teacherId: [] });
+      fetchCourses();
+    } catch (error) {
+      setNotification({ show: true, message: 'Failed to create course. Please try again.', variant: 'danger' });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -137,88 +188,116 @@ const AdminCourses = ({ token }) => {
         {courses.map(course => (
           <ListGroup.Item key={course._id} className="mb-3">
             <Row>
-              <Col md={3}>
+              <Col md={2}>
                 <strong>Course Name:</strong> {course.name}
               </Col>
-              <Col md={3}>
+              <Col md={2}>
                 <strong>Course ID:</strong> {course._id}
               </Col>
-              <Col md={3}>
+              <Col md={4}>
                 <strong>Teacher IDs:</strong> {course.teacherId.join(', ')}
               </Col>
-              <Col md={3} className="text-right">
-                <Button variant="danger" onClick={() => handleDelete(course._id)}>Delete</Button>
+              <Col md={4} className="text-right">
+                <Button variant="warning" onClick={() => handleUpdateClick(course)} style={{marginRight: "1rem"}}>Update</Button>
+                <Button variant="danger" onClick={() => handleDelete(course._id)} className="ml-2">Delete</Button>
               </Col>
             </Row>
+            {updateCourseId === course._id && (
+              <Form onSubmit={onUpdateCourse} className="mt-3">
+                <Form.Group controlId="formCourseName">
+                  <Form.Label>Course Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="courseName"
+                    value={formDataCourse.courseName}
+                    onChange={onChangeCourse}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="formCoursePath" style={{ display: 'none' }}>
+                  <Form.Control
+                    type="text"
+                    name="coursePath"
+                    value={formDataCourse.coursePath}
+                    onChange={onChangeCourse}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="formCourseTeacherId" className="mt-1">
+                  <Form.Label>Teacher IDs (comma separated)</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="teacherId"
+                    value={formDataCourse.teacherId.join(', ')}
+                    onChange={onChangeCourse}
+                    required
+                  />
+                </Form.Group>
+                <Button variant="success" type="submit" className="mt-3">
+                  Update Course
+                </Button>
+                <Button variant="secondary" onClick={handleCancelUpdate} className="mt-3 ml-2" style={{marginLeft: "1rem"}}>
+                  Cancel
+                </Button>
+              </Form>
+            )}
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <Row className="justify-content-md-center" style={{ overflowY: "auto" }}>
-        <Col className="mx-auto d-flex align-items-center">
-          <div className="rounded" style={{ minWidth: "360px" }}>
-            <h2 className="mb-4">Update Course</h2>
-            <Form onSubmit={onUpdateCourse}>
-              <Form.Group controlId="formCourseId">
-                <Form.Label>Current Course ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="courseId"
-                  value={formDataCourse.courseId}
-                  onChange={onChangeCourse}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="formNewCourseId">
-                <Form.Label>New Course ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="newCourseId"
-                  value={formDataCourse.newCourseId}
-                  onChange={onChangeCourse}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="formCourseName">
-                <Form.Label>Course Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="courseName"
-                  value={formDataCourse.courseName}
-                  onChange={onChangeCourse}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="formCoursePath" style={{ display: 'none' }}>
-                <Form.Control
-                  type="text"
-                  name="coursePath"
-                  value={formDataCourse.coursePath}
-                  onChange={onChangeCourse}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="formCourseTeacherId">
-                <Form.Label>Teacher IDs (comma separated)</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="teacherId"
-                  value={formDataCourse.teacherId.join(', ')}
-                  onChange={onChangeCourse}
-                  required
-                />
-              </Form.Group>
-              <Button variant="success" type="submit" className="mt-3">
-                Update Course
-              </Button>
-            </Form>
-          </div>
-        </Col>
-      </Row>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+      <div className="p-4 border rounded text-center mt-4" style={{minWidth: "360px"}}>
+        <h2 className="mb-4">Create New Course</h2>
+        <Form onSubmit={onSubmitCourse}>
+          <Form.Group controlId="formCourseId">
+            <Form.Label>Course ID</Form.Label>
+            <Form.Control
+              type="text"
+              name="courseId"
+              value={formDataCourse.courseId}
+              onChange={onChangeCourse}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="formCourseName">
+            <Form.Label>Course Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="courseName"
+              value={formDataCourse.courseName}
+              onChange={onChangeCourse}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="formCoursePath" style={{ display: 'none' }}>
+            <Form.Control
+              type="text"
+              name="coursePath"
+              value={formDataCourse.coursePath}
+              onChange={onChangeCourse}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="formCourseTeacherId">
+            <Form.Label>Teacher IDs (comma separated)</Form.Label>
+            <Form.Control
+              type="text"
+              name="teacherId"
+              value={formDataCourse.teacherId.join(', ')}
+              onChange={onChangeCourse}
+              required
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit" className="mt-3">
+            Submit Course
+          </Button>
+        </Form>
+      </div>
+      </div>
     </Container>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   token: state.auth.token,
 });
 

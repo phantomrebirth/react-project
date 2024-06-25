@@ -12,14 +12,30 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
   const [error, setError] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', variant: '' });
-  const [editUser, setEditUser] = useState(null); // State to track which user is being edited
+  const [editUser, setEditUser] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: '',
-    courseId: [], // Updated to an array
+    courseId: [],
     password: '',
   });
+
+  useEffect(() => {
+    if (users.length === 0 && loading) {
+      fetchUsers();
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (showAlert) {
+        setShowAlert(false);
+        setNotification({ show: false, message: '', variant: '' })
+      }
+    }, 4000);
+    return () => clearTimeout(timeout);
+  }, [showAlert, notification]);
 
   const fetchUsers = async () => {
     setFetching(true);
@@ -39,20 +55,14 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
     }
   };
 
-  useEffect(() => {
-    if (users.length === 0 && loading) {
-      fetchUsers();
-    }
-  }, [loading]);
-
   const deleteUser = async (userId) => {
     try {
       await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/users/delete/${userId}`, {
         'ngrok-skip-browser-warning': 'true',
         // headers: { Authorization: `Bearer ${token}` },
       });
+      await fetchUsers()
       setNotification({ show: true, message: 'User deleted successfully!', variant: 'success' });
-      setUsers(users.filter(user => user._id !== userId));
     } catch (error) {
       setError(error.message);
       setNotification({ show: true, message: 'Failed to delete user. Please try again.', variant: 'danger' });
@@ -65,8 +75,8 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      courseId: user.courseId || [], // Initialize courseId as an array
-      password: '', // Initialize password field
+      courseId: user.courseId || [],
+      password: '',
     });
   };
 
@@ -82,44 +92,47 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
   };
 
   const handleFormChange = (e) => {
-    if (e.target.name === 'courseId') {
-      // Convert comma-separated string to array
+    const { name, value } = e.target;
+    if (name === 'courseId') {
       setFormData({
         ...formData,
-        courseId: e.target.value.split(',').map(course => course.trim()),
+        courseId: value.split(',').map(course => course.trim()),
       });
     } else {
       setFormData({
         ...formData,
-        [e.target.name]: e.target.value,
+        [name]: value,
       });
     }
   };
 
   const handleUpdateUser = async () => {
     try {
-      const updatedUser = {
-        ...editUser,
+      const dataToSend = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
         role: formData.role,
-        courseId: formData.courseId,
+        courseId: formData.courseId, // Ensure courseId is sent correctly formatted
       };
-      await axios.patch(`https://thankful-ample-shrimp.ngrok-free.app/users/update/admin/${editUser._id}`, updatedUser, {
+      console.log(editUser._id)
+      console.log(dataToSend)
+      await axios.patch(`https://thankful-ample-shrimp.ngrok-free.app/users/update/admin/${editUser._id}`, dataToSend, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // Authorization: `Bearer ${token}`
         },
       });
-      setNotification({ show: true, message: 'User updated successfully!', variant: 'success' });
+  
       setEditUser(null);
-      setUsers(users.map(user => user._id === editUser._id ? updatedUser : user));
+      await fetchUsers();
+      setNotification({ show: true, message: 'User updated successfully!', variant: 'success' });
     } catch (error) {
       setError(error.message);
       setNotification({ show: true, message: 'Failed to update user. Please try again.', variant: 'danger' });
     }
   };
+  
 
   if (loading || fetching) {
     return (
@@ -132,6 +145,8 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
   }
 
   if (error) return <p>Error: {error}</p>;
+
+  const filteredUsers = users.filter(user => user.role !== 'admin');
 
   return (
     <div className='container mt-5'>
@@ -158,7 +173,7 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {filteredUsers.map(user => (
             <React.Fragment key={user._id}>
               <tr>
                 <td>{user._id}</td>
@@ -169,7 +184,7 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
                 <td style={{display: "flex", alignItems: "center"}}>
                   {editUser === user ? (
                     <>
-                      <Button variant='success' onClick={handleUpdateUser} style={{marginRight: "1rem"}}>
+                      <Button variant='success' onClick={handleUpdateUser} style={{marginRight: "1rem"}} disabled={!formData.password}>
                         Update
                       </Button>{' '}
                       <Button variant='secondary' onClick={handleCancelEdit}>
@@ -182,9 +197,11 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
                     </Button>
                   )}
                   {' '}
-                  <Button variant='danger' onClick={() => deleteUser(user._id)} style={{marginLeft: "1rem"}}>
-                    Delete
-                  </Button>
+                  {editUser !== user && (
+                    <Button variant='danger' onClick={() => deleteUser(user._id)} style={{marginLeft: "1rem"}}>
+                      Delete
+                    </Button>
+                  )}
                 </td>
               </tr>
               {editUser === user && (
@@ -219,17 +236,20 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
                           name="password"
                           value={formData.password}
                           onChange={handleFormChange}
+                          required
                         />
                       </Form.Group>
                       <Form.Group controlId="formRole">
                         <Form.Label>Role</Form.Label>
                         <Form.Control
-                          type="text"
-                          placeholder="Enter role"
+                          as="select"
                           name="role"
                           value={formData.role}
                           onChange={handleFormChange}
-                        />
+                        >
+                          <option value="teacher">Teacher</option>
+                          <option value="student">Student</option>
+                        </Form.Control>
                       </Form.Group>
                       <Form.Group controlId="formCourseId">
                         <Form.Label>Course IDs (comma separated)</Form.Label>

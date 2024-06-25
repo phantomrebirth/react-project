@@ -580,6 +580,7 @@ function ProfileHead({ token, profile, profileUpdate, deleteProfile, setCroppedI
             setFetchedImage(newImageUrl);
             setShowSuccess(true);
             setShowError(false);
+            console.log('updating profile:', file);
           }
           catch (error) {
           console.error('Error updating profile:', error);
