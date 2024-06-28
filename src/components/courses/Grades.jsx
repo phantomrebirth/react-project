@@ -5,6 +5,7 @@ import LoadingSpinner from '../../redux/actions/LoadingSpinner';
 import { login } from '../../redux/actions/auth';
 import axios from 'axios';
 import { format } from 'date-fns';
+import apiUrl from '../ApiUrl';
 
 const Grades = 
 ({
@@ -27,14 +28,14 @@ const Grades =
     }, [role]);
     const fetchQuizzes = async () => {
         try {
-          const response = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/quiz/${currentCourseID}`, {
+          const response = await axios.get(`${apiUrl}/quiz/${currentCourseID}`, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               'Authorization': `Bearer ${token}`
             }
           });
           const quizzesWithFormattedTime = response.data.quiz.map(async quiz => {
-            const availabilityResponse = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/quiz/availability/${quiz._id}`);
+            const availabilityResponse = await axios.get(`${apiUrl}/quiz/availability/${quiz._id}`);
             const { available } = availabilityResponse.data;
             const endTime = new Date(quiz.startTime).getTime() + quiz.duration * 60000;
             return {

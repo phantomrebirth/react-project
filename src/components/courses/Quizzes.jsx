@@ -13,6 +13,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import quizIcon from '../../assets/images/quiz.png';
+import apiUrl from '../ApiUrl';
 
 const Quizzes = 
 ({
@@ -75,14 +76,15 @@ const Quizzes =
     const course = courses.find(course => course._id === currentCourseID);
     const fetchQuizzes = async () => {
         try {
-          const response = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/quiz/${currentCourseID}`, {
+          const response = await axios.get(`${apiUrl}/quiz/${currentCourseID}`, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               'Authorization': `Bearer ${token}`
             }
           });
-          const quizzesWithFormattedTime = response.data.quiz.map(async quiz => {
-            const availabilityResponse = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/quiz/availability/${quiz._id}`);
+          console.log(response.data)
+          const quizzesWithFormattedTime = response.data.quizzes.map(async quiz => {
+            const availabilityResponse = await axios.get(`${apiUrl}/quiz/availability/${quiz._id}`);
             const { available } = availabilityResponse.data;
             const endTime = new Date(quiz.startTime).getTime() + quiz.duration * 60000;
             return {
@@ -206,7 +208,7 @@ const Quizzes =
         try {
             startFileOperation();
             if (editingQuizId) {
-                await axios.patch(`https://thankful-ample-shrimp.ngrok-free.app/quiz/${editingQuizId}`, payload, {
+                await axios.patch(`${apiUrl}/quiz/${editingQuizId}`, payload, {
                     headers: {
                         'ngrok-skip-browser-warning': 'true',
                         'Content-Type': 'application/json',
@@ -215,7 +217,7 @@ const Quizzes =
                 });
                 setUploadAlert({ variant: 'primary', message: 'Quiz updated successfully!' });
             } else {
-                await axios.post('https://thankful-ample-shrimp.ngrok-free.app/quiz', payload, {
+                await axios.post(`${apiUrl}/quiz`, payload, {
                     headers: {
                         'ngrok-skip-browser-warning': 'true',
                         'Content-Type': 'application/json',
@@ -273,7 +275,7 @@ const Quizzes =
         setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
 
         try {
-            const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/quiz/${quizId}`, {
+            const response = await axios.delete(`${apiUrl}/quiz/${quizId}`, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
                     'Authorization': `Bearer ${token}`,

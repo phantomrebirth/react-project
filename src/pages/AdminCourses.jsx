@@ -3,6 +3,7 @@ import '../../src/Admin.css';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { Spinner, Container, Row, Col, ListGroup, Alert, Button, Form } from 'react-bootstrap';
+import apiUrl from '../components/ApiUrl';
 
 const AdminCourses = ({ token }) => {
   const [courses, setCourses] = useState([]);
@@ -36,7 +37,7 @@ const AdminCourses = ({ token }) => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/course/all', {
+      const response = await axios.get(`${apiUrl}/course/all`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
@@ -51,7 +52,7 @@ const AdminCourses = ({ token }) => {
 
   const handleDelete = async (courseId) => {
     try {
-      await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/delete/${courseId}`, {
+      await axios.delete(`${apiUrl}/course/delete/${courseId}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         }
@@ -116,7 +117,7 @@ const AdminCourses = ({ token }) => {
       };
 
       const res = await axios.patch(
-        `https://thankful-ample-shrimp.ngrok-free.app/course/update/admin/${updateCourseId}`,
+        `${apiUrl}/course/update/admin/${updateCourseId}`,
         payload,
         { headers: {
           'ngrok-skip-browser-warning': 'true'
@@ -142,7 +143,7 @@ const AdminCourses = ({ token }) => {
         teacherId: formDataCourse.teacherId
       };
 
-      const res = await axios.post('https://thankful-ample-shrimp.ngrok-free.app/course', dataToSend, {
+      const res = await axios.post(`${apiUrl}/course`, dataToSend, {
         headers: {
           'ngrok-skip-browser-warning': 'true'
         }

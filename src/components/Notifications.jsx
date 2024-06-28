@@ -4,6 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
+import apiUrl from './ApiUrl';
 
 const Notifications = ({
     token,
@@ -42,7 +43,7 @@ const Notifications = ({
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/notifications', {
+                const response = await axios.get(`${apiUrl}/notifications`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'ngrok-skip-browser-warning': 'true',
@@ -61,7 +62,7 @@ const Notifications = ({
 
         fetchNotifications();
 
-        socket.current = io('https://thankful-ample-shrimp.ngrok-free.app', {
+        socket.current = io(`${apiUrl}`, {
             transports: ['websocket'],
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -118,7 +119,7 @@ const Notifications = ({
 
     const markAsRead = async (id) => {
         try {
-            const response = await axios.patch(`https://thankful-ample-shrimp.ngrok-free.app/notifications/${id}/read`, {}, {
+            const response = await axios.patch(`${apiUrl}/notifications/${id}/read`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'ngrok-skip-browser-warning': 'true',

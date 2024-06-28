@@ -28,9 +28,10 @@ import {
   SET_WAIT_VIDEO_ALERT,
   RESET_WAIT_VIDEO_ALERT,
 } from './type'
+import apiUrl from '../../components/ApiUrl';
 
 
-const apiUrl = "https://thankful-ample-shrimp.ngrok-free.app/"
+// const apiUrl = "https://thankful-ample-shrimp.ngrok-free.app/"
 
 export const getCourses = () => async (dispatch,getState) => {
   const userID = getState().auth.userID;
@@ -48,7 +49,7 @@ export const getCourses = () => async (dispatch,getState) => {
 
   dispatch({ type: COURSES_START });
   try {
-    const res = await axios.get(`${apiUrl}getCourse/all`, {
+    const res = await axios.get(`${apiUrl}/getCourse/all`, {
       ...config,
       onDownloadProgress: (progressEvent) => {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -124,7 +125,7 @@ export const getCourseProject = ({currentCourseID, projectID}) => async (dispatc
 // };
   dispatch({ type: COURSE_PROJECT_START });
   try {
-    const path = `${apiUrl}course/getProjects/${currentCourseID}/${projectID}`;
+    const path = `${apiUrl}/course/getProjects/${currentCourseID}/${projectID}`;
     dispatch({
       type: COURSE_PROJECT_SUCCESS,
       payload: path
@@ -170,7 +171,7 @@ export const getCourseAssignment = ({currentCourseID, assignmentID}) => async (d
   dispatch({ type: COURSE_ASSIGNMENT_START });
   try {
     // Construct the path based on the currentCourseID and assignmentID
-    const path = `${apiUrl}course/getAssignments/${currentCourseID}/${assignmentID}`;
+    const path = `${apiUrl}/course/getAssignments/${currentCourseID}/${assignmentID}`;
     dispatch({
       type: COURSE_ASSIGNMENT_SUCCESS,
       payload: path
@@ -195,7 +196,7 @@ export const getCourseFile = ({currentCourseID, fileID}) => async (dispatch) => 
 
   dispatch({ type: COURSE_FILE_START });
   try {
-    const path = `${apiUrl}course/getFiles/${currentCourseID}/${fileID}`;
+    const path = `${apiUrl}/course/getFiles/${currentCourseID}/${fileID}`;
     dispatch({
       type: COURSE_FILE_SUCCESS,
       payload: path
@@ -241,7 +242,7 @@ export const getCourseVideo = ({currentCourseID, videoID}) => async (dispatch) =
 
   dispatch({ type: COURSE_VIDEO_START });
   try {
-    const path = `${apiUrl}course/getVideos/${currentCourseID}/${videoID}`;
+    const path = `${apiUrl}/course/getVideos/${currentCourseID}/${videoID}`;
     dispatch({
       type: COURSE_VIDEO_SUCCESS,
       payload: path

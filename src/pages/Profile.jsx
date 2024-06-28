@@ -8,6 +8,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Alert from 'react-bootstrap/Alert';
 // import { userData, userUpdate } from '../redux/actions/profile';
 import { login } from '../redux/actions/auth';
+import apiUrl from '../components/ApiUrl';
 
 const Profile = ({ token }) => {
 //   const token = useSelector(selectToken);
@@ -27,7 +28,7 @@ const Profile = ({ token }) => {
   const fetchProfileData = async () => {
     try {
         // userData(token);
-      const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/users/me', {
+      const response = await axios.get(`${apiUrl}/users/me`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -56,7 +57,7 @@ const Profile = ({ token }) => {
         password: usersData.password
       };
       // const response = userUpdate(body);
-      const response = await axios.patch('https://thankful-ample-shrimp.ngrok-free.app/users/update',
+      const response = await axios.patch(`${apiUrl}/users/update`,
       body, {
         headers: {
           'ngrok-skip-browser-warning': 'true',

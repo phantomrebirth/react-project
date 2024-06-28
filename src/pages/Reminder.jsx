@@ -8,6 +8,7 @@ import { IoClose } from 'react-icons/io5';
 import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import apiUrl from '../components/ApiUrl';
 
 const Reminder = 
 ({
@@ -35,7 +36,7 @@ const Reminder =
 
   const fetchNotes = async () => {
     try {
-      const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/getReminder/all', {
+      const response = await axios.get(`${apiUrl}/getReminder/all`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           Authorization: `Bearer ${token}`,
@@ -71,7 +72,7 @@ const Reminder =
     try {
       if (selectedNoteIndex !== null) {
         const noteID = noteIds[selectedNoteIndex];
-        await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/reminders/${noteID}`, {
+        await axios.delete(`${apiUrl}/reminders/${noteID}`, {
           headers: {
             'ngrok-skip-browser-warning': 'true',
             Authorization: `Bearer ${token}`,
@@ -79,7 +80,7 @@ const Reminder =
         });
       }
 
-      const response = await axios.post('https://thankful-ample-shrimp.ngrok-free.app/reminders', newNote, {
+      const response = await axios.post(`${apiUrl}/reminders`, newNote, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           Authorization: `Bearer ${token}`,
@@ -124,7 +125,7 @@ const Reminder =
 
   const handleDeleteNote = async (noteID) => {
     try {
-      await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/reminders/${noteID}`, {
+      await axios.delete(`${apiUrl}/reminders/${noteID}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           Authorization: `Bearer ${token}`,

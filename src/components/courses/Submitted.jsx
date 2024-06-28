@@ -7,6 +7,7 @@ import {
 } from '../../redux/actions/courses';
 import { login } from '../../redux/actions/auth';
 import axios from 'axios';
+import apiUrl from '../ApiUrl';
 
 const formatDateTime = (dateTimeStr) => {
   const date = new Date(dateTimeStr);
@@ -43,7 +44,7 @@ const Submitted = ({
 
   useEffect(() => {
     if (course) {
-      const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course`;
+      const basePath = `${apiUrl}/course`;
       if (course.assignments?.length) {
         setSubmittedAssignments(course.assignments
           .filter(assignment => assignment.solutions?.length)
@@ -71,7 +72,7 @@ const Submitted = ({
       try {
         const promises = submittedItems.flatMap(item =>
           item.solutions?.map(solution => axios.get(
-            `https://thankful-ample-shrimp.ngrok-free.app/course/${itemType}/solution/${currentCourseID}/${item._id}/${solution._id}`,
+            `${apiUrl}/course/${itemType}/solution/${currentCourseID}/${item._id}/${solution._id}`,
             { headers: { 'Authorization': `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' }, responseType: 'blob' }
           )) || []
         );
@@ -93,11 +94,11 @@ const Submitted = ({
   };
 
   const renderItems = (items, solutions, openPDF, type) => (
-    <>
+    <div style={{display: "flex", alignItems: "start", justifyContent: "space-evenly"}}>
       {!waitAlert && (
-        <Row className='mt-3 assignments-container' style={{ marginLeft: "1%", marginRight: "0", marginBottom: "0", padding: "0"}}>
+        <Row className='mt-3 assignments-container' style={{ marginLeft: "1%", marginRight: "0", marginBottom: "0", padding: "0", flexDirection: "column"}}>
           {items.length ? items.map((item, index) => (
-            <Col key={item.id || index} className='asscol2' style={{ margin: "0", padding: "0"}}>
+            <Col key={item.id || index} className='asscol2' style={{ margin: "1rem 0 0 0", padding: "0"}}>
               <div className="assignment-container2">
                 <div className='assignment-header'>
                   <ul className='ass-h'>
@@ -135,7 +136,7 @@ const Submitted = ({
           )) : null}
         </Row>
       )}
-    </>
+    </div>
   );
 
   return (

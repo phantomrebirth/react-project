@@ -4,6 +4,7 @@ import { CiSearch } from 'react-icons/ci';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import apiUrl from './ApiUrl';
 
 const Search = ({ token, role, userID, courses }) => {
   const [query, setQuery] = useState('');
@@ -26,7 +27,7 @@ const Search = ({ token, role, userID, courses }) => {
     debounceTimeout.current = setTimeout(async () => {
       if (value.length > 0) {
         try {
-          const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/search', {
+          const response = await axios.get(`${apiUrl}/search`, {
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,

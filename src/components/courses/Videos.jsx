@@ -12,6 +12,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { login } from '../../redux/actions/auth';
 import { finishFileOperation, getCourseVideo, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, resetWaitVideoAlert, setDeleteAlert, setUploadAlert, setWaitAlert, setWaitVideoAlert, startFileOperation } from '../../redux/actions/courses';
 import { CircularProgress } from '@material-ui/core';
+import apiUrl from '../ApiUrl';
 
 const Videos = 
 ({
@@ -75,7 +76,7 @@ const Videos =
     const course = courses.find(course => course._id === currentCourseID);
     useEffect(() => {
         if (course && course.videos && course.videos.length > 0) {
-            const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course/getVideos/${currentCourseID}/`;
+            const basePath = `${apiUrl}/course/getVideos/${currentCourseID}/`;
             const videos = course.videos.map(video => ({
                 ...video,
                 path: `${basePath}${video._id}`,
@@ -196,7 +197,7 @@ const Videos =
             // setWaitAlert({ variant: 'info', message: 'Uploading your video... please wait', progress: 0 });
             // }
         try {
-            const response = await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/course/videos/${currentCourseID}`, formData, {
+            const response = await axios.post(`${apiUrl}/course/videos/${currentCourseID}`, formData, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
                     // 'User-Agent': 'CustomUserAgent',
@@ -247,7 +248,7 @@ const Videos =
             // setWaitAlert({ variant: 'info', message: 'Deleting your video... please wait', progress: 0 });
         // }
         try {
-            const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/deleteVideos/${currentCourseID}/${video._id}`, {
+            const response = await axios.delete(`${apiUrl}/course/deleteVideos/${currentCourseID}/${video._id}`, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
                     // 'User-Agent': 'CustomUserAgent',

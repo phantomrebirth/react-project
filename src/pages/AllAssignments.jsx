@@ -49,6 +49,7 @@ import { HiOutlineDownload } from 'react-icons/hi';
 import { PDFDocument } from 'pdf-lib';
 import { finishFileOperation, getCourseAssignment, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../redux/actions/courses';
 import { login } from '../redux/actions/auth';
+import apiUrl from '../components/ApiUrl';
 
 const formatDateTime = (dateTimeStr) => {
   const date = new Date(dateTimeStr);
@@ -154,7 +155,7 @@ const AllAssignments =
           return;
         }
   
-        const response = await fetch(`https://thankful-ample-shrimp.ngrok-free.app/course/assignments/solution/${clickedCourseId}/${clickedAssignmentId}`, {
+        const response = await fetch(`${apiUrl}/course/assignments/solution/${clickedCourseId}/${clickedAssignmentId}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -202,7 +203,7 @@ const AllAssignments =
     // dispatch(navigateToAssignment());
   };
   
-  const assignmentPath = `https://thankful-ample-shrimp.ngrok-free.app/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
+  const assignmentPath = `${apiUrl}/course/getAssignments/${clickedCourseId}/${clickedAssignmentId}`;
   
   const handleFileSelect = (event) => {
     const files = event.target.files;

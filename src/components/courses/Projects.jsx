@@ -566,6 +566,9 @@ import axios from 'axios';
 // import { selectProjectsPaths, selectSubmittedProjects, setProjectsPaths, setSubmittedProjects, updateProjectsPaths } from '../../redux/slices/ProjectsSlice';
 import { finishFileOperation, getCourseProject, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { login } from '../../redux/actions/auth';
+import apiUrl from '../ApiUrl';
+import projectVector from '../../assets/images/project2.png'
+import projectImage from '../../assets/images/project1.png'
 
 const formatDateTime = (dateTimeStr) => {
   const date = new Date(dateTimeStr);
@@ -634,7 +637,7 @@ const Projects =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.projects && course.projects.length > 0) {
-      const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course/getProjects/${currentCourseID}/`;
+      const basePath = `${apiUrl}/course/getProjects/${currentCourseID}/`;
       const projects = course.projects.map(project => {
         // Format assignment's uploadtime and deadline
         const formattedProject = {
@@ -753,7 +756,7 @@ const Projects =
         }
         // formData.append('description', description); // Add any additional metadata
       
-        const response = await fetch(`https://thankful-ample-shrimp.ngrok-free.app/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
+        const response = await fetch(`${apiUrl}/course/projects/solution/${currentCourseID}/${submittedProjectId}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -906,7 +909,7 @@ const Projects =
         setWaitAlert({ variant: 'info', message: 'Uploading... please wait' });
     // }
     try {
-        const response = await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/course/projects/${currentCourseID}`, formData, {
+        const response = await axios.post(`${apiUrl}/course/projects/${currentCourseID}`, formData, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               // 'User-Agent': 'CustomUserAgent',
@@ -921,7 +924,7 @@ const Projects =
           const uploadedProject = {
             _id: project,
             filename: selectedFiles[0].name,
-            path: `https://thankful-ample-shrimp.ngrok-free.app/course/getProjects/${currentCourseID}/${project}`,
+            path: `${apiUrl}/course/getProjects/${currentCourseID}/${project}`,
             uploadtime: new Date().toLocaleDateString(),
             deadline: deadline,
             // submitted: "notSubmitted"
@@ -956,7 +959,7 @@ const Projects =
     setWaitAlert({ variant: 'info', message: 'Deleting... please wait' });
 
     try {
-        const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/deleteProjects/${currentCourseID}/${project._id}`, {
+        const response = await axios.delete(`${apiUrl}/course/deleteProjects/${currentCourseID}/${project._id}`, {
             headers: {
               'ngrok-skip-browser-warning': 'true',
               // 'User-Agent': 'CustomUserAgent',
@@ -1103,6 +1106,9 @@ const Projects =
                               )}
                             </React.Fragment>
                     ))}
+                    <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: "5rem"}}>
+                      <img src={projectImage} alt='' style={{maxHeight: "225px", maxWidth: "225px"}} />
+                    </div>
                   </div>
                 </Col>
                 <Col style={{margin: "0", padding: "0"}}>
@@ -1137,10 +1143,13 @@ const Projects =
                 </Col>
               </Row>
               <Row style={{ padding: "0"}} className='projectDescription-container'>
-                <Col style={{margin: "0", padding: "0"}} className='projectD-col' md={12} lg={12} xl={9}>
-                  <h4>Project Description</h4>
+                <Col style={{margin: "0", padding: "0"}} className='projectD-col' md={12} lg={12} xl={6}>
+                {/* <div style={{display: "flex", alignItems: "center", justifyContent: "center"}} className='mt-5'>
+                <img src={projectImage} alt='' style={{maxHeight: "300px", maxWidth: "300px"}} />
+                </div> */}
+                  {/* <h4>Project Description</h4> */}
                   <Form onSubmit={handleSubmit}>
-                      <Form.Group controlId="projectDescription">
+                      {/* <Form.Group controlId="projectDescription">
                       <Form.Label>Write your project description:</Form.Label>
                       <Form.Control
                           as="textarea"
@@ -1149,7 +1158,7 @@ const Projects =
                           rows={4}
                           className='description-area'
                       />
-                      </Form.Group>
+                      </Form.Group> */}
                   </Form>
                 </Col>
               </Row>
@@ -1181,8 +1190,8 @@ const Projects =
               <div style={{width: "70%"}}>
                 <Row className='mt-4'>
                   <div className='inProgress-ass'>
-                    <Col >
-                      <Form.Group controlId="formName" style={{width: "88%"}}>
+                    <Col className='mt-3'>
+                      {/* <Form.Group controlId="formName" style={{width: "88%"}}>
                         <Form.Label>Name</Form.Label>
                         <Form.Control className='pfEmail' 
                                       type="text"
@@ -1191,7 +1200,7 @@ const Projects =
                                       value={projectName} 
                                       onChange={handleProjectNameChange}
                         />
-                      </Form.Group>
+                      </Form.Group> */}
                       <div>
                         <Form.Group controlId="formDeadline" style={{width: "69%"}}>
                           <Form.Label>Deadline</Form.Label>
@@ -1204,6 +1213,29 @@ const Projects =
                             />
                         </Form.Group>
                       </div>
+                      <div className='description-container mt-4'>
+
+                      <Form onSubmit={handleProjectUpload}>
+                    {/* <Form.Group controlId="assignmentDescription">
+                      <Form.Label>
+                        Write your assignment description:
+                      </Form.Label>
+                      <Form.Control
+                              as="textarea"
+                              value={description}
+                              onChange={handleChange}
+                              rows={4}
+                              className='description-area'
+                      />
+                    </Form.Group> */}
+                    <Button variant="primary" type="submit" className='ass-submit' disabled={selectedFiles.length === 0}>
+                      Confirm
+                    </Button>
+                    <Button variant="danger" className='ass-cancel' onClick={handleCancel}>
+                      Close
+                    </Button>
+                  </Form>
+                  </div>
                     </Col>
                     <Col md={4} lg={4} xl={4}>
                       <input
@@ -1229,28 +1261,12 @@ const Projects =
                     </Col>
                   </div>
                 </Row>
-                <div className='description-container'>
+                <div className='description-container' style={{marginTop: "0"}}>
                 {/* <h4>Assignment Description</h4> */}
-                  <Form onSubmit={handleProjectUpload}>
-                    {/* <Form.Group controlId="assignmentDescription">
-                      <Form.Label>
-                        Write your assignment description:
-                      </Form.Label>
-                      <Form.Control
-                              as="textarea"
-                              value={description}
-                              onChange={handleChange}
-                              rows={4}
-                              className='description-area'
-                      />
-                    </Form.Group> */}
-                    <Button variant="primary" type="submit" className='ass-submit' disabled={selectedFiles.length === 0}>
-                      Confirm
-                    </Button>
-                    <Button variant="danger" className='ass-cancel' onClick={handleCancel}>
-                      Close
-                    </Button>
-                  </Form>
+
+                </div>
+                <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
+                  <img src={projectVector} alt='' style={{maxHeight: "300px", maxWidth: "300px", marginRight: "6%"}} />
                 </div>
               </div>
             </div>

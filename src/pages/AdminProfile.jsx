@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Alert from 'react-bootstrap/Alert';
 import { login, logout } from '../redux/actions/auth';
+import apiUrl from '../components/ApiUrl';
 
 const Profile = ({ token, logout }) => {
   const [usersData, setUsersData] = useState({
@@ -31,7 +32,7 @@ const Profile = ({ token, logout }) => {
 
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/users/me', {
+      const response = await axios.get(`${apiUrl}/users/me`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           Authorization: `${token}`,
@@ -56,7 +57,7 @@ const Profile = ({ token, logout }) => {
         email: usersData.email,
         password: usersData.password
       };
-      const response = await axios.patch('https://thankful-ample-shrimp.ngrok-free.app/users/update',
+      const response = await axios.patch(`${apiUrl}/users/update`,
       body, {
         headers: {
           'ngrok-skip-browser-warning': 'true',

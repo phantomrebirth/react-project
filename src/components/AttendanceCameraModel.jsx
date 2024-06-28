@@ -54,7 +54,9 @@ const AttendanceCameraModal = ({ onClose, onCapture }) => {
     <div className="camera-modal" style={{height: "100%", width: "100%", top: "0", zIndex: "9999"}}>
       <div className="modal-overlay" style={{top: "0"}} onClick={handleClose}></div>
       <div className="modal-content" style={{top: "0", display: "flex", justifyContent: "center"}}>
-        <video ref={videoRef} autoPlay playsInline style={{width: "60%", margin: "auto", maxWidth: "none", borderRadius: "1rem"}} />
+        {/* <div style={{width: "960px", height: "540px", margin: "auto", maxWidth: "none", borderRadius: "1rem"}} className='attendance-video-container'> */}
+          <video ref={videoRef} autoPlay playsInline style={{height: "540px", width: "720px", margin: "auto", maxWidth: "none", borderRadius: "1rem"}} className='attendance-video'/>
+        {/* </div> */}
         <div style={{display: "flex", justifyContent: "space-evenly"}}>
           <button onClick={handleCapturePhoto} className='take-photo'>Capture Photo</button>
           <button onClick={handleClose} className='close-camera'>Close</button>

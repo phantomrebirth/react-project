@@ -17,6 +17,9 @@ import axios from 'axios';
 import { login } from '../../redux/actions/auth';
 import { finishFileOperation, getCourseAssignment, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { useParams } from 'react-router-dom';
+import apiUrl from '../ApiUrl';
+import assignmentVector from '../../assets/images/assignment1.png'
+import assignmentImage from '../../assets/images/assignment2.png'
 
 const formatDateTime = (dateTimeStr) => {
   const date = new Date(dateTimeStr);
@@ -86,7 +89,7 @@ const Assignments =
   const course = courses.find(course => course._id === currentCourseID);
   useEffect(() => {
     if (course && course.assignments && course.assignments.length > 0) {
-      const basePath = `https://thankful-ample-shrimp.ngrok-free.app/course/getAssignments/${currentCourseID}/`;
+      const basePath = `${apiUrl}/course/getAssignments/${currentCourseID}/`;
       const assignments = course.assignments.map(assignment => {
         // Format assignment's uploadtime and deadline
         const formattedAssignment = {
@@ -148,7 +151,7 @@ const Assignments =
           return;
         }
   
-        const response = await fetch(`https://thankful-ample-shrimp.ngrok-free.app/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
+        const response = await fetch(`${apiUrl}/course/assignments/solution/${currentCourseID}/${submittedAssignmentId}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -281,7 +284,7 @@ const Assignments =
     setWaitAlert({ variant: 'info', message: 'Uploading... please wait' })
     // }
     try {
-      const response = await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/course/assignments/${currentCourseID}`, formData, {
+      const response = await axios.post(`${apiUrl}/course/assignments/${currentCourseID}`, formData, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -298,7 +301,7 @@ const Assignments =
         const uploadedAssignment = {
           _id: assignmentId,
           filename: selectedFiles[0].name,
-          path: `https://thankful-ample-shrimp.ngrok-free.app/course/getAssignments/${currentCourseID}/${assignmentId}`,
+          path: `${apiUrl}/course/getAssignments/${currentCourseID}/${assignmentId}`,
           uploadtime: new Date().toLocaleDateString(),
           deadline: deadline,
           // submitted: "notSubmitted"
@@ -341,7 +344,7 @@ const Assignments =
     // }
 
     try {
-      const response = await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
+      const response = await axios.delete(`${apiUrl}/course/deleteAssignments/${currentCourseID}/${assignment._id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // 'User-Agent': 'CustomUserAgent',
@@ -502,8 +505,8 @@ const Assignments =
                       ))}
                     </div>
                   </Col>
-                  <Col md={5} lg={5} xl={5} style={{marginLeft: "21px"}}>
-                    <div className='upAss-container'>
+                  <Col md={5} lg={5} xl={5}>
+                    <div className='upAss-container' style={{justifyContent: "center"}}>
                       <label htmlFor='assignmentInput' className='headUp-ass' title='Click to select files'>
                         Upload Assignment
                         <TbFileUpload className='upAss-icon'/>
@@ -520,9 +523,9 @@ const Assignments =
                 </div>
               </Row>
               <div className='description-container'>
-                <h4>Assignment Description</h4>
+                {/* <h4>Assignment Description</h4> */}
                   <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="assignmentDescription">
+                    {/* <Form.Group controlId="assignmentDescription">
                       <Form.Label>
                         Write your assignment description:
                       </Form.Label>
@@ -533,7 +536,7 @@ const Assignments =
                               rows={4}
                               className='description-area'
                       />
-                    </Form.Group>
+                    </Form.Group> */}
                     <Button variant="primary" type="submit" className='ass-submit' disabled={selectedFiles.length === 0}>
                         Submit
                     </Button>
@@ -541,6 +544,9 @@ const Assignments =
                       Close
                     </Button>
                   </Form>
+              </div>
+              <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
+                  <img src={assignmentVector} alt='' style={{maxHeight: "500px", maxWidth: "1000px"}} />
               </div>
             </>
           )}
@@ -571,7 +577,7 @@ const Assignments =
                 <Row className='mt-4'>
                   <div className='inProgress-ass'>
                     <Col >
-                      <Form.Group controlId="formName" style={{width: "88%"}}>
+                      {/* <Form.Group controlId="formName" style={{width: "88%"}}>
                         <Form.Label>Name</Form.Label>
                         <Form.Control className='pfEmail' 
                                       type="text"
@@ -580,7 +586,7 @@ const Assignments =
                                       value={assignmentName} 
                                       onChange={handleAssignmentNameChange}
                         />
-                      </Form.Group>
+                      </Form.Group> */}
                       <div>
                       <Form.Group controlId="formDeadline" style={{width: "69%"}}>
                         <Form.Label>Deadline</Form.Label>
@@ -633,6 +639,9 @@ const Assignments =
                         Close
                       </Button>
                     </Form>
+                </div>
+                <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
+                  <img src={assignmentImage} alt='' style={{maxHeight: "500px", maxWidth: "1000px"}} />
                 </div>
               </div>
             </div>

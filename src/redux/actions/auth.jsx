@@ -7,8 +7,9 @@ import {
   LOGOUT_SUCCESS,
   LOGOUT_FAIL,
 } from "./type";
+import apiUrl from "../../components/ApiUrl";
 
-const apiUrl = "https://thankful-ample-shrimp.ngrok-free.app/";
+// const apiUrl = `${apiUrl}/`;
 
 export const login = (email, password) => async (dispatch) => {
   const config = {
@@ -22,7 +23,7 @@ export const login = (email, password) => async (dispatch) => {
   dispatch({ type: LOGIN_START });
 
   try {
-    const res = await axios.post(`${apiUrl}users/login`, body, config);
+    const res = await axios.post(`${apiUrl}/users/login`, body, config);
     console.log("asd")
     console.log("API response:", res.data);
     const userID = res.data.user._id

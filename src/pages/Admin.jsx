@@ -5,6 +5,7 @@ import { logout } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { profile } from '../redux/actions/profile';
+import apiUrl from '../components/ApiUrl';
 
 const Admin = ({ logout, image, error, isLoading, token, profile }) => {
   const [formDataUser, setFormDataUser] = useState({
@@ -71,7 +72,7 @@ const Admin = ({ logout, image, error, isLoading, token, profile }) => {
         dataToSend.append('registerImage', file);
       });
       console.log(name,email,password,role,courseIds)
-      const res = await axios.post('https://thankful-ample-shrimp.ngrok-free.app/users', dataToSend, {
+      const res = await axios.post(`${apiUrl}/users`, dataToSend, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'multipart/form-data'

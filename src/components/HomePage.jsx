@@ -11,12 +11,15 @@ import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import { getCourses } from '../redux/actions/courses';
 import LoadingSpinner from '../redux/actions/LoadingSpinner';
-// import { selectRole } from '../redux/slices/authSlice';
-
-const homeCourses = [
-  { title: 'Network', progress: 0.9, path: '/courses/network' },
-  { title: 'Computer Vision', path: '/courses/computer-vision', progress: 0.75 },
-];
+import apiUrl from './ApiUrl';
+import axios from 'axios';
+import { format } from 'date-fns';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+// const homeCourses = [
+//   { title: 'Network', progress: 0.9, path: '/courses/network' },
+//   { title: 'Computer Vision', path: '/courses/computer-vision', progress: 0.75 },
+// ];
 
 const HomePage = 
 ({ 
@@ -24,11 +27,15 @@ const HomePage =
   courses,
   isLoading,
   getCourses,
-  token
+  token,
+  name
 }) => {
   
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
+  const [quizzes, setQuizzes] = useState([]);
+  const [events, setEvents] = useState([]);
+
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
@@ -39,17 +46,100 @@ const HomePage =
       getCourses();
     }
   }, [role, isLoading]);
+  useEffect(() => {
+    if (quizzes.length === 0) {
+      fetchQuizzes();
+    }
+  }, []);
+  useEffect(() => {
+    if (teacher) {
+      const fetchedEvents = courses.flatMap(course => {
+        const assignments = course.assignments.map(assignment => ({
+          title: `${course.name}: ${assignment.filename}`,
+          date: new Date(assignment.deadline),
+        }));
+        const projects = course.projects.map(project => ({
+          title: `${course.name}: ${project.filename}`,
+          date: new Date(project.deadline),
+        }));
+        return [...assignments, ...projects];
+      });
+      setEvents(fetchedEvents);
+    }
+  }, [teacher, courses]);
   
-  // useEffect(() => {
-  //   if (courses.length === 0 && !isLoading) {
-  //     getCourses();
-  //   }
-  // }, [isLoading]);
-
   if (isLoading) {
     return (
         <LoadingSpinner/>
     );
+  };
+
+  const fetchQuizzes = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/quiz/getAll`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      console.log(response.data);
+      const quizzesWithFormattedTime = response.data.map(quiz => {
+        if (quiz.startTime) {
+          const endTime = new Date(quiz.startTime).getTime() + quiz.duration * 60000;
+          return {
+            ...quiz,
+            endTime: endTime,
+            formattedStartDate: format(new Date(quiz.startTime), 'MM/dd/yyyy'),
+            formattedStartTime: format(new Date(quiz.startTime), 'hh:mm a'),
+            formattedEndTime: format(new Date(endTime), 'hh:mm a'),
+            formattedQuizStartTime: format(new Date(quiz.startTime), 'PPpp')
+          };
+        } else {
+          return quiz;
+        }
+      });
+  
+      setQuizzes(quizzesWithFormattedTime);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
+
+  const getCourseNameById = (courseId) => {
+    const course = courses.find(course => course._id === courseId);
+    return course ? course.name : null;
+  };
+
+  const renderQuizzes = () => {
+    if (quizzes.length === 0) {
+      return <p>No quizzes available.</p>;
+    }
+
+    return quizzes.map((quiz, idx) => {
+      const courseName = getCourseNameById(quiz.courseId[0]);
+      return (
+        <Row key={idx} style={{width: "max-content"}}>
+          {quiz.formattedStartDate && courseName && (
+            <div className='home-myQuizContainer'>
+              <div className='home-QuizTitleContainer'>
+                <h4 className='home-QuizTitle' style={{marginRight: "1rem"}}>
+                  {courseName}
+                </h4>
+                <div className='home-QuizDateContainer'>
+                  <h5 className='home-QuizDate'>
+                    {quiz.formattedStartDate}
+                  </h5>
+                  <div className='home-quizArrowContainer'>
+                    <HiArrowLongRight className='home-quizArrow'/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </Row>
+      );
+    });
   };
 
   const formatDate = (dateString) => {
@@ -274,7 +364,7 @@ const HomePage =
                   Quiz
                 </h3>
               </Row>
-              <Row>
+              {/* <Row>
                 <div className='home-myQuizContainer'>
                   <div className='home-QuizTitleContainer'>
                     <h4 className='home-QuizTitle'>
@@ -290,7 +380,8 @@ const HomePage =
                     </div>
                   </div>
                 </div>
-              </Row>
+              </Row> */}
+              {renderQuizzes()}
             </Container>
           </Container>
         </Container>
@@ -298,15 +389,28 @@ const HomePage =
       )}
       {teacher && (
         <div>
-          <Container style={{display: "flex", justifyContent: "center", padding: "0"}}>
+          <Container style={{padding: "0"}}>
+          <Container style={{padding: "0px", margin: "0", width: "100%", maxWidth:"100%"}} className='homepage-container'>
+          <Container style={{padding: "0px", margin: "0", width: "100%", maxWidth:"100%", display: "inline-block"}}>
+            <Row>
+              <h1 className='homepage-description'>
+                Hello, {name.split(' ')[0]}
+              </h1>
+            </Row>
+            <Row>
+
+            </Row>
+          </Container>
+          </Container>
             {courses.length > 0 && (
               <Container style={{padding: "0", margin: "0", width: "100%", maxWidth:"100%"}} className='homeCourses-container'>
                 <Container className='cards-container' style={{padding: "0", width: "100%"}} fluid>
-                  <Row xs={1} md={2} xl={12} className="g-4" style={{padding: "0",
-                                                                      flexWrap: "nowrap",
+                  <Row xs={1} md={2} xl={12} className="g-4" style={{ padding: "0",
+                                                                      alignItems: "baseline",
+                                                                      // flexWrap: "nowrap",
                                                                       justifyContent: "center",
                                                                       width: "100%",
-                                                                      maxWidth:"100%"}}
+                                                                      maxWidth:"100%" }}
                                               id='cardsRow'
                   >
                     {courses.map((course, idx) => (
@@ -344,6 +448,14 @@ const HomePage =
               </Container>
             )}
           </Container>
+          <Container style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+            <Calendar
+              tileContent={({ date, view }) => {
+                const event = events.find(event => event.date.toDateString() === date.toDateString());
+                return event ? <p>{event.title}</p> : null;
+              }}
+            />
+          </Container>
         </div>
       )}
     </>
@@ -355,6 +467,7 @@ const mapStateToProps = state => ({
   courses: state.courses.coursesData,
   isLoading: state.courses.isLoading,
   token: state.auth.token,
+  name: state.auth.name,
 });
 
 export default connect(mapStateToProps, { login, getCourses })(HomePage);

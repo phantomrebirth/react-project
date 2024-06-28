@@ -13,7 +13,8 @@ import emailIcon from '../assets/images/email.png'
 import passwordIcon from '../assets/images/password.png'
 import closedEye from '../assets/images/eye-closed.png'
 import openEye from '../assets/images/eye.png'
-import loginImage from '../assets/images/login-image.png'
+// import loginImage from '../assets/images/login-image.png'
+import loginImage from '../assets/images/login-vector.png'
 
 const Login = ({login, token, role, error, isLoading}) => {
     // const emailInput = document.getElementById("emailInput");
@@ -181,7 +182,7 @@ const Login = ({login, token, role, error, isLoading}) => {
                     </Col>
                     <Col sm={0} md={0} lg={6} xl={6} xxl={6}>
                         <div id="backgroundMark" style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-                            <img src={loginImage} alt='' style={{width: "100%", height: "100%", marginTop: "auto"}} />
+                            <img src={loginImage} alt='' style={{width: "73%", height: "73%", margin: "auto", marginLeft: "17%"}} />
                         </div>
                     </Col>
                 </Row>

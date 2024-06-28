@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Table, Spinner, Alert, Form } from 'react-bootstrap';
 import '../../src/Admin.css';
 import { profile } from '../redux/actions/profile';
+import apiUrl from '../components/ApiUrl';
 
 const AdminUsers = ({ image, token, profile, isLoading }) => {
   const [users, setUsers] = useState([]);
@@ -40,7 +41,7 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
   const fetchUsers = async () => {
     setFetching(true);
     try {
-      const response = await axios.get('https://thankful-ample-shrimp.ngrok-free.app/users/all', {
+      const response = await axios.get(`${apiUrl}/users/all`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // Authorization: `Bearer ${token}`
@@ -57,7 +58,7 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
 
   const deleteUser = async (userId) => {
     try {
-      await axios.delete(`https://thankful-ample-shrimp.ngrok-free.app/users/delete/${userId}`, {
+      await axios.delete(`${apiUrl}/users/delete/${userId}`, {
         'ngrok-skip-browser-warning': 'true',
         // headers: { Authorization: `Bearer ${token}` },
       });
@@ -117,7 +118,7 @@ const AdminUsers = ({ image, token, profile, isLoading }) => {
       };
       console.log(editUser._id)
       console.log(dataToSend)
-      await axios.patch(`https://thankful-ample-shrimp.ngrok-free.app/users/update/admin/${editUser._id}`, dataToSend, {
+      await axios.patch(`${apiUrl}/users/update/admin/${editUser._id}`, dataToSend, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
           // Authorization: `Bearer ${token}`

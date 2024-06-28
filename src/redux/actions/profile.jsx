@@ -16,8 +16,9 @@ import {
   // USER_DATA_SUCCESS,
   // USER_DATA_FAIL,
 } from "./type";
+import apiUrl from "../../components/ApiUrl";
 
-const apiUrl = "https://thankful-ample-shrimp.ngrok-free.app/users";
+const ApiUrl = `${apiUrl}/users`;
 
 export const profile = () => async (dispatch, getState) => {
   const token = getState().auth.token;
@@ -32,7 +33,7 @@ export const profile = () => async (dispatch, getState) => {
 
   dispatch({ type: PROFILE_START });
   try {
-    const res = await axios.get(`${apiUrl}/getPP`, config)
+    const res = await axios.get(`${ApiUrl}/getPP`, config)
     if (res.data) {
       const imageUrl = URL.createObjectURL(res.data);
       dispatch({
@@ -66,7 +67,7 @@ export const deleteProfile = () => async (dispatch, getState) => {
   // const body = data
   dispatch({ type: PROFILE_DELETE_START });
   try {
-    const res = await axios.delete(`${apiUrl}/deletePP`, config);
+    const res = await axios.delete(`${ApiUrl}/deletePP`, config);
     if (res.data) {
       dispatch({
         type: PROFILE_DELETE_FAIL,
@@ -98,7 +99,7 @@ export const profileUpdate = (formData) => async (dispatch, getState) => {
   const body = formData;
   dispatch({ type: PROFILE_UPDATE_START });
   try {
-    const res = await axios.post(`${apiUrl}/profilePicture`, body, config);
+    const res = await axios.post(`${ApiUrl}/profilePicture`, body, config);
     console.log(res.data)
 
     if (res.status === 200 || res.status === 201) {

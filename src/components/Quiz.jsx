@@ -5,6 +5,7 @@ import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import { format } from 'date-fns';
 import LoadingSpinner from '../redux/actions/LoadingSpinner';
+import apiUrl from './ApiUrl';
 
 const Quiz = 
 ({
@@ -41,14 +42,14 @@ const Quiz =
 
   const fetchQuizzes = async () => {
     try {
-        const response = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/quiz/${currentCourseID}`, {
+        const response = await axios.get(`${apiUrl}/quiz/${currentCourseID}`, {
             headers: {
                 'ngrok-skip-browser-warning': 'true',
                 'Authorization': `Bearer ${token}`
             }
         });
 
-        const quizzesWithFormattedTime = response.data.quiz.map(quiz => {
+        const quizzesWithFormattedTime = response.data.quizzes.map(quiz => {
             const durationSeconds = quiz.duration * 60; // convert duration from minutes to seconds
             setQuizID(quiz._id);
             return {
@@ -93,7 +94,7 @@ const Quiz =
 
   const handleFinishClick = async () => {
     try {
-      await axios.post(`https://thankful-ample-shrimp.ngrok-free.app/quiz/submit/${quizID}`, {
+      await axios.post(`${apiUrl}/quiz/submit/${quizID}`, {
         answers: selectedAnswers
       }, {
         headers: {
@@ -164,9 +165,9 @@ const Quiz =
                                 <div className='QA-container'>
                                     <div style={{display: "flex"}}>
                                     <div className='photoOrAudio-container'>
-                                        <p className='photoOrAudio'>
+                                        {/* <p className='photoOrAudio'>
                                             Photo/Audio
-                                        </p>
+                                        </p> */}
                                     </div>
                                     <div className='quiz-timeContainer'>
                                         <div className='quiz-timeLeft'>
