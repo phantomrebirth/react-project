@@ -426,7 +426,8 @@ console.log(quizzesAvailability)
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     height: '100%',
-                                    paddingTop: '6%'
+                                    paddingTop: '6%',
+                                    fontSize: "125%"
                                 }}
                     >
                         No quiz is currently available. Please check back later.

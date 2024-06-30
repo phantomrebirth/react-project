@@ -400,7 +400,8 @@ const Assignments =
                       justifyContent: 'center',
                       alignItems: 'center',
                       height: '100%',
-                      paddingTop: '6%'
+                      paddingTop: '6%',
+                      fontSize: "125%"
                     }}
         >
           <p>No assignments yet.</p>
@@ -415,7 +416,8 @@ const Assignments =
                           justifyContent: 'center',
                           alignItems: 'center',
                           height: '100%',
-                          paddingTop: '6%'
+                          paddingTop: '6%',
+                          fontSize: "125%"
                         }}
             >
               <p>No assignments yet.</p>
@@ -545,8 +547,8 @@ const Assignments =
                     </Button>
                   </Form>
               </div>
-              <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
-                  <img src={assignmentVector} alt='' style={{maxHeight: "500px", maxWidth: "1000px"}} />
+              <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}}>
+                <img src={assignmentVector} alt='' className='assignmentVector'/>
               </div>
             </>
           )}
@@ -641,7 +643,7 @@ const Assignments =
                     </Form>
                 </div>
                 <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
-                  <img src={assignmentImage} alt='' style={{maxHeight: "500px", maxWidth: "1000px"}} />
+                  <img src={assignmentImage} alt='' className='assignmentImage'/>
                 </div>
               </div>
             </div>

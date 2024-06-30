@@ -385,7 +385,7 @@ const Videos =
                             </div>
                         </Row>
                     );
-                }) : course.videos.length > 0 && (
+                }) : course.videos && course.videos.length > 0 && (
                     <div style=
                                 {{
                                     display: 'flex',
@@ -409,7 +409,8 @@ const Videos =
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     height: '100%',
-                                    paddingTop: '6%'
+                                    paddingTop: '6%',
+                                    fontSize: "125%"
                                 }}
                     >
                         <p>No videos yet.</p>
@@ -475,7 +476,7 @@ const Videos =
                         </div>
                     </Row>
                 );
-            }) : course.videos.length > 0 && (
+            }) : course.videos && course.videos.length > 0 && (
                 <div style=
                             {{
                                 display: 'flex',
@@ -499,7 +500,8 @@ const Videos =
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 height: '100%',
-                                paddingTop: '6%'
+                                paddingTop: '6%',
+                                fontSize: "125%"
                             }}
                 >
                     <p>No videos yet.</p>

@@ -1394,7 +1394,7 @@ input[type="file"]::placeholder {
     z-index: 0;
   }
   .chat-messages {
-    max-height: calc(100vh - 30vh) !important;
+    max-height: calc(100vh - 18vh) !important;
     min-height: 70vh !important;
   }
   .message {
@@ -3457,8 +3457,9 @@ video:focus-within {
 
 .home-myAssTitleContainer {
   /* padding: 0% 1.6%; */
+  width: 100%;
   margin-left: 1.6%;
-  min-width: 333px;
+  min-width: 400px;
 }
 
 .home-myAssTitle {
@@ -3479,7 +3480,7 @@ video:focus-within {
 
 .home-myAssDate {
   color: #555;
-  padding-left: 3%;
+  padding-left: 0.5rem;
   margin: 0%;
 }
 
@@ -3882,6 +3883,22 @@ video:focus-within {
   }
   .camera-modal {
     width: auto !important;
+  }
+  .assignmentVector {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+  .assignmentImage {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+  .projectVector {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+  .projectImage {
+    max-width: 30% !important;
+    max-height: 30% !important;
   }
 }
 
@@ -4317,11 +4334,11 @@ video:focus-within {
   /* min-height: 27vh; */
   /* height: 50vh; */
   /* display: flex; */
-  max-height: 72vh;
+  /* max-height: 80vh; */
 }
 
 .chat-messages {
-  height: 68vh;
+  height: 81vh;
   display: flex;
   flex-direction: column;
   /* max-height: 40rem; */
@@ -4345,50 +4362,78 @@ video:focus-within {
 
 .message {
   margin: 5px 0;
-  padding: 3px 8px;
+  padding: 3px 8px 1px 8px;
   border-radius: 10px;
+  /* border-bottom-right-radius: 0px; */
   word-wrap: break-word;
   width: max-content;
-  background-color: #7939ff;
-  color: #fff;
-  align-self: flex-end;
-  margin-left: auto;
+  flex-direction: column;
+  /* background-color: #7939ff; */
+  /* color: #fff; */
+  /* align-self: flex-end; */
+  /* margin-left: auto; */
   /* max-width: 666px; */
   max-width: 500px;
   /* display: flex; */
+  color: #000;
 }
 
-.message-sender {
+.message.incoming-message {
+  background-color: #c2c2c2c2;
+  border-bottom-left-radius: 0px;
+  /* border-radius: 10px; */
   /* font-weight: bold; */
-  font-size: 0.7rem;
-  color: #333;
+  /* font-size: 0.7rem; */
+  /* color: #333; */
+  /* margin-bottom: 4px; */
+  align-self: flex-start;
+}
+
+.message.outgoing-message {
+  border-bottom-right-radius: 0px;
+  /* border-radius: 10px; */
+  background-color: #af8affd5;
+  /* background-color: #7839ff86; */
+  /* font-weight: bold; */
+  /* font-size: 0.7rem; */
+  /* color: #333; */
   /* margin-bottom: 4px; */
   align-self: flex-end;
 }
 
 .message-content {
   width: 100%;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  /* text-align: center; */
 }
 
-.user {
-  background-color: #7939ff;
-  color: #fff;
+.sender {
+  font-size: 1rem;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 600;
+  color: #7839fff6;
+}
+
+.sender.user {
+  /* background-color: #7939ff; */
   align-self: flex-end;
   margin-left: auto;
 }
 
-.bot {
-  background-color: #4caf50;
-  color: #fff;
+.sender.others {
+  /* background-color: #4caf50; */
   align-self: flex-start;
   margin-right: auto;
 }
 
 .message-timestamp {
-  color: #ffffffbd;
+  color: #000;
   /* align-self: flex-end; */
-  text-align: end;
+  /* display: flex; */
+  /* margin-left: auto; */
+  /* text-align: end; */
+  align-self: flex-end;
   /* display: flex; */
   font-size: 0.6em;
 }
@@ -5113,7 +5158,7 @@ video:focus-within {
   justify-content: center;
   position: absolute;
   z-index: 9999;
-  bottom: 3%;
+  bottom: 6%;
 }
 
 .attendance-cameraBtn {
@@ -5312,3 +5357,25 @@ div.react-calendar {
   max-width: 333px;
   max-height: 333px;
 }
+
+.assignmentImage {
+  max-width: 50%;
+  max-height: 25%;
+}
+
+.projectVector {
+  max-width: 360px;
+  max-height: 360px;
+  margin-right: 6%;
+}
+
+.assignmentVector {
+  max-width: 50%;
+  max-height: 25%;
+}
+
+.projectImage {
+  max-width: 180px;
+  max-height: 180px;
+}
+

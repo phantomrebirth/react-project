@@ -50,7 +50,7 @@ const Course = ({
         setTeacher(true);
       }
     }, [role, isFileOperationInProgress]);
-    const [activeTab, setActiveTab] = useState('Chat');
+    const [activeTab, setActiveTab] = useState('Videos');
     const hasFetchedCourses = useRef(false);
     const hasFetchedDetails = useRef(false);
     const arraysEqual = (a, b) => {
@@ -220,8 +220,8 @@ const Course = ({
                                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                                 <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
                                     <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
-                                        {/* Assuming you have a list of tab names */}
-                                        {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Grades', 'Attendance Rate'].map(tabName => (
+                                    {/* {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Grades', 'Attendance Rate'].map(tabName => ( */}
+                                        {['Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Grades'].map(tabName => (
                                             <Nav.Link key={tabName} id='tabz' className='tab-link' eventKey={tabName}>{tabName}</Nav.Link>
                                         ))}
                                     </Nav>
@@ -250,7 +250,7 @@ const Course = ({
                                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                                 <Navbar.Collapse id="basic-navbar-nav" className='collapse-tabs'>
                                     <Nav id='nav-tabs' className="mr-auto" activeKey={activeTab} onSelect={handleSelect}>
-                                        {['Chat', 'Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Submitted', 'Attendance'].map(tabName => (
+                                        {['Videos', 'Files', 'Assignments', 'Projects', 'Quizzes', 'Submitted', 'Attendance'].map(tabName => (
                                             <Nav.Link key={tabName} id='tabz' className='tab-link' eventKey={tabName}>{tabName}</Nav.Link>
                                         ))}
                                     </Nav>

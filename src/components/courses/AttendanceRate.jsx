@@ -112,7 +112,7 @@ const AttendanceRate =
                 // Create FormData and append blob with filename
                 const formData = new FormData();
                 formData.append('courseId', currentCourseID);
-                formData.append('attendanceImage', blob, 'captured_photo.png'); // Set filename here
+                formData.append('attendanceImage', blob, 'captured_photo.png');
                 console.log(blob)
                 console.log(capturedPhoto)
                 // Send FormData with axios
@@ -141,9 +141,9 @@ const AttendanceRate =
         setWaitAlert({ variant: 'info', message: 'Saving attendance file... please wait' });
 
         try {
-            const currentDate = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
+            const currentDate = new Date().toLocaleDateString('en-CA');
             console.log(currentDate);
-    
+            
             const response = await axios.get(`https://thankful-ample-shrimp.ngrok-free.app/attendance/${currentCourseID}/${currentDate}`, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
@@ -304,7 +304,7 @@ const AttendanceRate =
             </Container>
         )}
         {teacher && (
-            <div>
+            <div className='mt-4'>
                 {photoSent && !capturedPhotoPending && !firstBtns && (
                     <div className='postRequestBtn-container mt-5'>
                         <Button variant='primary' className="post-request-btn" onClick={handlePostRequest}>
@@ -322,7 +322,7 @@ const AttendanceRate =
                         </div>
                     )}
                 </div>
-                <div className='cameraBtn-container mt-3'>
+                <div className='cameraBtn-container mt-5'>
                     {!capturedPhotoPending && (
                         <>
                             {!photoSent && firstBtns ? (

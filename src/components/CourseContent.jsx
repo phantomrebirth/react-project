@@ -52,13 +52,14 @@ const CourseContent = ({ course, activeTab, refreshKey, isLoading, videoIsLoadin
 
     return (
         <>
-            {activeTab === 'Chat' && <Chat key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {/* {activeTab === 'Chat' && <Chat key={refreshKey} courseId={course} loading={coursesLoading} />} */}
             {activeTab === 'Files' && <Files key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Videos' && <Videos key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Assignments' && <Assignments key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Projects' && <Projects key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Grades' && <Grades key={refreshKey} courseId={course} loading={coursesLoading} />}
-            {(activeTab === 'Attendance Rate' || activeTab === 'Attendance') && <AttendanceRate key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {activeTab === 'Attendance' && <AttendanceRate key={refreshKey} courseId={course} loading={coursesLoading} />}
+            {/* {(activeTab === 'Attendance Rate' || activeTab === 'Attendance') && <AttendanceRate key={refreshKey} courseId={course} loading={coursesLoading} />} */}
             {activeTab === 'Quizzes' && <Quizzes key={refreshKey} courseId={course} loading={coursesLoading} />}
             {activeTab === 'Submitted' && <Submitted key={refreshKey} courseId={course} loading={coursesLoading} />}
         </>

@@ -22,6 +22,9 @@ import Attendance from './pages/Attendance.jsx'
 import { login } from './redux/actions/auth.jsx'
 import { connect } from 'react-redux'
 import Admin from './pages/Admin.jsx'
+import HomeQuiz from './pages/HomeQuiz.jsx'
+import Chat from './components/courses/Chat.jsx'
+import Chats from './pages/Chats.jsx'
 
 const ProtectedRoutes = 
 ({
@@ -43,6 +46,9 @@ const ProtectedRoutes =
                     {/* <Route path="/courses/software-engineering" element={<SoftwareEngineering />} /> */}
                     <Route path="/assignments" element={<AllAssignments />} />
                     <Route path="/attendance" element={<Attendance />} />
+                    <Route path="/quiz/:courseId" element={<HomeQuiz />} />
+                    <Route path="/chat" element={<Chats />} />
+                    <Route path="/chat/:chatId" element={<Chat />} />
                     {/* <Route path="/messages" element={<Messages />} /> */}
                     <Route path="/reminder" element={<Reminder />} />
                     <Route path="/settings" element={<Settings />} />

@@ -50,6 +50,7 @@ import { PDFDocument } from 'pdf-lib';
 import { finishFileOperation, getCourseAssignment, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../redux/actions/courses';
 import { login } from '../redux/actions/auth';
 import apiUrl from '../components/ApiUrl';
+import assignmentVector from '../assets/images/assignment1.png'
 
 const formatDateTime = (dateTimeStr) => {
   const date = new Date(dateTimeStr);
@@ -100,7 +101,9 @@ const AllAssignments =
     } else if (role === 'teacher') {
       setTeacher(true);
     }
-    getCourses();
+    if (courses.length === 0) {
+      getCourses();
+    }
   }, [role, courseAssignmentData]);
 //   const { loading, data: courses, currentCourseId } = useSelector(selectCourses);
   useEffect(() => {
@@ -273,6 +276,20 @@ const AllAssignments =
     <>
       {student && (
         <>
+          {submittedAssignments.length === 0 && (
+            <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%',
+                      fontSize: "150%"
+                    }}
+            >
+              <p>No assignments yet.</p>
+            </div>
+          )}
           <Row style={{ marginLeft: "1%", marginRight: "0", marginBottom: "0", padding: "0"}} className='mt-3 assignments-container'>
             {!up && submittedAssignments.map((assignment, index) => (
               <React.Fragment key={index}>
@@ -318,6 +335,9 @@ const AllAssignments =
                 )}
               </React.Fragment>
             ))}
+            <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%", marginTop: "13%"}}>
+              <img src={assignmentVector} alt='' style={{maxHeight: "100%", maxWidth: "100%"}} />
+            </div>
           </Row>
           {up && (
             <div style={{marginLeft: "1%"}}>
@@ -394,19 +414,9 @@ const AllAssignments =
                     </Button>
                   </Form>
               </div>
-            </div>
-          )}
-          {submittedAssignments.length === 0 && (
-            <div style=
-                    {{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: '100%',
-                      paddingTop: '6%'
-                    }}
-            >
-              <p>No assignments yet.</p>
+              <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%", marginTop: "10rem"}} className='mt-5'>
+                  <img src={assignmentVector} alt='' style={{maxHeight: "500px", maxWidth: "1000px"}} />
+              </div>
             </div>
           )}
         </>

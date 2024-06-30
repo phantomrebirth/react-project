@@ -1,3 +1,3 @@
-const apiUrl = 'https://thankful-ample-shrimp.ngrok-free.app';
+const apiUrl = 'https://bluegill-tidy-antelope.ngrok-free.app';
 
 export default apiUrl;

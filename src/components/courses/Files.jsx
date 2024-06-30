@@ -371,7 +371,8 @@ console.log(isFileOperationInProgress)
                       justifyContent: 'center',
                       alignItems: 'center',
                       height: '100%',
-                      paddingTop: '6%'
+                      paddingTop: '6%',
+                      fontSize: "125%"
                     }}
         >
           <p>No Files yet.</p>

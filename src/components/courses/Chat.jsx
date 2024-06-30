@@ -467,19 +467,30 @@
 
 // export default connect(mapStateToProps)(Chat);
 
+
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPaperPlane, FaCamera } from 'react-icons/fa';
 import { IoMicOutline } from "react-icons/io5";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { connect } from 'react-redux';
 import CameraModal from '../CameraModel';
+import { connect } from 'react-redux';
 import LoadingSpinner from '../../redux/actions/LoadingSpinner';
-import io from 'socket.io-client';
-import apiUrl from '../ApiUrl';
 import axios from 'axios';
+import io from 'socket.io-client';
+import { format } from 'date-fns';
+import socket from '../../Socket';
+import apiUrl from '../ApiUrl';
+import { useParams } from 'react-router-dom';
 
-const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
+const Chat = ({
+  token,
+  courses,
+  currentCourseID,
+  isLoading,
+  name
+}) => {
+  const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -495,41 +506,15 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
   const photoInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
-  const socketRef = useRef(null);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
 
-  useEffect(() => {
-    socketRef.current = io(apiUrl);
-  
-    socketRef.current.on('connect', () => {
-      console.log('Connected to socket server');
-      socketRef.current.emit('join', currentCourseID);
-    });
-  
-    socketRef.current.on('message', (messageContent) => {
-      console.log('Received message:', messageContent);
-      setMessages(prevMessages => [...prevMessages, messageContent]);
-      scrollToBottom();
-    });
-  
-    socketRef.current.on('disconnect', () => {
-      console.log('Disconnected from socket server');
-    });
-
-    socketRef.current.on('error', (error) => {
-      console.error('Socket error:', error);
-    });
-  
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [currentCourseID]);
+  // const socketRef = useRef();
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
-
   useEffect(() => {
     const interval = setInterval(() => {
       if (isRecording && recordingStartTime) {
@@ -540,78 +525,194 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const socketRef = useRef();
+
+  // useEffect(() => {
+  //   // Connect to WebSocket server
+  //   socketRef.current = io(`${apiUrl}`, {
+  //     transports: ['websocket'],
+  //     reconnectionAttempts: 5,
+  //     reconnectionDelay: 1000,
+  //     autoConnect: true
+  //   });
+
+  //   const handleIncomingMessage = (message) => {
+  //     console.log('Received message:', message);
+  //     setMessages(prevMessages => [...prevMessages, message]);
+  //     scrollToBottom();
+  //   };
+
+  //   // Handle incoming messages
+  //   // socketRef.current.on('message', (message) => {
+  //   //   console.log('Received message:', message);
+  //   //   setMessages(prevMessages => [...prevMessages, message]);
+  //   //   scrollToBottom();
+  //   // });
+  //   socketRef.current.on('message', handleIncomingMessage);
+
+  //   // Handle disconnect
+  //   // socketRef.current.on('disconnect', () => {
+  //   //   console.log('Disconnected from server');
+  //   //   // Optionally handle reconnection logic here
+  //   // });
+
+  //   // Clean up socket on unmount or when component is re-initialized
+  //   return () => {
+  //     socketRef.current.off('message', handleIncomingMessage); // Remove the event listener
+  //     socketRef.current.disconnect();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    fetchMessages();
+    // fetchMedia();
+  }, [chatId]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    if (capturedPhotoPending) {
-      inputRef.current.focus();
+  const fetchMessages = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/chats/${chatId}/messages`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Authorization': `Bearer ${token}`
+        },
+        // responseType: 'arraybuffer' // Ensure binary data is handled correctly
+      });
+  
+      const messages = response.data.messages || response.data;
+  
+      const updatedMessages = messages.map(message => {
+        if (message.media) {
+          const mediaUrl = `data:${message.contentType};base64,${message.media}`;
+          message.mediaUrl = mediaUrl;  
+        }
+        if (message.voice) {
+          const binaryData = atob(message.voice); // Decode base64 string to binary data
+          const byteArray = new Uint8Array(binaryData.length);
+          for (let i = 0; i < binaryData.length; i++) {
+            byteArray[i] = binaryData.charCodeAt(i);
+          }
+          const blob = new Blob([byteArray.buffer], { type: 'audio/webm' });
+          const voiceUrl = URL.createObjectURL(blob);
+          message.voiceUrl = voiceUrl;  
+        }
+        return message;
+      });
+  
+      setMessages(updatedMessages);
+      setIsLoadingMessages(false);
+      console.log(updatedMessages);
+  
+    } catch (error) {
+      console.error('Failed to fetch messages:', error);
     }
-  }, [capturedPhotoPending]);
+  };  
+  
+console.log(messages)
+  // const fetchMedia = async () => {
+  //   try {
+  //     const response = await axios.get('https://chatapp3-9h76.onrender.com/api/upload');
+  //     setMessages(response.data.reverse());
+  //   } catch (error) {
+  //     console.error('Failed to fetch media:', error);
+  //   }
+  // };
 
-  useEffect(() => {
-    const fetchMessages = async () => {
+console.log(name)
+
+// const sendMessage = (message) => {
+//   socketRef.current.emit('message', message);
+// };
+
+  const handleSendMessage = async () => {
+    if (newMessage.trim() !== '' && !capturedPhoto) {
+      const newMessageObj = { text: newMessage };
+      console.log('Sending message:', newMessageObj);
+
       try {
-        const response = await axios.get(`${apiUrl}/chats` , {
+        // Sending the message to the server using POST request
+        await axios.post(`${apiUrl}/chats/${chatId}/messages`, newMessageObj, {
           headers: {
             'ngrok-skip-browser-warning': 'true',
             'Authorization': `Bearer ${token}`
-        }
+          }
         });
-        console.log(response.data)
-        setMessages(response.data); // Assuming response.data is an array of messages
+        // If POST is successful, emit the message via socket
+        // sendMessage(newMessageObj);
+        // Clear the input field after sending the message
+        await fetchMessages();
+        setNewMessage('');
+        inputRef.current.focus();
       } catch (error) {
-        console.error('Error fetching messages:', error);
+        console.error('Failed to send message:', error);
       }
-    };
-
-    fetchMessages();
-  }, [currentCourseID]);
-
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-      const message = {
-        chatId: currentCourseID,
-        sender: 'user',
-        text: newMessage,
-        timestamp: new Date().toLocaleTimeString(),
-      };
-      console.log('Sending message:', message);
-      socketRef.current.emit('message', message);
-      setNewMessage('');
-      setIsRecording(false);
-      setRecordingStartTime(null);
-      setRecordingDuration(0);
-      setIntentToSend('message');
-      inputRef.current.focus();
+    } else {
+      handleSendCapturedPhoto();
     }
-    handleSendCapturedPhoto();
   };
 
-  const handleSendRecordedBlob = () => {
+  const handleSendRecordedBlob = async () => {
     if (recordedBlob && intentToSend === 'recording') {
-      const audioUrl = URL.createObjectURL(recordedBlob);
-      const message = {
-        chatId: currentCourseID,
-        sender: 'user',
-        audioUrl,
-        timestamp: new Date().toLocaleTimeString(),
-      };
-      socketRef.current.emit('message', message);
-      setRecordedBlob(null);
-      setIsRecording(false);
-      setRecordingStartTime(null);
-      setRecordingDuration(0);
-      setIntentToSend('message');
-      chunksRef.current = [];
-      scrollToBottom();
+      console.log("Preparing to send recorded blob");
+      // const response = await fetch(recordedBlob);
+      // const updatedBlob = await response.blob(([recordedBlob], { type: 'audio/webm' }));
+      const formData = new FormData();
+      formData.append('media', recordedBlob, 'recording.webm');
+      console.log(recordedBlob)
+      try {
+        console.log("Sending the recorded blob via axios");
+        const response = await axios.post(`${apiUrl}/chats/${chatId}/messages`, formData, {
+          headers: {
+            // 'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'true',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log("Recorded blob sent successfully:", response.data);
+        await fetchMessages();
+        setNewMessage('');
+        setRecordedBlob(null);
+        setIsRecording(false);
+        setRecordingStartTime(null);
+        setRecordingDuration(0);
+        setIntentToSend('message');
+        chunksRef.current = [];
+        scrollToBottom();
+      } catch (error) {
+        console.error('Failed to upload recording:', error.response?.data || error.message);
+      }
     } else {
-      console.log('Unable to send recorded blob');
+      console.log("No recorded blob to send or intentToSend is not 'recording'");
+    }
+  };
+  
+  
+
+  const handlePhotoInputChange = async (e) => {
+    const file = e.target.files[0]; // Get the first selected file
+    if (file) {
+      const formData = new FormData();
+      formData.append('media', file); // Append the file to FormData under key 'media'
+  
+      try {
+        const response = await axios.post(`${apiUrl}/chats/${chatId}/messages`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'true',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+  
+        await fetchMessages();
+        setNewMessage('');
+        inputRef.current.focus();
+        console.log(response.data);
+      } catch (error) {
+        console.error('Failed to upload photo:', error);
+      }
     }
   };
 
@@ -629,13 +730,14 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
     if (!isRecording) {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
-          .then((stream) => {
+        .then(stream => {
             mediaRecorderRef.current = new MediaRecorder(stream);
-            mediaRecorderRef.current.ondataavailable = (e) => {
+            mediaRecorderRef.current.ondataavailable = e => {
               chunksRef.current.push(e.data);
             };
             mediaRecorderRef.current.onstop = () => {
               const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+              console.log("Recorded Blob:", blob.size, blob.type); // Log blob details for debugging
               setRecordedBlob(blob);
               setIsRecording(false);
               setRecordingStartTime(null);
@@ -647,7 +749,7 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
             setRecordingStartTime(new Date());
             setIsRecording(true);
           })
-          .catch((error) => console.error('Error accessing microphone:', error));
+          .catch(error => console.error('Error accessing microphone:', error));
       } else {
         console.error('getUserMedia not supported on your browser');
       }
@@ -655,6 +757,7 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
       mediaRecorderRef.current.stop();
     }
   };
+  
 
   const formatDuration = (duration) => {
     const minutes = Math.floor(duration / 60);
@@ -665,6 +768,7 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
   const handleDeleteRecording = () => {
     setRecordedBlob(null);
     setIntentToSend('message');
+    
     if (isRecording) {
       setMessages([...messages]);
       setRecordedBlob(null);
@@ -675,100 +779,117 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
       chunksRef.current = [];
       scrollToBottom();
     }
+    
     scrollToBottom();
   };
 
-  const handlePhotoInputChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const randomNumber = Math.floor(Math.random() * 1000000);
-        const fileExtension = file.name.split('.').pop();
-        const blob = new Blob([reader.result], { type: file.type });
-        const renamedFile = new File([blob], `${randomNumber}.${fileExtension}`, { type: file.type });
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   
-        const photoUrl = URL.createObjectURL(renamedFile);
-        const message = {
-          chatId: currentCourseID,
-          sender: 'user',
-          photoUrl,
-          timestamp: new Date().toLocaleTimeString(),
-        };
-        console.log('Sending photo message:', message);
-        socketRef.current.emit('message', message);
+  const handleSendCapturedPhoto = async () => {
+    if (capturedPhoto) {
+      const response = await fetch(capturedPhoto);
+      const blob = await response.blob();
+
+      // Create FormData and append blob with filename
+      const formData = new FormData();
+      // formData.append('courseId', currentCourseID);
+      formData.append('media', blob, 'captured_photo.png');
+      console.log(blob)
+  
+      try {
+        const response = await axios.post(`${apiUrl}/chats/${chatId}/messages`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'true',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log(response.data)
+        // const photoMessage = {
+        //   photoUrl: response.data.file,
+        //   sender: 'user',
+        //   timestamp: new Date().toLocaleTimeString(),
+        // };
+        await fetchMessages();
+        setNewMessage('');
+        // setMessages(prevMessages => [...prevMessages, photoMessage]);
+        setCapturedPhoto(null);
+        setCapturedPhotoPending(false);
         scrollToBottom();
-      };
-      reader.readAsArrayBuffer(file);
+      } catch (error) {
+        console.error('Failed to upload photo:', error);
+      }
     }
   };
-
   const handleCapturePhoto = (photoUrl) => {
     setCapturedPhoto(photoUrl);
     setCapturedPhotoPending(true);
+    handleSendCapturedPhoto()
   };
-
-  const handleSendCapturedPhoto = () => {
-    if (capturedPhoto) {
-      const message = {
-        chatId: currentCourseID,
-        sender: 'user',
-        photoUrl: capturedPhoto,
-        timestamp: new Date().toLocaleTimeString(),
-      };
-      console.log('Sending captured photo message:', message);
-      socketRef.current.emit('message', message);
-      setCapturedPhoto(null);
-      setCapturedPhotoPending(false);
-      scrollToBottom();
-    }
-  };
-
   const handleDeleteCapturedPhoto = () => {
     setCapturedPhoto(null);
     setCapturedPhotoPending(false);
   };
-
+  
   const handleCameraClick = () => {
     setShowCamera(true);
   };
-
+  
   const handleCloseCamera = () => {
     setShowCamera(false);
+  };
+
+  const renderMessage = (message, index) => {
+    const isSender = message.sender.name === name; // Check if the message is from the sender
+    const messageClass = isSender ? 'outgoing-message' : 'incoming-message';
+  
+    return (
+      <div key={index} className={`message ${messageClass}`}>
+        <div className={`sender ${message.sender.name === name ? 'user' : 'others'}`}>
+          {message.sender.name !== name ? message.sender.name.split(' ').slice(0, 2).join(' ') : ''}
+        </div>
+        <div className="message-content">
+          {message.media ? ( // Conditionally render image or audio
+            <img src={message.mediaUrl} alt="Uploaded media" style={{padding: "0.5rem 0.125rem 0.25rem 0.125rem"}} />
+            ) : (
+            message.voiceUrl && (
+              <audio controls src={message.voiceUrl} style={{padding: "0.5rem 0.125rem 0.25rem 0.125rem"}} />
+            )
+          )}
+          {message.text && <div>{message.text}</div>}
+          <div className="message-timestamp">{format(new Date(message.createdAt), 'hh:mm a')}</div>
+        </div>
+      </div>
+    );
   };
 
   return (
     <>
       <div className="chat-container">
-        <div className="chat-messages">
-          {messages.map((message, index) => (
-            <div key={index} className={`message ${message.sender}`}>
-              {message.text && (
-                <div className="message-content">{message.text}</div>
-              )}
-              {message.audioUrl && (
-                <audio controls>
-                  <source src={message.audioUrl} type="audio/webm" />
-                  Your browser does not support the audio element.
-                </audio>
-              )}
-              {message.photoUrl && (
-                <div className="message-content">
-                  <img src={message.photoUrl} alt="Selected" style={{ maxWidth: '100%', maxHeight: '200px' }} />
-                </div>
-              )}
-              <div className="message-timestamp">
-                {message.sender === 'user' ? '' : message.timestamp}
-              </div>
+        {isLoadingMessages ? (
+          <LoadingSpinner />
+          ) : (
+            <div className="chat-messages">
+              {messages.map((message, index) => (
+                <>
+                  {/* <div className={`sender ${message.sender.name === name ? 'user' : 'others'}`}>
+                    {message.sender.name.split(' ').slice(0, 2).join(' ')}
+                  </div> */}
+                  {renderMessage(message,index)}
+                </>
+              ))}
+              <div ref={messagesEndRef} />
             </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          {isRecording && (
-            <div className="recording-indicator">
-              Recording: {formatDuration(recordingDuration)}
-              <MdOutlineDeleteOutline className="delete-icon" onClick={handleDeleteRecording} />
+          )}
+        <div style={{display: "flex", justifyContent: "center"}}>
+          {capturedPhotoPending && (
+            <div className="captured-photo-container">
+              <img src={capturedPhoto} alt="Captured" className='captured-photo'/>
+                <button className="captured-deleteBtn" onClick={handleDeleteCapturedPhoto} title='Cancel'>
+                  X
+                </button>
             </div>
           )}
         </div>
@@ -776,18 +897,46 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
           <input
             ref={inputRef}
             type="text"
+            placeholder="Message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
-            disabled={isRecording || capturedPhotoPending}
+            onKeyDown={handleKeyPress}
           />
-          <button onClick={handleSendMessage} disabled={isRecording || capturedPhotoPending}>
-            <FaPaperPlane />
-          </button>
-          <button onClick={handleMicClick}>
-            <IoMicOutline />
-          </button>
+          {!recordedBlob && (
+            <button className={`chat-mic ${isRecording ? 'recording' : ''}`} onClick={handleMicClick}>
+              {!isRecording && (
+                <IoMicOutline className='mic-icon' title='Record voice note'/>
+              )}
+              {isRecording && (
+                <>
+                  <span className='recorded-time' title='Stop recording'>
+                    {formatDuration(recordingDuration)}
+                  </span>
+                </>
+              )}
+            </button>
+          )}
+          {recordedBlob && intentToSend === 'recording' && (
+          <>
+            <button className="send-button" onClick={handleSendRecordedBlob} onKeyDown={handleKeyPress}>
+              <FaPaperPlane className='send-icon' title='Send voice note'/>
+            </button>
+          </>
+          )}
+          {isRecording && !recordedBlob && (
+            <button className="chat-recordDelete" 
+            onClick={() => { handleDeleteRecording(); }}
+            >
+                <MdOutlineDeleteOutline className='delete-record' title='Delete record'/>
+            </button>
+          )}
+          {recordedBlob && !isRecording &&(
+            <button className="chat-deleteRecord" 
+            onClick={() => { handleDeleteRecording(); }}
+            >
+                <MdOutlineDeleteOutline className='delete-record' title='Delete record'/>
+            </button>
+          )}
           <input
             ref={photoInputRef}
             type="file"
@@ -795,30 +944,42 @@ const Attendance = ({ role, token, courses, currentCourseID, isLoading }) => {
             style={{ display: 'none' }}
             onChange={handlePhotoInputChange}
           />
-          <button onClick={() => photoInputRef.current.click()}>
-            <HiOutlinePhotograph />
+          <button className="chat-gallery" onClick={() => photoInputRef.current.click()}>
+            <HiOutlinePhotograph className='gallery-icon' title='Open gallery'/>
           </button>
-          {/* <button onClick={handleCameraClick}>
-            <FaCamera />
-          </button> */}
+          <button className="chat-camera" onClick={handleCameraClick}>
+            <FaCamera className='camera-icon' title='take a picture'/>
+          </button>
+          {!recordedBlob && !isRecording && (
+            <button className="send-button" onClick={handleSendMessage} onKeyDown={handleKeyPress}>
+              <FaPaperPlane className='send-icon' title='Send message'/>
+            </button>
+          )}
+          {isRecording && (
+            <button className="send-button" onClick={handleSendMessage} onKeyDown={handleKeyPress}>
+              <FaPaperPlane className='send-icon' title="Can't send message while recording"/>
+            </button>
+          )}
         </div>
       </div>
-      {/* <CameraModal
-        show={showCamera}
-        onCapture={handleCapturePhoto}
-        onClose={handleCloseCamera}
-      /> */}
-      {isLoading && <LoadingSpinner />}
+      {showCamera && (
+        <div className='camera-model-container'>
+          <CameraModal
+            onClose={handleCloseCamera}
+            onCapture={handleCapturePhoto}
+          />
+        </div>
+      )}
     </>
   );
 };
 
-const mapStateToProps = (state) => ({
-  role: state.auth.role,
+const mapStateToProps = state => ({
   token: state.auth.token,
-  courses: state.courses.courses,
+  name: state.auth.name,
+  courses: state.courses.coursesData,
   currentCourseID: state.courses.currentCourseID,
-  isLoading: state.isLoading,
+  isLoading: state.courses.isLoading,
 });
 
-export default connect(mapStateToProps)(Attendance);
+export default connect(mapStateToProps)(Chat);

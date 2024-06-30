@@ -5,17 +5,19 @@ import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import { format } from 'date-fns';
 import LoadingSpinner from '../redux/actions/LoadingSpinner';
-import apiUrl from './ApiUrl';
+import apiUrl from '../components/ApiUrl';
+import { useParams } from 'react-router-dom';
 
-const Quiz = 
+const HomeQuiz = 
 ({
     token,
     role,
     currentCourseID,
     courses,
     userID,
-    fallbackCourseID
 }) => {
+
+  const { courseId } = useParams();
   const [activePage, setActivePage] = useState(1);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showQuiz, setShowQuiz] = useState(true);
@@ -38,11 +40,10 @@ const Quiz =
         handleFinishClick();
     }
 }, [timeLeft]);
-
   const course = courses.find(course => course._id === currentCourseID);
 
   const fetchQuizzes = async () => {
-    const courseIDToUse = currentCourseID || fallbackCourseID;
+    const courseIDToUse = currentCourseID || courseId;
 
     if (!courseIDToUse) {
         console.error("No course ID available to fetch quizzes.");
@@ -163,10 +164,10 @@ const Quiz =
   return (
     <>
       {quizData && quizData.map((quiz, index) => (
-        <Container className='quiz-container' style={{padding: "0", margin: "0"}} fluid key={index} >
-            <Row style={{padding: "0", margin: "0"}}>
+        <Container className='quiz-container' style={{padding: "0", margin: "5rem 0 0 0", height: "100%"}} fluid key={index} >
+            <Row style={{padding: "0", margin: "0", justifyContent: "center"}}>
             {/* xs={12} sm={12} md={10} lg={8} xl={8} */}
-                <Col style={{padding: "0", margin: "0"}}>
+                <Col style={{padding: "0", margin: "0", flexGrow: "0.9"}}>
                     <div className='questions-container'>
                         <div className='allQuestions-container'>
                             <Col >
@@ -294,4 +295,4 @@ export default connect(mapStateToProps,
     //   startFileOperation,
     //   finishFileOperation,
     })
-(Quiz);
+(HomeQuiz);

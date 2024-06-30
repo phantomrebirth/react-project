@@ -6,6 +6,7 @@ import { login } from '../../redux/actions/auth';
 import axios from 'axios';
 import { format } from 'date-fns';
 import apiUrl from '../ApiUrl';
+import gradesVector from '../../assets/images/harpyGrades.png'
 
 const Grades = 
 ({
@@ -34,7 +35,7 @@ const Grades =
               'Authorization': `Bearer ${token}`
             }
           });
-          const quizzesWithFormattedTime = response.data.quiz.map(async quiz => {
+          const quizzesWithFormattedTime = response.data.quizzes.map(async quiz => {
             const availabilityResponse = await axios.get(`${apiUrl}/quiz/availability/${quiz._id}`);
             const { available } = availabilityResponse.data;
             const endTime = new Date(quiz.startTime).getTime() + quiz.duration * 60000;
@@ -110,8 +111,9 @@ console.log(quizzes)
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                height: '100%',
-                                paddingTop: '6%'
+                                height: '70%',
+                                paddingTop: '6%',
+                                fontSize: "125%"
                             }}
                     >
                         You haven't submitted any quizzes yet.
@@ -125,8 +127,9 @@ console.log(quizzes)
                        display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        height: '100%',
-                        paddingTop: '6%'
+                        height: '70%',
+                        paddingTop: '6%',
+                        fontSize: "125%"
                     }}
             >
                 You haven't submitted any quizzes yet.
@@ -134,6 +137,11 @@ console.log(quizzes)
         )}
         {teacher && (
             <div>_</div>
+        )}
+        {student && quizzes.grades && (
+            <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
+                <img src={gradesVector} alt='' style={{maxHeight: "360px", maxWidth: "360px"}} />
+            </div>
         )}
     </>
   );

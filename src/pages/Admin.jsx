@@ -179,6 +179,9 @@ const Admin = ({ logout, image, error, isLoading, token, profile }) => {
                 onChange={onChangeUser}
                 required
               />
+              <Form.Text className="text-muted">
+                At least 8 characters
+              </Form.Text>
             </Form.Group>
             <Form.Group controlId="formRoleUser">
               <Form.Label>Role</Form.Label>

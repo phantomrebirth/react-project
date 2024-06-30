@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import { FaChevronRight } from "react-icons/fa6";
 import { HiArrowLongRight } from "react-icons/hi2";
 // import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import { getCourses } from '../redux/actions/courses';
@@ -16,6 +16,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import HomeQuiz from '../pages/HomeQuiz';
 // const homeCourses = [
 //   { title: 'Network', progress: 0.9, path: '/courses/network' },
 //   { title: 'Computer Vision', path: '/courses/computer-vision', progress: 0.75 },
@@ -35,6 +36,8 @@ const HomePage =
   const [student, setStudent] = useState(false);
   const [quizzes, setQuizzes] = useState([]);
   const [events, setEvents] = useState([]);
+  const [selectedQuizCourseID, setSelectedQuizCourseID] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (role === 'student') {
@@ -82,7 +85,7 @@ const HomePage =
           'Authorization': `Bearer ${token}`
         }
       });
-  
+
       console.log(response.data);
       const quizzesWithFormattedTime = response.data.map(quiz => {
         if (quiz.startTime) {
@@ -99,8 +102,12 @@ const HomePage =
           return quiz;
         }
       });
-  
+
       setQuizzes(quizzesWithFormattedTime);
+      // Assuming you want to use the first quiz's course ID
+      if (quizzesWithFormattedTime.length > 0) {
+        setSelectedQuizCourseID(quizzesWithFormattedTime[0].courseId);
+      }
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
@@ -109,6 +116,10 @@ const HomePage =
   const getCourseNameById = (courseId) => {
     const course = courses.find(course => course._id === courseId);
     return course ? course.name : null;
+  };
+console.log(selectedQuizCourseID)
+  const handleQuizClick = () => {
+    navigate(`/quiz/${selectedQuizCourseID}`);
   };
 
   const renderQuizzes = () => {
@@ -121,7 +132,7 @@ const HomePage =
       return (
         <Row key={idx} style={{width: "max-content"}}>
           {quiz.formattedStartDate && courseName && (
-            <div className='home-myQuizContainer'>
+            <div onClick={handleQuizClick} className='home-myQuizContainer'>
               <div className='home-QuizTitleContainer'>
                 <h4 className='home-QuizTitle' style={{marginRight: "1rem"}}>
                   {courseName}
@@ -162,22 +173,22 @@ const HomePage =
       return assignment.solutions && assignment.solutions.length > 0 ? 'Completed' : 'In progress';
     };
 
-    const firstCourseAssignment = lastTwoCourses[1].assignments[0]?.filename || 'No assignment';
-    const firstCourseAssignmentTime = formatDate(lastTwoCourses[1].assignments[0]?.uploadtime) || '';
-    const firstCourseAssignmentStatus = renderAssignmentStatus(lastTwoCourses[1].assignments[0]);
+    const firstCourseAssignment = courses[1].assignments[0]?.filename || 'No assignment';
+    const firstCourseAssignmentTime = formatDate(courses[1].assignments[0]?.uploadtime) || '';
+    const firstCourseAssignmentStatus = renderAssignmentStatus(courses[1].assignments[0]);
 
-    const secondCourseAssignment = lastTwoCourses[0].assignments[0]?.filename || 'No assignment';
-    const secondCourseAssignmentTime = formatDate(lastTwoCourses[0].assignments[0]?.uploadtime) || '';
-    const secondCourseAssignmentStatus = renderAssignmentStatus(lastTwoCourses[0].assignments[0]);
+    const secondCourseAssignment = courses[0].assignments[0]?.filename || 'No assignment';
+    const secondCourseAssignmentTime = formatDate(courses[0].assignments[0]?.uploadtime) || '';
+    const secondCourseAssignmentStatus = renderAssignmentStatus(courses[0].assignments[0]);
 
     return (
       <>
-        {firstCourseAssignment.length !== 0 && firstCourseAssignmentTime !== (undefined || null || "Invalid Date") && lastTwoCourses[1].assignments.length > 0 &&(
+        {firstCourseAssignment.length !== 0 && firstCourseAssignmentTime !== (undefined || null || "Invalid Date") && courses[1].assignments.length > 0 &&(
           <Row>
             <div className='home-myAssContainer'>
               <div className='home-myAssTitleContainer'>
                 <h4 className='home-myAssTitle'>
-                  {lastTwoCourses[1].name}
+                  {courses[1].name}
                 </h4>
                 <div className='home-myAssNameContainer'>
                   <h6 className='home-myAssName'>
@@ -197,12 +208,12 @@ const HomePage =
           </Row>
         )}
         {/* secondCourseAssignment !== 0 && secondCourseAssignmentTime !== (undefined || null || "Invalid Date") && */}
-        {secondCourseAssignment !== 0 && secondCourseAssignmentTime !== (undefined || null || "Invalid Date") && lastTwoCourses[0].assignments.length > 0  && (
+        {secondCourseAssignment !== 0 && secondCourseAssignmentTime !== (undefined || null || "Invalid Date") && courses[0].assignments.length > 0  && (
           <Row>
             <div className='home-myAssContainer'>
               <div className='home-myAssTitleContainer'>
                 <h4 className='home-myAssTitle'>
-                  {lastTwoCourses[0].name}
+                  {courses[0].name}
                 </h4>
                 <div className='home-myAssNameContainer'>
                   <h6 className='home-myAssName'>
@@ -230,7 +241,7 @@ const HomePage =
   return (
     <>
       {student && (
-        <Container style={{display: "flex", justifyContent: "center", padding: "0"}}>
+        <Container style={{padding: "0"}}>
         <Container style={{padding: "0px", margin: "0", width: "100%", maxWidth:"100%"}} className='homepage-container'>
           <Container style={{padding: "0px", margin: "0", width: "100%", maxWidth:"100%", display: "inline-block"}}>
             <Row>
@@ -261,7 +272,7 @@ const HomePage =
                 >
                   {courses.slice(-2).reverse().map((course, idx) => (
                   // margin: "1rem 3% 1rem 4px",
-                    <Col key={idx} className='cards' style={{margin: "1rem 5% 1rem 5px", padding: "0 4px 0 0", maxWidth: "34rem"}}>
+                    <Col key={idx} className='cards' style={{margin: "1rem 5% 1rem 5px", padding: "0 4px 0 0", maxWidth: "33rem"}}>
                       <Link to={`/courses/${course.path}`} className='cards-link'>
                         <Card style={{transform: "none",
                                       minHeight: "252px",
@@ -300,14 +311,16 @@ const HomePage =
               <Container style={{maxWidth: "100%", display: "inline-block"}}
                         className='home-AssContainer'
               >
-                <Row style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                  <h3 className='home-myAssHeader' style={{width: "fit-content"}}>
-                    Assignments
-                  </h3>
-                  <Link to='/assignments' className='allAssignments-link'>
-                    all assignments
-                  </Link>
-                </Row>
+                {courses[0].assignments.length > 0  && (
+                  <Row style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <h3 className='home-myAssHeader' style={{width: "fit-content"}}>
+                      Assignments
+                    </h3>
+                    <Link to='/assignments' className='allAssignments-link'>
+                      all assignments
+                    </Link>
+                  </Row>
+                )}
                 {/* <Row>
                   <div className='home-myAssContainer'>
                     <div className='home-myAssTitleContainer'>
@@ -356,33 +369,35 @@ const HomePage =
               </Container>
             {/* )} */}
             {/* paddingBottom: "1%", */}
-            <Container style={{ maxWidth: "100%", margin: "0.5rem 0 0 0"}}
-                      className='home-QuizContainer'
-            >
-              <Row>
-                <h3 className='home-QuizHeader'>
-                  Quiz
-                </h3>
-              </Row>
-              {/* <Row>
-                <div className='home-myQuizContainer'>
-                  <div className='home-QuizTitleContainer'>
-                    <h4 className='home-QuizTitle'>
-                      Network
-                    </h4>
-                    <div className='home-QuizDateContainer'>
-                      <h5 className='home-QuizDate'>
-                        6/2/2024
-                      </h5>
-                      <div className='home-quizArrowContainer'>
-                        <HiArrowLongRight className='home-quizArrow'/>
+            {Array.isArray(quizzes) && quizzes.length > 0 && new Date(quizzes[0].endTime) > new Date() && (
+              <Container style={{ maxWidth: "100%", margin: "0.5rem 0 0 0"}}
+                        className='home-QuizContainer'
+              >
+                <Row>
+                  <h3 className='home-QuizHeader'>
+                    Quiz
+                  </h3>
+                </Row>
+                {/* <Row>
+                  <div className='home-myQuizContainer'>
+                    <div className='home-QuizTitleContainer'>
+                      <h4 className='home-QuizTitle'>
+                        Network
+                      </h4>
+                      <div className='home-QuizDateContainer'>
+                        <h5 className='home-QuizDate'>
+                          6/2/2024
+                        </h5>
+                        <div className='home-quizArrowContainer'>
+                          <HiArrowLongRight className='home-quizArrow'/>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Row> */}
-              {renderQuizzes()}
-            </Container>
+                </Row> */}
+                {renderQuizzes()}
+              </Container>
+            )}
           </Container>
         </Container>
         </Container>
@@ -458,6 +473,7 @@ const HomePage =
           </Container>
         </div>
       )}
+      {/* {selectedQuizCourseID && <HomeQuiz token={token} fallbackCourseID={selectedQuizCourseID} />} */}
     </>
   );
 };

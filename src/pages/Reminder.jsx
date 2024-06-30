@@ -9,6 +9,7 @@ import { login } from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import apiUrl from '../components/ApiUrl';
+import LoadingSpinner from '../redux/actions/LoadingSpinner';
 
 const Reminder = 
 ({
@@ -23,6 +24,7 @@ const Reminder =
   const [noteIds, setNoteIds] = useState([]);
   const [teacher, setTeacher] = useState(false);
   const [student, setStudent] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (role === 'student') {
       setStudent(true);
@@ -53,6 +55,7 @@ const Reminder =
       setNotes(formattedNotes);
       console.log(response.data)
       setNoteIds(response.data.map(note => note._id)); // Store the note IDs
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching notes:', error);
     }
@@ -115,7 +118,7 @@ const Reminder =
   };
 
   const handleEditNote = (index) => {
-    const originalIndex = notes.length - 1 - index; // Adjust the index for the reversed array
+    const originalIndex = notes.length - 1 - index;
     const selectedNote = notes[originalIndex];
     setNoteTitle(selectedNote.title);
     setNoteBody(selectedNote.note);
@@ -148,108 +151,127 @@ const Reminder =
   };
 
   return (
-    <Container className='reminder-container' style={{ margin: "0" }}>
-      <Row>
-        {!showNoteForm && teacher && (
-          <Col md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
-            <Card style={{ padding: "0" }} className='addR-container' onClick={() => setShowNoteForm(true)} title='Create note'>
-              <Card.Body>
-                <Card.Title className='addReminder-body'>
-                  <IoAdd className='addReminder-icon'/>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Col>
+    <>
+      <Container className='reminder-container' style={{ margin: "0" }}>
+        <Row>
+          {!showNoteForm && teacher && (
+            <Col md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
+              <Card style={{ padding: "0" }} className='addR-container' onClick={() => setShowNoteForm(true)} title='Create note'>
+                <Card.Body>
+                  <Card.Title className='addReminder-body'>
+                    <IoAdd className='addReminder-icon'/>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Col>
+          )}
+          {!showNoteForm && notes.slice().reverse().map((note, index) => (
+            <Col key={index} md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
+              <Card style={{ padding: "0" }} className='addedR-container'>
+                <Card.Body className='addedReminder-body'>
+                  <Card.Title className='addedReminder-title'>
+                    {note.title}
+                  </Card.Title>
+                  <Card.Text className='addedReminder-text'>
+                    {note.note}
+                  </Card.Text>
+                  <Card.Footer style={{ padding: "0" }} className='addedR-footer'>
+                    <div id='reminder-date'>
+                      <span className="ml-auto" >{note.formattedDate}</span>
+                    </div>
+                    {teacher && (
+                      <>
+                        <div className='reminderO-container'>
+                          <SlOptions  onClick={() => handleOptionsButtonClick(index)} className='reminder-options'/>
+                        </div>
+                        <Dropdown className="dropdown" style={{display: "contents"}}>
+                          <Dropdown.Toggle variant="success" id={`dropdown-${index}`} style={{display: "none"}}/>
+                          <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => handleEditNote(index)}>Edit</Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleDeleteNote(note._id)}>Delete</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </>
+                    )}
+                  </Card.Footer>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+        {showNoteForm && (
+          <Container className='note-container' style={{ padding: "0", marginLeft: "1rem" }}>
+          <Form className='mt-5'>
+            <Row>
+              <Col xs={10} sm={8} md={5} lg={3} xg={2} style={{ padding: "0" }}>
+                <Form.Label className='note-label'>
+                  Add Note
+                </Form.Label>
+              </Col>
+              <Col xs={1} sm={1} md={1} lg={1} xg={1} className='x-container' style={{ padding: "0" }}>
+                <Button variant="link" 
+                        onClick={handleCloseNoteForm} 
+                        tabIndex="-1" 
+                        className='close-noteBtn'
+                        >
+                          X
+                </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={10} sm={8} md={5} lg={3} xg={2}>
+                <Form.Group controlId="noteTitle">
+                  {/* <Form.Label>Title</Form.Label> */}
+                  <Form.Control
+                    placeholder='Title'
+                    className='noteH-input'
+                    type="text"
+                    value={noteTitle}
+                    onChange={(e) => setNoteTitle(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={10} sm={8} md={5} lg={3} xg={2}>
+                <Form.Group controlId="noteBody" className='noteB-text'>
+                  {/* <Form.Label>Note</Form.Label> */}
+                  <Form.Control
+                    placeholder='Note'
+                    className='noteB-input'
+                    as="textarea"
+                    rows={9}
+                    value={noteBody}
+                    onChange={(e) => setNoteBody(e.target.value)}
+                  />
+                </Form.Group>
+                <Button variant="primary" onClick={handleNoteSave} className='save-noteBtn'>
+                  Save
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Container>
         )}
-        {!showNoteForm && notes.slice().reverse().map((note, index) => (
-          <Col key={index} md={5} lg={3} xl={3} xxl={3} className='reminder-card'>
-            <Card style={{ padding: "0" }} className='addedR-container'>
-              <Card.Body className='addedReminder-body'>
-                <Card.Title className='addedReminder-title'>
-                  {note.title}
-                </Card.Title>
-                <Card.Text className='addedReminder-text'>
-                  {note.note}
-                </Card.Text>
-                <Card.Footer style={{ padding: "0" }} className='addedR-footer'>
-                  <div id='reminder-date'>
-                    <span className="ml-auto" >{note.formattedDate}</span>
-                  </div>
-                  {teacher && (
-                    <>
-                      <div className='reminderO-container'>
-                        <SlOptions  onClick={() => handleOptionsButtonClick(index)} className='reminder-options'/>
-                      </div>
-                      <Dropdown className="dropdown" style={{display: "contents"}}>
-                        <Dropdown.Toggle variant="success" id={`dropdown-${index}`} style={{display: "none"}}/>
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => handleEditNote(index)}>Edit</Dropdown.Item>
-                          <Dropdown.Item onClick={() => handleDeleteNote(note._id)}>Delete</Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </>
-                  )}
-                </Card.Footer>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-      {showNoteForm && (
-        <Container className='note-container' style={{ padding: "0", marginLeft: "1rem" }}>
-        <Form className='mt-5'>
-          <Row>
-            <Col xs={10} sm={8} md={5} lg={3} xg={2} style={{ padding: "0" }}>
-              <Form.Label className='note-label'>
-                Add Note
-              </Form.Label>
-            </Col>
-            <Col xs={1} sm={1} md={1} lg={1} xg={1} className='x-container' style={{ padding: "0" }}>
-              <Button variant="link" 
-                      onClick={handleCloseNoteForm} 
-                      tabIndex="-1" 
-                      className='close-noteBtn'
-                      >
-                        X
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={10} sm={8} md={5} lg={3} xg={2}>
-              <Form.Group controlId="noteTitle">
-                {/* <Form.Label>Title</Form.Label> */}
-                <Form.Control
-                  placeholder='Title'
-                  className='noteH-input'
-                  type="text"
-                  value={noteTitle}
-                  onChange={(e) => setNoteTitle(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={10} sm={8} md={5} lg={3} xg={2}>
-              <Form.Group controlId="noteBody" className='noteB-text'>
-                {/* <Form.Label>Note</Form.Label> */}
-                <Form.Control
-                  placeholder='Note'
-                  className='noteB-input'
-                  as="textarea"
-                  rows={9}
-                  value={noteBody}
-                  onChange={(e) => setNoteBody(e.target.value)}
-                />
-              </Form.Group>
-              <Button variant="primary" onClick={handleNoteSave} className='save-noteBtn'>
-                Save
-              </Button>
-            </Col>
-          </Row>
-        </Form>
       </Container>
+      {isLoading && (
+        <LoadingSpinner/>
       )}
-    </Container>
+      {notes.length === 0 && !isLoading && (
+        <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%',
+                      fontSize: "125%"
+                    }}
+        >
+          <p>No announcements yet.</p>
+        </div>
+      )}
+    </>
   );
   // const [createQuiz, setCreateQuiz] = useState(false);
   // const [questions, setQuestions] = useState([]);

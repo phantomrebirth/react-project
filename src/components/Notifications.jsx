@@ -49,9 +49,9 @@ const Notifications = ({
                         'ngrok-skip-browser-warning': 'true',
                     }
                 });
-                console.log('Fetched notifications:', response.data);
-                if (Array.isArray(response.data)) {
-                    setNotifications(response.data);
+                console.log('Fetched notifications:', response.data.notifications);
+                if (Array.isArray(response.data.notifications)) {
+                    setNotifications(response.data.notifications);
                 } else {
                     console.error('Fetched notifications are not an array:', response.data);
                 }

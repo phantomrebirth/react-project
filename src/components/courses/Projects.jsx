@@ -567,7 +567,7 @@ import axios from 'axios';
 import { finishFileOperation, getCourseProject, getCourses, resetDeleteAlert, resetUploadAlert, resetWaitAlert, setDeleteAlert, setUploadAlert, setWaitAlert, startFileOperation } from '../../redux/actions/courses';
 import { login } from '../../redux/actions/auth';
 import apiUrl from '../ApiUrl';
-import projectVector from '../../assets/images/project2.png'
+import projectVector from '../../assets/images/harpyProjects.png'
 import projectImage from '../../assets/images/project1.png'
 
 const formatDateTime = (dateTimeStr) => {
@@ -1012,7 +1012,8 @@ const Projects =
                       justifyContent: 'center',
                       alignItems: 'center',
                       height: '100%',
-                      paddingTop: '6%'
+                      paddingTop: '6%',
+                      fontSize: "125%"
                     }}
         >
           <p>No projects yet.</p>
@@ -1027,7 +1028,8 @@ const Projects =
                         justifyContent: 'center',
                         alignItems: 'center',
                         height: '100%',
-                        paddingTop: '6%'
+                        paddingTop: '6%',
+                        fontSize: "125%"
                       }}
           >
             <p>No projects yet.</p>
@@ -1106,8 +1108,8 @@ const Projects =
                               )}
                             </React.Fragment>
                     ))}
-                    <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: "5rem"}}>
-                      <img src={projectImage} alt='' style={{maxHeight: "225px", maxWidth: "225px"}} />
+                    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}} className='mt-5'>
+                      <img src={projectImage} alt='' className='projectImage' />
                     </div>
                   </div>
                 </Col>
@@ -1213,29 +1215,6 @@ const Projects =
                             />
                         </Form.Group>
                       </div>
-                      <div className='description-container mt-4'>
-
-                      <Form onSubmit={handleProjectUpload}>
-                    {/* <Form.Group controlId="assignmentDescription">
-                      <Form.Label>
-                        Write your assignment description:
-                      </Form.Label>
-                      <Form.Control
-                              as="textarea"
-                              value={description}
-                              onChange={handleChange}
-                              rows={4}
-                              className='description-area'
-                      />
-                    </Form.Group> */}
-                    <Button variant="primary" type="submit" className='ass-submit' disabled={selectedFiles.length === 0}>
-                      Confirm
-                    </Button>
-                    <Button variant="danger" className='ass-cancel' onClick={handleCancel}>
-                      Close
-                    </Button>
-                  </Form>
-                  </div>
                     </Col>
                     <Col md={4} lg={4} xl={4}>
                       <input
@@ -1261,12 +1240,35 @@ const Projects =
                     </Col>
                   </div>
                 </Row>
+                                          <div className='description-container mt-4'>
+
+                      <Form onSubmit={handleProjectUpload}>
+                    {/* <Form.Group controlId="assignmentDescription">
+                      <Form.Label>
+                        Write your assignment description:
+                      </Form.Label>
+                      <Form.Control
+                              as="textarea"
+                              value={description}
+                              onChange={handleChange}
+                              rows={4}
+                              className='description-area'
+                      />
+                    </Form.Group> */}
+                    <Button variant="primary" type="submit" className='ass-submit' disabled={selectedFiles.length === 0}>
+                      Confirm
+                    </Button>
+                    <Button variant="danger" className='ass-cancel' onClick={handleCancel}>
+                      Close
+                    </Button>
+                  </Form>
+                  </div>
                 <div className='description-container' style={{marginTop: "0"}}>
                 {/* <h4>Assignment Description</h4> */}
 
                 </div>
                 <div style={{display: 'flex', alignItems: "center", justifyContent: "center", width: "100%"}} className='mt-5'>
-                  <img src={projectVector} alt='' style={{maxHeight: "300px", maxWidth: "300px", marginRight: "6%"}} />
+                  <img src={projectVector} alt='' className='projectVector'/>
                 </div>
               </div>
             </div>
@@ -1293,7 +1295,7 @@ const Projects =
                         <div className='downloadAss-container'>
                           <a onClick={(event) => { event.stopPropagation(); project.path && handleProjectDelete(project)}}
                              className='delete-project'
-                             style={{cursor: project.path ? "pointer" : "default"}}
+                             style={{cursor: project.path ? "pointer" : "default", marginLeft: "0"}}
                           >
                             <MdOutlineDeleteOutline 
                                className='deleteAss-icon'

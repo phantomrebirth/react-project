@@ -140,10 +140,23 @@ const Submitted = ({
   );
 
   return (
-    <div>
+    <div style={{display: "flex", alignItems: "start", justifyContent: "space-evenly"}}>
         {submittedAssignments.length > 0 && renderItems(submittedAssignments, assignmentSolutions, openPDF, 'Assignment')}
         {submittedProjects.length > 0 && renderItems(submittedProjects, projectSolutions, openPDF, 'Project')}
-        {submittedAssignments.length === 0 && submittedProjects.length === 0 && <p>No assignments or projects with solutions available.</p>}
+        {submittedAssignments.length === 0 && submittedProjects.length === 0 && 
+          <div style=
+                    {{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      paddingTop: '6%',
+                      fontSize: "125%"
+                    }}
+          >
+            <p>No assignments or projects with solutions available.</p>
+          </div>
+        }
     </div>
   );
 };
